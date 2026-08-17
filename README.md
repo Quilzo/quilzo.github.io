@@ -17,13 +17,3 @@ There's no build step or framework. The content was extracted directly from
 (the structured `chapter`/`section`/`block` data that powers the in-app
 manual), so the wording here matches the app exactly rather than being
 maintained separately.
-
-## Keeping it in sync
-
-This is a point-in-time mirror, not a live sync — when the manual changes in
-the app, this site needs to be regenerated and re-pushed by hand. There's no
-automation for that yet.
-
-One known gap right now: the 8 screenshots predate a recent rename in the
-main app and still show old branding in places. Worth regenerating from a
-current build before this site is linked from anywhere prominent.

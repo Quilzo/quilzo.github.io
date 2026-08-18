@@ -1,0 +1,47 @@
+name: check
+
+# The manual is the target of a link in another repository, so the thing worth
+# checking on every push is not that the HTML is pretty but that the anchors
+# the application sends people to still exist.
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  anchors:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Every section the app links to is present
+        run: ./check-anchors.sh
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: No in-page link points at a section that does not exist
+        run: |
+          # Internal hrefs only: #foo must have a matching id="foo".
+          fail=0
+          for a in $(grep -o 'href="#[a-z0-9-]*"' index.html | sed 's/href="#//;s/"//' | sort -u); do
+            if ! grep -q "id=\"$a\"" index.html; then
+              echo "dangling: href=\"#$a\" has no matching id"
+              fail=1
+            fi
+          done
+          [ "$fail" -eq 0 ] && echo "no dangling anchors"
+          exit $fail
+
+      - name: Every referenced image exists
+        run: |
+          fail=0
+          for src in $(grep -o 'src="images/[^"]*"' index.html | sed 's/src="//;s/"//' | sort -u); do
+            if [ ! -f "$src" ]; then
+              echo "missing image: $src"
+              fail=1
+            fi
+          done
+          [ "$fail" -eq 0 ] && echo "all images present"
+          exit $fail

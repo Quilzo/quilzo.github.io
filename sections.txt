@@ -1,0 +1,48 @@
+# Every anchor the Quilzo admin links to.
+#
+# This is one half of a contract with the application. The admin's footer sends
+# "Help with this screen" to https://quilzo.github.io/#<anchor>, and the anchor
+# for each screen is declared in internal/admin/nav.go (docSections) in the
+# Quilzo repository. A test there refuses a screen pointing at an anchor not on
+# this list; the workflow here refuses a build where index.html has stopped
+# carrying one.
+#
+# Neither half proves the other. Each fails on its own side, and the failure a
+# reader suffers -- Help landing on nothing -- needs both to be wrong at once.
+#
+# Renaming a section means changing it in both repositories. That is the cost of
+# splitting the manual out, and it is cheaper than a Help link that 404s.
+
+# one per admin screen
+pages
+data
+types
+structure
+listings
+forms
+media
+languages
+ai
+publishing
+environments
+history
+transfer
+ipfs
+provenance
+security
+logging
+users
+auth
+integrations
+settings
+api
+profile
+
+# sections no screen owns: concepts and surfaces, reached by reading
+start
+setup
+concepts
+privacy
+cli
+mcp
+templates

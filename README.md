@@ -1,3 +1,5 @@
+<img src="images/mark.svg" alt="" width="72" height="72">
+
 # quilzo.github.io
 
 The Quilzo manual. **[quilzo.github.io](https://quilzo.github.io)**

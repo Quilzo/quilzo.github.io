@@ -326,3 +326,19 @@ footer.site a { color: var(--ink-muted); }
   .sidebar.open { display: block; }
   .doc { padding: 20px 18px; }
 }
+
+
+/* The mark.
+ *
+ * An asymmetric squircle — rounded on three corners, square on the fourth —
+ * with a quill nib knocked out of it, pointing into the square corner. The
+ * container is Material 3 Expressive's own shape move; the nib is the name.
+ *
+ * Drawn with fill-rule:evenodd so the nib is a hole rather than a white shape,
+ * which is what lets one file work on the light theme and the dark one. It
+ * takes currentColor, so it follows the text it sits beside and there is no
+ * second copy to keep in step. */
+.brand .mark { flex: 0 0 auto; margin-right: .5rem; vertical-align: -.35em; }
+.brand .dot { display: none; }
+.hero-mark { display: block; margin: 0 0 1rem; color: var(--accent, #00515f); }
+@media (prefers-color-scheme: dark) { .hero-mark { color: #7ad3e3; } }

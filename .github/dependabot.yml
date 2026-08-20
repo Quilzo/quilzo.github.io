@@ -1,0 +1,15 @@
+# Keep the pinned actions current.
+#
+# Pinning by commit removes the risk that a tag is repointed under us. It adds
+# the opposite one: a pin nobody moves is a pin to a version with a known
+# problem, held there deliberately-looking. This is what moves them, and the
+# pull request it opens carries the new SHA and the version it corresponds to,
+# so the pin stays a pin.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    commit-message:
+      prefix: ci

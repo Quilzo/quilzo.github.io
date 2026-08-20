@@ -9,18 +9,30 @@ on:
   pull_request:
   workflow_dispatch:
 
+# Read-only. This workflow checks files and writes nothing, so the token it is
+# handed should not be able to. The default is write access to the whole
+# repository, which is a great deal of authority for a shell script that greps
+# an HTML file.
+permissions:
+  contents: read
+
 jobs:
   anchors:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      # Pinned by commit, not by tag. A tag is a mutable pointer in somebody
+      # else's repository: actions/checkout@v4 is whatever that repository
+      # decides v4 means on the morning your workflow runs, and this one runs
+      # on every pull request from anybody. The SHA was checked against the
+      # tag it claims before it was written down.
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: Every section the app links to is present
         run: ./check-anchors.sh
 
   links:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
       - name: No in-page link points at a section that does not exist
         run: |
           # Internal hrefs only: #foo must have a matching id="foo".

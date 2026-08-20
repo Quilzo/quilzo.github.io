@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>About Marginalia — Marginalia</title>
+<link rel="stylesheet" href="/demo/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap bar">
+    <a class="wordmark" href="/demo/">Marginalia</a>
+    <nav aria-label="Main">
+      <ul class="mainnav">
+      
+        <li><a href="/demo/">Shop</a></li>
+      
+        <li><a href="/demo/shop">Everything</a></li>
+      
+        <li><a href="/demo/ranges">Ranges</a></li>
+      
+        <li><a href="/demo/available">In stock</a></li>
+      
+        <li><a href="/demo/stockists">Stockists</a></li>
+      
+        <li><a href="/demo/wholesale">Wholesale</a></li>
+      
+        <li><a href="/demo/about" aria-current="page">About</a></li>
+      
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <h1>About Marginalia</h1>
+  <p class="intro">What this is, and how it is put together.</p>
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+
+  
+
+  <div class="prose"><h2>What this is</h2>
+<p>Marginalia is a demonstration shop. Twelve products, three stockists, a
+catalogue a machine can read, two policies, a wholesale enquiry form and a sale
+that has not started yet. Everything here was built through the Quilzo admin
+interface — no configuration files were edited, and no code was written for it
+beyond one HTML template and one stylesheet.</p>
+
+<h2>How it is put together</h2>
+<p>The products are <strong>records</strong> in a collection, which is what
+makes the shop page sortable, the range page filterable, and the catalogue feed
+possible — all three are the same query mechanism, not three systems kept in
+step. The price is a <strong>number</strong>, because a price stored as text
+cannot be compared by anything. Availability is a <strong>closed choice</strong>,
+so &ldquo;sold out&rdquo;, &ldquo;Sold Out&rdquo; and &ldquo;out of stock&rdquo;
+cannot become three states that mean one thing.</p>
+<p>The stockists are <strong>pages with a content type</strong>, so one missing
+a city is refused before it is stored. The sale is a page carrying a
+<strong>publish window</strong>: it is not on this site yet, and no scheduled
+job is responsible for that — the window is checked when the page is asked for,
+so it cannot be late, and it cannot be early either.</p>
+<p>The claims are gated. The brass pen promises a five-year warranty and
+publishes, because the product carries a link to the terms; take that link away
+and publishing stops, naming the sentence and the field that would make it
+sayable. The correspondence cards make a recycled-content claim and publish,
+because the certification is linked. That check runs over the records and not
+only the pages, because in a shop the copy that matters is a record.</p>
+<p>This page is subject to the same rules, which is why it describes those
+sentences rather than quoting them: the first draft quoted both, and the gate
+refused to publish the page explaining the gate. That is the control working on
+its author, and it seemed worth leaving in.</p>
+
+<h2>What is deliberately missing</h2>
+<p>There is no cart, no checkout, no payment and no stock reservation. Shopping
+agents in 2026 discover products and hand the purchase back to the merchant, so
+what a shop needs from a CMS is a catalogue that says what is for sale and where
+to complete the purchase. The moment this took an order it would need
+credentials it does not have, and implying otherwise would make this
+demonstration dishonest.</p></div>
+  
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <ul class="footnav" role="list">
+    
+      <li><a href="/demo/returns">Returns</a></li>
+    
+      <li><a href="/demo/delivery">Delivery</a></li>
+    
+    </ul>
+    <p class="colophon">Marginalia — a Quilzo demonstration. Prices are in
+      pence. The catalogue is also served as JSON at
+      <a href="/demo/catalogue.json">/catalogue.json</a>, which is what a shopping
+      agent reads.</p>
+  </div>
+</footer>
+</body>
+</html>

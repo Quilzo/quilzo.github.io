@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Wholesale — Marginalia</title>
+<link rel="stylesheet" href="/demo/site.css">
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<header class="topbar">
+  <div class="wrap bar">
+    <a class="wordmark" href="/demo/">Marginalia</a>
+    <nav aria-label="Main">
+      <ul class="mainnav">
+      
+        <li><a href="/demo/">Shop</a></li>
+      
+        <li><a href="/demo/shop">Everything</a></li>
+      
+        <li><a href="/demo/ranges">Ranges</a></li>
+      
+        <li><a href="/demo/available">In stock</a></li>
+      
+        <li><a href="/demo/stockists">Stockists</a></li>
+      
+        <li><a href="/demo/wholesale" aria-current="page">Wholesale</a></li>
+      
+        <li><a href="/demo/about">About</a></li>
+      
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main id="main" class="wrap">
+  <h1>Wholesale</h1>
+  <p class="intro">If you run a shop and want to carry this, say so here.</p>
+
+  
+
+  
+  
+  
+  
+
+  
+
+  
+  <form class="enquiry" method="post" action="/form/wholesale">
+    <p class="field"><label for="f-shop">Shop name</label>
+      <input id="f-shop" name="shop" type="text" required></p>
+    <p class="field"><label for="f-contact">Your name</label>
+      <input id="f-contact" name="contact" type="text" autocomplete="name" required></p>
+    <p class="field"><label for="f-email">Email</label>
+      <input id="f-email" name="email" type="email" autocomplete="email" required></p>
+    <p class="field"><label for="f-city">Where you are</label>
+      <input id="f-city" name="city" type="text" required></p>
+    <p class="field"><label for="f-ranges">Which ranges interest you</label>
+      <select id="f-ranges" name="ranges">
+        <option>desk</option><option>correspondence</option>
+        <option>archive</option><option>all of them</option>
+      </select></p>
+    <p class="field"><label for="f-detail">Anything else</label>
+      <textarea id="f-detail" name="detail" rows="5"></textarea></p>
+    <p class="hp" aria-hidden="true"><label for="f-url">Leave this empty</label>
+      <input id="f-url" name="website_url" type="text" tabindex="-1" autocomplete="off"></p>
+    <input type="hidden" name="form_started" value="">
+    <p><button type="submit">Send</button></p>
+  </form>
+  <p class="privacy">Wholesale enquiries reach the two people who run Marginalia and nobody else. We keep them for a year so we can pick up a conversation that paused, then they are deleted.</p>
+  
+
+  
+
+  
+  
+</main>
+
+<footer class="foot">
+  <div class="wrap">
+    <ul class="footnav" role="list">
+    
+      <li><a href="/demo/returns">Returns</a></li>
+    
+      <li><a href="/demo/delivery">Delivery</a></li>
+    
+    </ul>
+    <p class="colophon">Marginalia — a Quilzo demonstration. Prices are in
+      pence. The catalogue is also served as JSON at
+      <a href="/demo/catalogue.json">/catalogue.json</a>, which is what a shopping
+      agent reads.</p>
+  </div>
+</footer>
+</body>
+</html>

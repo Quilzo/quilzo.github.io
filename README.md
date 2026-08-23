@@ -23,6 +23,26 @@ published on its own now and can be fixed the day somebody notices.
 The cost of splitting it out is that the application can no longer prove its
 Help links land somewhere. That is what `sections.txt` is for.
 
+## The demonstration sites
+
+Two published sites live here, both rendered by `quilzo ipfs write` and copied
+in as static files. They are the manual's worked examples: everything on them
+was produced by the commands the manual describes.
+
+  - **[/demo](https://quilzo.github.io/demo/)** — Marginalia, the shop `quilzo
+    demo` builds: a catalogue read through a declared listing, a page per
+    product, a wholesale form and a sale with a publish window.
+
+  - **[/demo2](https://quilzo.github.io/demo2/)** — Aster & Alum, a natural dye
+    house. Sixteen pages in two languages using all nineteen section kinds and
+    six layouts, two record collections behind six listings, two forms, a
+    checked theme with self-hosted variable faces, and pictures drawn by a
+    script rather than photographed.
+
+Both are rendered with `--base-path`, because every link a Quilzo page carries
+is rooted and a bundle copied into a subdirectory would otherwise resolve one
+level too high.
+
 ## The contract with the application
 
 Every screen in the Quilzo admin has a Help link in the same place, pointing at

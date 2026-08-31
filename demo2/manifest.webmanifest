@@ -1,0 +1,17 @@
+{
+  "background_color": "#faf6ef",
+  "description": "",
+  "display": "standalone",
+  "icons": [],
+  "name": "Aster \u0026 Alum",
+  "scope": "/demo2/",
+  "short_name": "Aster \u0026 Alum",
+  "shortcuts": [
+    {
+      "name": "Stockists",
+      "url": "/demo2/stockists"
+    }
+  ],
+  "start_url": "/demo2/",
+  "theme_color": "#0e5a54"
+}

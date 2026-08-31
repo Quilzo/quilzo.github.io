@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:xhtml="http://www.w3.org/1999/xhtml">
+  <url>
+    <loc>https://quilzo.github.io/demo2/about</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/available</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/cloth</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/fr/index</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quilzo.github.io/demo2/index"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://quilzo.github.io/demo2/fr/index"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://quilzo.github.io/demo2/index"/>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/fr/shop</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quilzo.github.io/demo2/shop"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://quilzo.github.io/demo2/fr/shop"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://quilzo.github.io/demo2/shop"/>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/guide</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/impact</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quilzo.github.io/demo2/index"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://quilzo.github.io/demo2/fr/index"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://quilzo.github.io/demo2/index"/>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/indigo-in-january</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/journal</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/search</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/shop</loc>
+    <xhtml:link rel="alternate" hreflang="en" href="https://quilzo.github.io/demo2/shop"/>
+    <xhtml:link rel="alternate" hreflang="fr" href="https://quilzo.github.io/demo2/fr/shop"/>
+    <xhtml:link rel="alternate" hreflang="x-default" href="https://quilzo.github.io/demo2/shop"/>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/stockists</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/wholesale</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/work</loc>
+  </url>
+  <url>
+    <loc>https://quilzo.github.io/demo2/workshops</loc>
+  </url>
+</urlset>

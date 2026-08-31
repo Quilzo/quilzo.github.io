@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rsl xmlns="https://rslstandard.org/rsl">
+  <content url="/">
+    <permits type="search"/>
+    <prohibits type="train"/>
+    <prohibits type="ai-summarize"/>
+    <legal type="license">CC-BY-SA-4.0</legal>
+    <copyright>https://asterandalum.example/</copyright>
+    <contact>hello@asterandalum.example</contact>
+  </content>
+</rsl>

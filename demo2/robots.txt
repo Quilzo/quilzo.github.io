@@ -1,0 +1,5 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://quilzo.github.io/demo2/sitemap.xml
+License: https://quilzo.github.io/demo2/license.xml

@@ -13,9 +13,10 @@
 
 <link rel="stylesheet" href="/demo2/site.css">
 <link rel="manifest" href="/demo2/manifest.webmanifest">
+<link rel="alternate" type="application/json" href="/demo2/catalogue.json" title="Product catalogue">
+<link rel="alternate" type="application/atom+xml" href="/demo2/feed.xml" title="Aster &amp; Alum">
+<link rel="alternate" type="application/feed+json" href="/demo2/feed.json" title="Aster &amp; Alum">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","description":"If you run a shop and want to carry this, say so here.","isPartOf":{"@type":"WebSite","name":"Aster \u0026 Alum"},"name":"Wholesale"}</script>
-<meta name="c2pa:digitalSourceType" content="humanEdits">
-<meta name="content-hash" content="sha256:cc6cfe7db7d7b4a9fda89bce5e36f1845a0ad126046386cb340204830804a50f">
 
 </head>
 <body>
@@ -107,7 +108,10 @@
 
 <section class="section">
   <div class="wrap">
-    <div class="section-head"><h2>Wholesale enquiry</h2></div>
+    <div class="section-head">
+      <h2>Wholesale enquiry</h2>
+      <p class="lead">If you run a shop and want to carry this, tell us what you sell and roughly how much you would take.</p>
+    </div>
     <form class="stacked" method="post" action="/demo2/form/wholesale">
       
       <p class="field">
@@ -175,10 +179,10 @@
       
       <p class="hp"><label for="f-website-url">Leave this empty</label>
         <input id="f-website-url" name="website_url" type="text" tabindex="-1" autocomplete="off"></p>
-      <input type="hidden" name="form_started" value="1788189327">
-      <p><button class="btn" type="submit">Send the enquiry</button></p>
+      <input type="hidden" name="form_started" value="1788192022">
+      <p><button class="btn" type="submit">Send</button></p>
     </form>
-    <p class="muted">This reaches the three of us and nobody else. We keep it for two years so we can pick up a conversation that paused, then it is deleted. There is no newsletter to be added to.</p>
+    <p class="muted">This reaches the three people who run Aster &amp; Alum and nobody else. We keep enquiries for two years so we can pick up a conversation that paused, then they are deleted. We do not add you to anything.</p>
   </div>
 </section>
 

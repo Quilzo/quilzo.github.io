@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom">
+  <title>Aster &amp; Alum</title>
+  <id>https://quilzo.github.io/demo2/</id>
+  <updated>2026-08-10T00:00:00Z</updated>
+  <link rel="self" href="https://quilzo.github.io/demo2/feed.xml"></link>
+  <link rel="alternate" href="https://quilzo.github.io/demo2/"></link>
+  <entry>
+    <title>Indigo kit for one vat</title>
+    <id>https://quilzo.github.io/demo2/cloth/indigo-kit</id>
+    <updated>2026-08-10T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/indigo-kit"></link>
+    <summary>Enough to dye about two kilos, and the instructions we use.</summary>
+  </entry>
+  <entry>
+    <title>Indigo yarn, worsted</title>
+    <id>https://quilzo.github.io/demo2/cloth/indigo-yarn</id>
+    <updated>2026-08-01T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/indigo-yarn"></link>
+    <summary>Hanks of 100 grams, four dips.</summary>
+  </entry>
+  <entry>
+    <title>Walnut hemp</title>
+    <id>https://quilzo.github.io/demo2/cloth/walnut-hemp</id>
+    <updated>2026-07-28T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/walnut-hemp"></link>
+    <summary>Husks from one tree in Wiltshire. No mordant, no waste.</summary>
+  </entry>
+  <entry>
+    <title>Logwood wool</title>
+    <id>https://quilzo.github.io/demo2/cloth/logwood-wool</id>
+    <updated>2026-07-19T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/logwood-wool"></link>
+    <summary>A purple that fades, honestly labelled.</summary>
+  </entry>
+  <entry>
+    <title>Indigo linen, heavy</title>
+    <id>https://quilzo.github.io/demo2/cloth/indigo-linen-heavy</id>
+    <updated>2026-07-14T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/indigo-linen-heavy"></link>
+    <summary>Eight dips. The blue that keeps its green in the shade.</summary>
+  </entry>
+  <entry>
+    <title>Madder linen</title>
+    <id>https://quilzo.github.io/demo2/cloth/madder-linen</id>
+    <updated>2026-07-02T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/madder-linen"></link>
+    <summary>Three years in the ground, one afternoon in the pot.</summary>
+  </entry>
+  <entry>
+    <title>Weld cotton</title>
+    <id>https://quilzo.github.io/demo2/cloth/weld-cotton</id>
+    <updated>2026-06-20T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/weld-cotton"></link>
+    <summary>The oldest yellow in Europe, on a cloth you can push a needle through.</summary>
+  </entry>
+  <entry>
+    <title>Cochineal silk</title>
+    <id>https://quilzo.github.io/demo2/cloth/cochineal-silk</id>
+    <updated>2026-05-11T00:00:00Z</updated>
+    <link rel="alternate" href="https://quilzo.github.io/demo2/cloth/cochineal-silk"></link>
+    <summary>Twelve grams of insect for a metre of cloth. We say so.</summary>
+  </entry>
+</feed>

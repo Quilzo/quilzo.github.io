@@ -13,9 +13,10 @@
 
 <link rel="stylesheet" href="/demo2/site.css">
 <link rel="manifest" href="/demo2/manifest.webmanifest">
+<link rel="alternate" type="application/json" href="/demo2/catalogue.json" title="Product catalogue">
+<link rel="alternate" type="application/atom+xml" href="/demo2/feed.xml" title="Aster &amp; Alum">
+<link rel="alternate" type="application/feed+json" href="/demo2/feed.json" title="Aster &amp; Alum">
 <script type="application/ld+json">{"@context":"https://schema.org","@type":"WebPage","description":"Six benches, one day, and you take home whatever you put in the vat.","isPartOf":{"@type":"WebSite","name":"Aster \u0026 Alum"},"name":"Workshops"}</script>
-<meta name="c2pa:digitalSourceType" content="humanEdits">
-<meta name="content-hash" content="sha256:58bb79ee15981a983f567f329d67c1958b52128418d3cd0308bc3237c3992081">
 
 </head>
 <body>
@@ -195,7 +196,10 @@
 
 <section class="section">
   <div class="wrap">
-    <div class="section-head"><h2>Book a bench</h2></div>
+    <div class="section-head">
+      <h2>Book a bench</h2>
+      <p class="lead">Six benches a session. We answer within two days.</p>
+    </div>
     <form class="stacked" method="post" action="/demo2/form/workshop">
       
       <p class="field">
@@ -254,10 +258,10 @@
       
       <p class="hp"><label for="f-website-url">Leave this empty</label>
         <input id="f-website-url" name="website_url" type="text" tabindex="-1" autocomplete="off"></p>
-      <input type="hidden" name="form_started" value="1788189327">
-      <p><button class="btn" type="submit">Ask for a place</button></p>
+      <input type="hidden" name="form_started" value="1788192022">
+      <p><button class="btn" type="submit">Send</button></p>
     </form>
-    <p class="muted">Kept for a year: long enough to answer, take payment and tell you if the date moves. Access and dietary notes are marked sensitive, so they stay out of listings and out of exports unless somebody asks for them by name.</p>
+    <p class="muted">We keep this for a year: long enough to answer, to take payment, and to tell you the date moved. Dietary and access notes are marked sensitive, which means they are not shown in listings and are left out of exports unless somebody asks for them by name.</p>
   </div>
 </section>
 

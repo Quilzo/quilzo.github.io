@@ -3,3 +3,16 @@ Allow: /
 
 Sitemap: https://quilzo.github.io/demo2/sitemap.xml
 License: https://quilzo.github.io/demo2/license.xml
+
+# Content-Signal directives say how this site's content may be used, not
+# whether it may be fetched. They are derived from the licence at
+# /license.xml, which is the binding statement; these are the same terms in
+# the file every crawler already reads.
+#
+# yes = permitted, no = not permitted, absent = no preference stated.
+#
+#   search:   building a search index and showing links and snippets
+#   ai-input: using this content as input to an AI-generated answer
+#   ai-train: using this content to train a model
+
+Content-Signal: search=yes, ai-input=no, ai-train=no

@@ -99,5 +99,11 @@ referenced image is actually in the repository.
 
 ## Licence
 
-The software is AGPL-3.0-or-later. This documentation describes it and carries
-the same licence.
+The software is dual-licensed: `AGPL-3.0-or-later OR LicenseRef-Quilzo-Commercial`,
+at the user's choice. The AGPL one applies unless you have signed the other, and it
+is not a trial. See [LICENSING.md](https://github.com/Quilzo/Quilzo/blob/main/LICENSING.md)
+in the software repository, and the `#licence` section of this manual.
+
+This documentation describes the software and carries the same terms. There is one
+version of the software and this manual describes all of it — no page in here
+documents something a reader cannot have.

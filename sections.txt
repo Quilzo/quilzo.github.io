@@ -23,6 +23,8 @@ forms
 media
 languages
 ai
+agents
+design
 publishing
 environments
 history

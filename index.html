@@ -458,8 +458,8 @@ quilzo detect suppressions</code></pre>
 quilzo vuln plan
 quilzo vuln queue</code></pre>
   <p>Those are this program's own formats. The files people actually have are imported instead:</p>
-  <pre class="code"><code>quilzo vuln import --bom sbom.json --where repo:storefront \\
-    --osv npm-all.zip --kev known_exploited_vulnerabilities.json \\
+  <pre class="code"><code>quilzo vuln import --bom sbom.json --where repo:storefront \
+    --osv npm-all.zip --kev known_exploited_vulnerabilities.json \
     --epss epss_scores-current.csv.gz</code></pre>
   <div class="table-wrap"><table><thead><tr><th scope="col">File</th><th scope="col">What it is</th><th scope="col">What importing does</th></tr></thead><tbody>
   <tr><th scope="row"><code>--bom</code></th><td>a CycloneDX bill of materials for one thing, named by <code>--where</code></td><td>replaces that asset's components and leaves every other asset's; a component with no package URL is counted and left out</td></tr>

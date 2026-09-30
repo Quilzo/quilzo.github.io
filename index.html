@@ -447,6 +447,14 @@ quilzo incident close inc-20260930-535594 --because "policy copied from a public
   <li>A closed incident takes notes and nothing else.</li>
   </ul>
   <p>Findings are linked by identifier, from a finding's own page or the incident's. The finding stays in the register; the incident names it.</p>
+  <h4>One account or one machine</h4>
+  <p>A finding names what it is about — <code>okta:dana</code>, <code>mdm:MBP-1004</code> — and that name is a link. The page behind it gathers the findings about that entity, the incidents they are part of, what it did and what was done to it in the events (by source and outcome, with the addresses it used rarest first), and the vulnerabilities on it. The Findings screen has a lookup for going there directly.</p>
+  <ul>
+  <li>Nothing is stored about an entity. The page is assembled from the other stores each time, so there is no profile to go stale.</li>
+  <li>The same name under another issuer is another entity. A name with no issuer matches under all of them, and the page says so.</li>
+  <li>An empty page says it may be a name spelt differently from how the source spells it. It is not shown as a clean result.</li>
+  <li>An entity is often a person: opening the page is written to the audit log first, under the pseudonym every other record uses.</li>
+  </ul>
   <h4>Who may do what</h4>
   <p>Cases are for administrators. Every change leaves an audit record saying who and which kind of change; the words stay in the incident. An agent cannot declare an incident or write in one. Through <code>incident_status</code> it can read which clocks are running, which are late and which nobody has started, without what people wrote.</p>
   <p class="hint"><a href="#top">Back to top</a></p>

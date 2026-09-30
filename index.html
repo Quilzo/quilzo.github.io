@@ -487,6 +487,20 @@ quilzo detect suppressions</code></pre>
   <p class="notice warn">The corpus holds real events, with real account names. Keep it in the repository the rules are in and nowhere more public.</p>
   <h4>Correlations</h4>
   <p>Some things are only visible across events: twenty failures then a success, one account from five countries in an hour. Put a Sigma correlation file (<code>.yml</code>) beside the rules and <code>detect run</code> evaluates it over the store's own events. A window is only judged once the events that belong in it have had time to arrive, measured from how late each source has actually been, so a slow source delays an answer instead of producing a wrong one. A correlation appears on the Detections screen like any other rule, with rings and suppressions.</p>
+  <h4>Indicators</h4>
+  <p>An indicator is something somebody else has said is bad: an address, a domain, a URL, a file digest, a sender. Import a feed from a file — a STIX 2.1 bundle or a list with one value to a line — or add one on the Indicators screen.</p>
+  <pre class="code"><code>quilzo intel import feed.json --source "CERT weekly"
+quilzo intel add 'evil[.]example' --source isac --until 2026-12-31 --note "Qakbot C2"
+quilzo intel list</code></pre>
+  <ul>
+  <li><strong>It looks back first.</strong> A report published today is about a campaign that ran last month, so a new indicator is looked for in the events already stored before anything else. After that, each detection run checks arriving events against everything still believed. No event is read twice for the same indicator.</li>
+  <li><strong>Every indicator has an author and an end.</strong> Ninety days when the feed gives none, a year at most. Past its date the address belongs to whoever holds it now, and it stops matching. An event is matched only if it happened inside the period the indicator is about.</li>
+  <li><strong>Some things are never indicators</strong> and are refused, counted and reported: private and local addresses, the digest of the empty file, a single-label name, and domains shared by a great many unrelated people such as <code>github.io</code>. The name under a shared domain is accepted.</li>
+  <li><strong>Matching is exact and typed.</strong> An address matches an address field, a domain matches itself and names under it on a label boundary, and nothing is matched inside an event's free text — anybody can get a string written to a log.</li>
+  <li><strong>STIX patterns are read where they are simple.</strong> One value, or several joined by OR. A pattern with AND, a sequence, a time window, a range or another pattern language says something narrower than any value inside it; it is counted as not read and the import says how many.</li>
+  <li>The same indicator from two feeds is one entry with two sources, and its findings rank higher.</li>
+  </ul>
+  <p>The screen leads with the indicators that found something and shows how many of those findings a person ruled false. One that has only ever been ruled false is a claim that has not held up here, and removing it is the fix; what it already found stays in the queue. Written forms that cannot be clicked (<code>hxxp</code>, <code>[.]</code>) are understood, values are shown as text and never as links, and the import opens no connection. An agent cannot add an indicator.</p>
   <h4>Hunting</h4>
   <p>The Hunt screen is for looking before there is a rule. Pick a field and a period and it lists that field's values rarest first, with how many events and accounts each was seen on and when. Most of what is malicious is rare; most of what is rare is not malicious, which is why a person reads it.</p>
   <ul>

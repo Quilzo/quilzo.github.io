@@ -467,6 +467,25 @@ quilzo incident step inc-20260930-535594 exposed-data close done --because "poli
   <pre class="code"><code>quilzo incident playbooks show phishing --json &gt; ours.json
 quilzo incident playbooks check ours.json</code></pre>
   <p>Every step must say why, and a step may only need steps listed before it. A playbook in the store that does not pass is an error for the whole catalogue: one quietly missing is found out during the incident it was written for.</p>
+  <h4>Actions on other tools</h4>
+  <p>A playbook step is carried out by a person. An <strong>action</strong> is the exception: this program makes the call itself — it suspends the account. Everything else here only reads, so an action is kept as far from a connector as it can be.</p>
+  <pre class="code"><code>quilzo action catalogue
+quilzo action add okta-suspend-user --org acme
+QUILZO_CONNECT_SECRET=… quilzo connect secret okta-action-token
+quilzo incident act inc-20260930-8ad1d1 okta-suspend-user okta:00u1a2b3c4d5e6f7 --because "factor reset nobody asked for"
+quilzo incident act-approve inc-20260930-8ad1d1 1
+quilzo incident act-undo inc-20260930-8ad1d1 1 --because "cleared by the owner"</code></pre>
+  <ul>
+  <li><strong>Off until installed.</strong> No action exists in a store until you add one, and it has a credential of its own, named apart from the one that reads. Removing the action leaves reading untouched.</li>
+  <li><strong>One fixed request.</strong> A fixed method, host and path with one place for the account, and a body that is a constant. Nothing about the call can be computed from anything but which account it is, and the account's identifier is checked against a pattern before it goes near a URL.</li>
+  <li><strong>Only on an account the incident is already about</strong> — the entity of one of its findings, or another identifier of the same person. An action cannot be pointed at somebody by typing their name.</li>
+  <li><strong>Asked for by one person, approved by another</strong>, or by the commander. The request shows the exact call; approving sends it. If the action's file changed after the request was shown, approval is refused.</li>
+  <li><strong>The approval is recorded before the call and the answer after.</strong> If the program stops in between, the record says the outcome is not known, and the incident cannot be closed until somebody has checked.</li>
+  <li><strong>What can be undone says how</strong>, and anybody working the incident can undo it, with a reason. What cannot be undone says that instead.</li>
+  <li>The audit log holds who asked, who approved, which action and what the tool answered. It does not hold what the tool said back or the credential, and the account is pseudonymised like everybody else.</li>
+  <li>An agent does not install an action, ask for one or approve one.</li>
+  </ul>
+  <p>Two ship, both for Okta: suspend an account (undone by unsuspending) and clear an account's sessions (not undoable, and harmless: the person signs in again). The token should come from a role that can do those two things and nothing else.</p>
   <h4>One account or one machine</h4>
   <p>A finding names what it is about — <code>okta:dana</code>, <code>mdm:MBP-1004</code> — and that name is a link. The page behind it gathers the findings about that entity, the incidents they are part of, what it did and what was done to it in the events (by source and outcome, with the addresses it used rarest first), and the vulnerabilities on it. The Findings screen has a lookup for going there directly.</p>
   <ul>

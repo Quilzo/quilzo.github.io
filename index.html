@@ -457,6 +457,25 @@ quilzo detect suppressions</code></pre>
   <pre class="code"><code>quilzo vuln load --advisories advisories.jsonl --inventory inventory.jsonl
 quilzo vuln plan
 quilzo vuln queue</code></pre>
+  <p>Those are this program's own formats. The files people actually have are imported instead:</p>
+  <pre class="code"><code>quilzo vuln import --bom sbom.json --where repo:storefront \\
+    --osv npm-all.zip --kev known_exploited_vulnerabilities.json \\
+    --epss epss_scores-current.csv.gz</code></pre>
+  <div class="table-wrap"><table><thead><tr><th scope="col">File</th><th scope="col">What it is</th><th scope="col">What importing does</th></tr></thead><tbody>
+  <tr><th scope="row"><code>--bom</code></th><td>a CycloneDX bill of materials for one thing, named by <code>--where</code></td><td>replaces that asset's components and leaves every other asset's; a component with no package URL is counted and left out</td></tr>
+  <tr><th scope="row"><code>--osv</code></th><td>OSV records: a file, a directory, or the zip osv.dev publishes per ecosystem</td><td>keeps the advisories that concern something installed; removes any the database has withdrawn</td></tr>
+  <tr><th scope="row"><code>--kev</code></th><td>CISA's known exploited vulnerabilities catalogue, as JSON</td><td>records CISA's attestation on each advisory it lists, and removes it from any it no longer lists</td></tr>
+  <tr><th scope="row"><code>--epss</code></th><td>FIRST's daily EPSS scores, <code>.csv</code> or <code>.csv.gz</code></td><td>sets each advisory's probability and the day it was measured</td></tr>
+  </tbody></table></div>
+  <ul>
+  <li>The command opens no connection. Fetch the four files with whatever you already trust to fetch things; what is read is bounded and an archive is read in place, never unpacked.</li>
+  <li>The day you learned of an advisory is kept across imports. Every deadline runs from it, and an import that reset it would make each refresh a way to be on time.</li>
+  <li>The same CVE published by two databases is one row, named by the CVE, with the ranges of both.</li>
+  <li>A version past an advisory's last affected version is not reported, and a list of affected versions names those versions and no others.</li>
+  <li>An empty catalogue, scores with no date, and a probability above 1 are refused: each would quietly make things look better.</li>
+  <li>Advisories are kept for what is installed at the time. After importing a new bill, import the advisories again.</li>
+  </ul>
+  <p class="notice warn">Matching is by ecosystem and package name. Language ecosystems — npm, PyPI, Go, Maven, crates.io and the rest — match as published. Operating-system packages match only when the bill and the advisory name the same release.</p>
   <p>An inventory line names an ecosystem, a package, a version and the asset it is on. An advisory carries its identifier, the affected ranges, when <em>you</em> learned of it, its EPSS probability and its CVSS score, and — by name and date — anybody who attests it is being exploited.</p>
   <p class="notice warn">Nothing loaded is shown as nothing loaded, and an advisory list more than a week old is called out above everything else. An empty queue built from a stale list looks exactly like a safe estate.</p>
   <h4>The order</h4>

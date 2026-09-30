@@ -33,6 +33,7 @@ ipfs
 provenance
 security
 detection
+vulnerabilities
 workforce
 logging
 users

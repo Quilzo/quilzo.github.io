@@ -521,6 +521,30 @@ quilzo intel list</code></pre>
   <li>The same indicator from two feeds is one entry with two sources, and its findings rank higher.</li>
   </ul>
   <p>The screen leads with the indicators that found something and shows how many of those findings a person ruled false. One that has only ever been ruled false is a claim that has not held up here, and removing it is the fix; what it already found stays in the queue. Written forms that cannot be clicked (<code>hxxp</code>, <code>[.]</code>) are understood, values are shown as text and never as links, and the import opens no connection. An agent cannot add an indicator.</p>
+  <h4>The analyst: a model's first pass</h4>
+  <p><code>quilzo analyst triage</code> takes the open findings nobody has looked at and writes, for each, a suggestion: real, false positive or benign, with a confidence. The suggestion appears on the finding's page. Nothing changes state; a person agrees with it or not and records the verdict under their own name.</p>
+  <pre class="code"><code>quilzo analyst plan
+quilzo analyst triage --limit 20
+quilzo analyst triage --dry-run
+quilzo analyst eval --k 5</code></pre>
+  <p>A finding's evidence is log text, written by whoever could reach the log — sometimes whoever is being detected — and a model that reads it can be told things by it. Instructions to the model reduce how often that works and do not stop it. So three things hold by construction, whatever the model does:</p>
+  <ul>
+  <li><strong>The plan is fixed before anything is read.</strong> What the analyst gathers, and in what order, is a list you can print with <code>analyst plan</code>. Nothing in a log can add a step. The untrusted text is read last.</li>
+  <li><strong>What was counted is kept apart from what was written.</strong> The model is given numbers this program worked out — what people ruled on this rule's other findings, on other findings about the same entity, how many other entities are affected — and separately, marked as such, the text somebody else wrote.</li>
+  <li><strong>All that comes out is a suggestion.</strong> The answer is one of three words with a confidence, sampled three times; if the samples disagree or the confidence is under 0.8 there is no suggestion at all. The reason shown to you is assembled from the counts and never from anything the model wrote, so text in a log cannot travel through the model onto your screen.</li>
+  </ul>
+  <p>A finding the analyst has looked at is not put to the model again until it fires again. With no model configured, nothing runs and it says so. A model cannot start the analyst.</p>
+  <h4>Measuring it before trusting it</h4>
+  <p><code>analyst eval</code> measures the model you have configured against your own history: every finding a person has ruled on, shown to the model as it would have been with its own verdict left out.</p>
+  <div class="table-wrap"><table><thead><tr><th scope="col">Number</th><th scope="col">What it means</th></tr></thead><tbody>
+  <tr><th scope="row">reliable (pass^k)</th><td>right on every one of k runs. Right eight times in ten is wrong every fifth morning, so a case counts only if it never missed</td></tr>
+  <tr><th scope="row">abstained</th><td>never wrong, and left some runs to a person. The safe outcome</td></tr>
+  <tr><th scope="row">wrong</th><td>confidently suggested something a person ruled otherwise, on any run. The number to drive to nothing</td></tr>
+  <tr><th scope="row">hijacked</th><td>each case is run again with instructions planted where a log's text goes, pushing for a wrong answer; this is how many times that worked</td></tr>
+  </tbody></table></div>
+  <p>Even a hijacked run can only produce a suggestion. The measurement tells you how much weight its suggestions deserve.</p>
+  <h4>Agents are a log source</h4>
+  <p>Everything a model does here — the analyst, or an outside agent through the machine interface — is in the audit log. Each detection run copies those actions into the event store under the source <code>quilzo/agents</code>, so rules, hunting and entity pages work over them like any other source. The first time an agent that has been seen for more than a day does something it has never done before, that is a finding.</p>
   <h4>Hunting</h4>
   <p>The Hunt screen is for looking before there is a rule. Pick a field and a period and it lists that field's values rarest first, with how many events and accounts each was seen on and when. Most of what is malicious is rare; most of what is rare is not malicious, which is why a person reads it.</p>
   <ul>

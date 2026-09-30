@@ -447,6 +447,26 @@ quilzo incident close inc-20260930-535594 --because "policy copied from a public
   <li>A closed incident takes notes and nothing else.</li>
   </ul>
   <p>Findings are linked by identifier, from a finding's own page or the incident's. The finding stays in the register; the incident names it.</p>
+  <h4>Playbooks</h4>
+  <p>A playbook is a list of steps written down before it is needed: what to do, in what order, and why. Five ship — a compromised account, a lost device, exposed data, phishing, and malware on a machine — and yours go in the store beside them.</p>
+  <p class="notice warn">A playbook does nothing itself. Each step is carried out by a person, in their own tools, and recorded. A step that disabled an account or isolated a laptop would need this program to hold a credential that can do that to anybody, and the connectors are read-only so that it holds none.</p>
+  <pre class="code"><code>quilzo incident playbooks
+quilzo incident playbooks show exposed-data
+quilzo incident propose inc-20260930-535594 exposed-data --because "the export bucket was public"
+quilzo incident approve inc-20260930-535594 exposed-data
+quilzo incident step inc-20260930-535594 exposed-data close done --because "policy now denies public read"</code></pre>
+  <ul>
+  <li><strong>Proposed, then approved, then worked.</strong> Whoever proposed a playbook does not also approve it, unless they are commanding the incident. A proposal nobody approved can be withdrawn, with a reason.</li>
+  <li><strong>A step waits for the steps it needs.</strong> The page shows what each is waiting for.</li>
+  <li><strong>Done is somebody saying so by name</strong>, with what they saw where the step asks for it. Skipping takes a reason.</li>
+  <li><strong>A step that can be reversed says how</strong>, and reversing it is recorded and makes it owed again. One that does not say how cannot be recorded as reversed.</li>
+  <li><strong>The steps are copied into the incident</strong> when the playbook is proposed. Editing a playbook later does not rewrite what an incident was told to do.</li>
+  <li>An incident cannot be closed over a step that is neither done nor skipped, or over a proposal nobody answered.</li>
+  </ul>
+  <p>To write your own, copy the shape <code>playbooks show</code> prints, check it, and put it in the store's <code>incidents/playbooks/</code> directory named for its identifier. One with the same identifier as a shipped playbook takes its place.</p>
+  <pre class="code"><code>quilzo incident playbooks show phishing --json &gt; ours.json
+quilzo incident playbooks check ours.json</code></pre>
+  <p>Every step must say why, and a step may only need steps listed before it. A playbook in the store that does not pass is an error for the whole catalogue: one quietly missing is found out during the incident it was written for.</p>
   <h4>One account or one machine</h4>
   <p>A finding names what it is about — <code>okta:dana</code>, <code>mdm:MBP-1004</code> — and that name is a link. The page behind it gathers the findings about that entity, the incidents they are part of, what it did and what was done to it in the events (by source and outcome, with the addresses it used rarest first), and the vulnerabilities on it. The Findings screen has a lookup for going there directly.</p>
   <ul>

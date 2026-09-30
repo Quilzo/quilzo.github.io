@@ -516,6 +516,28 @@ quilzo collect file billing/admin records.jsonl</code></pre>
   <li><strong>A read that may have missed something says so</strong> — it stopped at a limit, or a source with no "since" returned a full page of records that were all new.</li>
   <li>The schedule runs while the server runs, no more often than every fifteen minutes, and is set by a person. An agent cannot start a read.</li>
   </ul>
+  <h4>One person across platforms</h4>
+  <p>Okta knows Dana as <code>00u1a2b3</code>, Entra as a GUID, GitHub as <code>dana-gh</code>. A rule about "the same person on two platforms" has nothing to group by unless something says they are one person. What they share is an address, and most platforms' logs carry it beside their own identifier.</p>
+  <ul>
+  <li>Each event keeps the platform's identifier as who acted — it is the one that does not change — and also carries the person's address, as the field <code>raw.person</code>.</li>
+  <li>The pairing is learned as events are collected, so a later event from the same identifier that arrives without an address still gets it.</li>
+  <li>Where a platform never gives an address, you say whose the identifier is, once. A link you made is never replaced by one that was learned.</li>
+  </ul>
+  <pre class="code"><code>quilzo identity list
+quilzo identity link github:dana-gh dana@acme.com</code></pre>
+  <h4>The rules that ship</h4>
+  <pre class="code"><code>quilzo detect pack
+quilzo detect pack install</code></pre>
+  <p>Twenty-one rules and four correlations, copied into your rules directory, where they are yours: tuned, put on trial or switched off like any other. A file already there is left alone. Each carries an event it must match and one it must not.</p>
+  <div class="table-wrap"><table><thead><tr><th scope="col">Platform</th><th scope="col">What is watched</th></tr></thead><tbody>
+  <tr><th scope="row">Okta</th><td>an administrator role granted, a second factor reset, a policy switched off, an API token created, a sign-in through an anonymising proxy</td></tr>
+  <tr><th scope="row">Entra ID</th><td>a sign-in over a protocol that cannot ask for a second factor, a sign-in Microsoft judged risky and allowed</td></tr>
+  <tr><th scope="row">GitHub</th><td>a branch protection removed, secret scanning switched off, a deploy key added, a repository deleted</td></tr>
+  <tr><th scope="row">AWS</th><td>the root account used, a trail stopped, deleted or narrowed</td></tr>
+  <tr><th scope="row">EVM contract</th><td>owner changed, implementation upgraded, a role granted or revoked, paused, a multisig's signers or threshold changed — matched on the event's signature, so they work on a contract the explorer has not verified</td></tr>
+  <tr><th scope="row">Across platforms</th><td>one person failing to sign in many times; one person failing on more than one platform; one address failing as many people; one person's second factor reset and the same person removing a branch protection within a day</td></tr>
+  </tbody></table></div>
+  <p>The three "sign-in failed" rules are <strong>quiet</strong>: they raise nothing themselves and exist for the correlations to count, because one failed sign-in is a typo. A quiet rule that no correlation counts is refused, not run in silence. A correlation grouped by person names that person, whichever platform's identifier each event carried.</p>
   <h4>What a rule has been worth</h4>
   <p>The Detections screen counts those verdicts per rule. Precision is given as a range, not a number: three real findings out of three is not a rule that is always right, and under ten verdicts the screen says it does not know yet. From the range it proposes, and only proposes:</p>
   <div class="table-wrap"><table><thead><tr><th scope="col">Proposal</th><th scope="col">When</th></tr></thead><tbody>

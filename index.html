@@ -478,6 +478,15 @@ quilzo vuln queue</code></pre>
   <p class="notice warn">Matching is by ecosystem and package name. Language ecosystems — npm, PyPI, Go, Maven, crates.io and the rest — match as published. Operating-system packages match only when the bill and the advisory name the same release.</p>
   <p>An inventory line names an ecosystem, a package, a version and the asset it is on. An advisory carries its identifier, the affected ranges, when <em>you</em> learned of it, its EPSS probability and its CVSS score, and — by name and date — anybody who attests it is being exploited.</p>
   <p class="notice warn">Nothing loaded is shown as nothing loaded, and an advisory list more than a week old is called out above everything else. An empty queue built from a stale list looks exactly like a safe estate.</p>
+  <h4>Whether the vulnerable code is used</h4>
+  <pre class="code"><code>quilzo vuln reach --source ./edge-proxy --where repo:edge-proxy</code></pre>
+  <p>This reads one asset's source for the functions each open advisory names, and records the answer against that advisory on that asset. A library is not reachable or unreachable; one function of it is, and the next advisory names a different one.</p>
+  <ul>
+  <li>Go only. Go's vulnerability database names affected symbols; npm, PyPI, Maven and the rest describe them in prose, and nothing is inferred from prose.</li>
+  <li>An advisory that names no symbol stays "not analysed". The command says how many, so the share it could settle is not mistaken for the share it cleared.</li>
+  <li>"Not named in its source" lowers the rank and closes nothing. The asset's dependencies were not read and may still call it, so the page offers it as grounds for recording <em>not affected</em> — which a person does, by name.</li>
+  <li>Importing a new bill for the asset discards its results: they were about code that has since changed.</li>
+  </ul>
   <h4>The order</h4>
   <div class="table-wrap"><table><thead><tr><th scope="col">Reason</th><th scope="col">Worth</th><th scope="col">Why</th></tr></thead><tbody>
   <tr><th scope="row">Attested exploitation</th><td>1000 per source</td><td>a fact, and two sources agreeing is more than one</td></tr>

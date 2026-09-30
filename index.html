@@ -573,6 +573,16 @@ quilzo intel list</code></pre>
   <li>The same indicator from two feeds is one entry with two sources, and its findings rank higher.</li>
   </ul>
   <p>The screen leads with the indicators that found something and shows how many of those findings a person ruled false. One that has only ever been ruled false is a claim that has not held up here, and removing it is the fix; what it already found stays in the queue. Written forms that cannot be clicked (<code>hxxp</code>, <code>[.]</code>) are understood, values are shown as text and never as links, and the import opens no connection. An agent cannot add an indicator.</p>
+  <h4>Risk: findings added up by person</h4>
+  <p>The Risk screen is the queue turned on its side: one row per person or thing, with everything open about them added up. Three medium findings about one account, from three rules on two platforms, are the most important thing in a queue that shows them as three things to get to later.</p>
+  <ul>
+  <li>A finding is worth 5, 15, 40 or 80 points by severity, in full for a day, half for a week and a quarter for a fortnight.</li>
+  <li>Several rules agreeing count for more than one rule firing several times: a quarter more per extra rule, up to double.</li>
+  <li>What was ruled false, benign or fixed is not counted, and neither is what a rule on trial raised.</li>
+  <li>Where the person is known, their identifiers on every platform are one row. Their page — <code>person:dana@acme.com</code> — gathers the findings and activity of all of them.</li>
+  <li>Each row lists the findings it is made of with the points each contributed. The number is those and nothing else.</li>
+  </ul>
+  <p>Where there are several findings from more than one rule and the total is high, the row offers to declare one incident gathering them, with the playbook that fits the rules that raised them. It is an offer: you declare, and the playbook is proposed and still needs approving. Findings an incident already gathers are not offered again. <code>quilzo finding risk</code> prints the same list.</p>
   <h4>The analyst: a model's first pass</h4>
   <p><code>quilzo analyst triage</code> takes the open findings nobody has looked at and writes, for each, a suggestion: real, false positive or benign, with a confidence. The suggestion appears on the finding's page. Nothing changes state; a person agrees with it or not and records the verdict under their own name.</p>
   <pre class="code"><code>quilzo analyst plan

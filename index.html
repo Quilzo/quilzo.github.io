@@ -486,6 +486,36 @@ quilzo incident playbooks check ours.json</code></pre>
   </div>
   <p class="lead">Rules over the events this deployment collects, what each rule has turned out to be worth, and how to look before there is a rule.</p>
   <p>A detection is a file: what it reads, what it matches, why it exists, what it deliberately misses, and events it must and must not fire on. <code>quilzo detect test</code> refuses one without both kinds of fixture, because a rule shown only to fire has not been shown to be quiet. <code>quilzo detect run</code> puts what the rules find in the findings queue, where a person rules on each: real, false, or real and harmless.</p>
+  <h4>Collecting logs</h4>
+  <p>Rules, hunting, entity pages and indicators all read the event store. <code>quilzo collect</code> is what fills it: for each platform it reads what is new since the last read, turns each record into an event, and stores it.</p>
+  <pre class="code"><code>quilzo connect catalogue
+quilzo connect add okta --org acme
+quilzo connect add github --org acme
+quilzo connect add entra --tenant 72f988bf-86f1-41af-91ab-2d7cd011db47
+quilzo connect add evm --region base --address 0x…
+quilzo collect run
+quilzo collect auto 15m
+quilzo collect status</code></pre>
+  <div class="table-wrap"><table><thead><tr><th scope="col">Read over an API</th><th scope="col">What</th><th scope="col">Credential</th></tr></thead><tbody>
+  <tr><th scope="row">okta</th><td>the system log: sign-ins, administrative changes, policy decisions</td><td>a token made by a Read-Only Administrator</td></tr>
+  <tr><th scope="row">entra</th><td>sign-ins</td><td>an app registration with AuditLog.Read.All; a token carrying any permission not listed is refused</td></tr>
+  <tr><th scope="row">github</th><td>the organisation's audit log (Enterprise Cloud)</td><td>a token with read:audit_log</td></tr>
+  <tr><th scope="row">evm</th><td>the events one contract emits — ownership transferred, implementation upgraded, a role granted, paused — from a Blockscout explorer on Ethereum, Base, Optimism, Arbitrum, Polygon or Gnosis</td><td>none; the events are public</td></tr>
+  </tbody></table></div>
+  <p>Every connector is a file you can read, makes GET requests to one host, and keeps only the fields it declares. The first read goes back one day; after that each read starts where the last one stopped.</p>
+  <h4>Logs that arrive as files, and your own applications</h4>
+  <p>Mappings ship for seventeen platforms — AWS CloudTrail, Azure, Google Cloud, Workspace, Duo, Kubernetes, Cloudflare, Salesforce, Slack, Snowflake, CrowdStrike, Jamf and Linux auditd beside the four above. Where a log is delivered as a file — a cloud trail in a bucket, an export — store it with the mapping's name:</p>
+  <pre class="code"><code>quilzo source list
+quilzo collect file aws/cloudtrail trail.json</code></pre>
+  <p>An application of your own gets a mapping: a small file saying which field is the time, who acted, on what, whether it worked, and which fields to keep. It is installed only once it has mapped real records you give it.</p>
+  <pre class="code"><code>quilzo source add billing.json --sample records.jsonl
+quilzo collect file billing/admin records.jsonl</code></pre>
+  <ul>
+  <li><strong>A record that does not map is counted, and the missing field is named.</strong> A vendor renaming a field must not look like a source going quiet.</li>
+  <li><strong>Nothing is stored twice.</strong> A record returned again, or a file collected again, is recognised.</li>
+  <li><strong>A read that may have missed something says so</strong> — it stopped at a limit, or a source with no "since" returned a full page of records that were all new.</li>
+  <li>The schedule runs while the server runs, no more often than every fifteen minutes, and is set by a person. An agent cannot start a read.</li>
+  </ul>
   <h4>What a rule has been worth</h4>
   <p>The Detections screen counts those verdicts per rule. Precision is given as a range, not a number: three real findings out of three is not a rule that is always right, and under ten verdicts the screen says it does not know yet. From the range it proposes, and only proposes:</p>
   <div class="table-wrap"><table><thead><tr><th scope="col">Proposal</th><th scope="col">When</th></tr></thead><tbody>

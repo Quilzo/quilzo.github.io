@@ -32,6 +32,10 @@ transfer
 ipfs
 provenance
 security
+cases
+detection
+vulnerabilities
+workforce
 logging
 users
 auth

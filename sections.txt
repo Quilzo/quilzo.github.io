@@ -32,6 +32,7 @@ transfer
 ipfs
 provenance
 security
+workforce
 logging
 users
 auth

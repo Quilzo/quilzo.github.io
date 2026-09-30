@@ -585,6 +585,19 @@ quilzo vuln queue</code></pre>
   <tr><th scope="row">Severity (CVSS)</th><td>up to 10</td><td>the tiebreak, and only that</td></tr>
   </tbody></table></div>
   <p>Opening a vulnerability shows these as rows with the points each contributed. The weight is their sum and nothing else.</p>
+  <h4>SSVC: a decision, not a score</h4>
+  <p>CERT/CC's SSVC answers "what do we do about this" with one of four words — defer, scheduled, out-of-cycle, immediate — from four inputs: is it being exploited, how exposed is the system, could an attack be automated, and what is lost if it works. It is shown beside the weight, not instead of it.</p>
+  <pre class="code"><code>quilzo vuln ssvc-tree deployer_patch_application_priority_1_0_0.csv
+quilzo vuln asset 'ec:srv-web-*' --exposure open --impact high --because "internet-facing web tier"
+quilzo vuln import --ssvc vulnrichment/
+quilzo vuln assets</code></pre>
+  <ul>
+  <li><strong>The decision table is not shipped.</strong> It is CERT/CC's, published under their terms, and you load the CSV they publish in their SSVC repository under <code>data/csv/ssvc</code>. A table with a missing or repeated combination is refused. Until one is loaded no SSVC decision is offered, and the screen says why.</li>
+  <li><strong>Two inputs are about your machines</strong>, and no feed knows them. You record them as tags: exposure (small, controlled, open) and what is lost (low to very high), on one asset or a prefix ending in <code>*</code>, with a reason. The most specific tag wins. One tag for every tool's assets at once is refused.</li>
+  <li><strong>Two are about the vulnerability.</strong> Exploitation is "active" when somebody attests to it by name. Whether an exploit is public and whether an attack can be automated come from CISA's annotations on CVE records (its Vulnrichment repository), imported from files with <code>--ssvc</code>. An annotation saying "active" is recorded as a public exploit and no more: it has no name and no date, and is not an attestation.</li>
+  <li><strong>A missing input gives a range, not a guess.</strong> The tree is worked for every value the missing input could take: "scheduled to immediate, depending on how exposed mdm:MBP-1001 is". Tagging the asset narrows it. The screen says how many assets have no tag.</li>
+  </ul>
+  <p>A tag is a person's judgement: an agent cannot set or remove one.</p>
   <h4>What to change</h4>
   <p>The first table on the screen is one row per package: what is installed, and the lowest version that clears every open advisory with a fix. Lower leaves one open; higher is a bigger change than anybody asked for.</p>
   <ul>

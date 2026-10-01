@@ -139,6 +139,9 @@ body {
 }
 .brand:hover .mark { transform: rotate(-8deg) scale(1.08); }
 .brand .dot { display: none; }
+/* The logotype: the mark set as the Q of the name. */
+.lockup { display: inline-flex; align-items: baseline; white-space: nowrap; }
+.lockup .lockup-q { width: .955em; height: .955em; position: relative; top: .167em; margin-right: -.1em; flex: none; }
 
 .topbar nav { margin-left: auto; display: flex; gap: .4rem; }
 .topbar nav a {

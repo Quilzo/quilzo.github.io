@@ -357,4 +357,4 @@ tbody tr:last-child th, tbody tr:last-child td { border-bottom: 0; }
 
 /* The mark in its two colours, as in the application. */
 .mark-loop { fill: light-dark(#0b57d0, #a8c7fa); }
-.mark-tick { fill: light-dark(#00897b, #4fd1c5); }
+.mark-tail { fill: light-dark(#7b4dff, #c8b6ff); }

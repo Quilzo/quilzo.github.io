@@ -34,6 +34,7 @@ provenance
 security
 cases
 detection
+automations
 vulnerabilities
 workforce
 logging

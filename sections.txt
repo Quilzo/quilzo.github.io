@@ -38,6 +38,7 @@ vulnerabilities
 workforce
 logging
 users
+provisioning
 members
 auth
 integrations

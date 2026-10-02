@@ -736,7 +736,7 @@ quilzo analyst eval --k 5</code></pre>
   <div class="table-wrap"><table><thead><tr><th scope="col">Step</th><th scope="col">What it does</th></tr></thead><tbody>
   <tr><th scope="row">Make them prove it is them</th><td>the sign-in gets no session until its person confirms with a passkey or an emailed code, or an administrator lets them in; for any other event, every session they have open is held the same way</td></tr>
   <tr><th scope="row">Sign them out of Quilzo</th><td>ends every session and token they hold here</td></tr>
-  <tr><th scope="row">Tell somebody</th><td>emails the security team (<code>security.contact</code>) or the person it is about</td></tr>
+  <tr><th scope="row">Tell somebody</th><td>emails the security team — the <code>mailto:</code> address in <code>security.contact</code> — or the person it is about, through the relay in <code>notify/mail.json</code></td></tr>
   <tr><th scope="row">Open a case</th><td>opens an incident with what happened, linked to the finding when there is one</td></tr>
   <tr><th scope="row">Suspend them in Okta · End their Okta sessions</th><td>opens a case and <em>requests</em> the action there</td></tr>
   </tbody></table></div>

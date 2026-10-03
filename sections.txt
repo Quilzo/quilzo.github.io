@@ -35,6 +35,7 @@ security
 cases
 detection
 automations
+feeds
 vulnerabilities
 workforce
 logging

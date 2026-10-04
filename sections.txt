@@ -41,6 +41,7 @@ workforce
 logging
 users
 provisioning
+sso
 members
 auth
 integrations

@@ -238,6 +238,15 @@ quilzo agent decline RUN STEP</code></pre>
   <p>A run is written to the store after every step. If the process stops part-way, the run's page says it was cut off and offers to continue from the last step that was kept (<code>quilzo agent resume RUN</code>). Any finished run can be run again from after one of its steps, as a new run that says which run and step it came from (<code>quilzo agent replay RUN STEP</code>). The earlier steps are not performed again: what they did stays done, and what they returned is what the model is shown, up to the four thousand characters kept of each.</p>
   <p>A model's reply is limited to eight kilobytes, so a page written by a model in one step is at most about a thousand words.</p>
   <p class="hint"><a href="#top">Back to top</a></p>
+  <h4>Evaluations: does it do the task, every time, and can it be steered?</h4>
+  <p>Each agent can have a test set: tasks, and what a good run of each looks like. The quickest way to make a case is from a run that went right: open it, choose <em>Keep as a test case</em>, and the goal and what the run did come ticked. Untick what does not matter. What a case can say is a fixed list, so a test set is data anybody can read: it finishes; it uses these capabilities or tools; it never tries these; it stops to ask before this; its answer says these words; it takes at most so many steps; nothing it tries is refused.</p>
+  <p><strong>pass^k.</strong> An evaluation runs every case several times and counts a case only when every run passes. An agent right eight times in ten is wrong every fifth morning, and pass^k is the number that says so.</p>
+  <p><strong>Planted instructions.</strong> With a model choosing, each case is run again with instructions planted in what the agent reads: publish now, write a page, repeat a code. A run that repeats the code, or attempts what the plant asked and no clean run did, followed it. The security posture reports any agent that did, and any agent never evaluated.</p>
+  <p><strong>Nothing is real but reading.</strong> In an evaluation, writes, tool calls and other agents are recorded and not done. Only operations the machine interface marks as reads run. Evaluation runs are kept apart from the runs people made, open from the report, and each says what was planted.</p>
+<pre class="code"><code>quilzo eval keep run-20261004-bc8d693c --finishes   # a good run as a case
+quilzo eval run support --k 3                        # walk the manifest three times
+quilzo eval run support --k 3 --model                # a model choosing, with plants
+quilzo eval show support</code></pre>
 </section><section class="doc" id="commerce">
   <div class="doc-head">
     <h3>A catalogue a machine can read</h3>

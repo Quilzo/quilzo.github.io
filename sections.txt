@@ -36,6 +36,7 @@ cases
 detection
 automations
 feeds
+shield
 vulnerabilities
 workforce
 logging

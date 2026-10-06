@@ -49,6 +49,7 @@ integrations
 settings
 api
 profile
+agent-interface
 
 # sections no screen owns: concepts and surfaces, reached by reading
 start

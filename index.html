@@ -229,6 +229,20 @@ quilzo auth grant agent/triage reader --on /docs</code></pre>
   <p>Every action of a run is its own record in the audit log as it happens, allowed or refused: the run, the step, the operation or tool, why it was refused, and a digest of its input rather than the input, since what a page said or a person typed is not the log's to keep. A receipt is a run's records with each one's proof of inclusion and a head signed with Ed25519 and ML-DSA. Whoever holds it can check, from the file alone and against keys they were given, that these are exactly the records the log holds, unaltered, and which steps, if any, were left out.</p>
   <pre class="code"><code>quilzo agent receipt run-20261006-2f5a4dad -o receipt.json
 quilzo agent verify-receipt receipt.json --keys head.pub.json</code></pre>
+  <h4>What a run costs, and who pays</h4>
+  <p>A model route can carry its prices, per million tokens in and out, in the currency the gateway is set to. A run is charged at the provider's reported usage (estimated, and marked so, when a provider reports none), rounded up to the micro-unit, and charged twice over: to the agent and to the person who started it. A budget on either refuses the call that would pass it, so neither an agent nor the person running agents can spend past what was set. A manifest can also cap one run's tokens and money, and a run that reaches its cap stops rather than warning.</p>
+  <pre class="code"><code>quilzo gateway currency EUR
+quilzo gateway route add claude --url https://… --model … --key-env CLAUDE_KEY --price-in 3.00 --price-out 15.00
+quilzo gateway budget agent:triage --tokens-per-day 200000 --money-per-day 5.00 --money-per-month 60.00
+quilzo gateway budget person:dana --money-per-day 20.00</code></pre>
+  <p>The Models screen shows each route's prices and what each caller has spent today and this month against its budgets. A caller that spends its budget reaches the <a href="#shield">shield</a>, which tells somebody; an agent that spends it again the same day is paused for a day.</p>
+  <h4>Autonomy is earned, and lost</h4>
+  <p>A manifest says how far an agent may go: propose, draft or publish. When a model drives it, it goes only as far as its last evaluation showed it can be trusted. Drafting takes three cases each passing three runs; publishing takes five and five; both need every case to pass every run, planted instructions resisted, and an evaluation from the last thirty days. Short of that, it proposes.</p>
+  <p>Behaviour takes it away again. Once the shield has paused an agent, or the watch has flagged it for reaching for what it was refused, a model drives it only to propose until it is evaluated again. A pause an administrator judged a mistake costs it nothing. Walking a manifest without a model, and running an evaluation, are not held back, because neither is a model deciding anything.</p>
+  <h4>Tools somebody approved</h4>
+  <p>A model is offered only the tools whose definition a person pinned and the server still gives unchanged, described by what the operator wrote about them rather than by the server. When a server redefines a pinned tool, the call is refused, the <a href="#shield">shield</a> is told once for each new definition and opens a case, and the posture keeps <code>integration.tool-changed</code> until somebody reads what the tool now is and pins it again. A tool an agent uses that nobody pinned is <code>integration.unpinned</code>.</p>
+  <h4>Who is told</h4>
+  <p>When the shield acts on an agent (paused for following a planted instruction, flagged, out of budget), its sponsor is told as well as the security contact, and two weeks before an agent's identity ends its sponsor is reminded to renew it or let it go.</p>
   <h4>Finding a page instead of reading all of them</h4><p>An agent with only &quot;list the pages&quot; and &quot;read a page&quot; has one move when asked which page covers returns: list everything and read it one at a time, spending a step and a body&#x27;s worth of context on each, until the budget runs out or it guesses right. The full-text and vector indexes are built at publish anyway, so an agent can ask them. Neither index is new. What is new is that asking is a capability a manifest can grant.</p><h4>Calling something outside</h4><p>A manifest may name tools, and each one names the host it is allowed to reach — one exact hostname, no wildcards, and the credential named rather than carried. When a model asks for a tool, the name is looked up in the manifest and again in this install&#x27;s own declarations, and <strong>the two have to agree about the host or nothing is called</strong>. A host the model supplied is dropped rather than forwarded: that was the thing worth not taking instruction about.</p><h4>Calling something outside: what a model may choose</h4>
   <p>A run where a model chooses may pick from the agent's declared tools and, for a supervisor, its delegates, beside its capabilities. It is shown each by what the operator wrote in the manifest and the argument names the tool takes. What the far side says about its own tool is never put in front of the model: a description is text a third party wrote, and the model's choices are what an injection would aim at.</p>
   <p>And only tools whose definition a person approved. <code>quilzo integrations pin NAME</code> shows each tool the install uses, in full, and records the SHA-256 of its definition. A server that later changes a pinned tool, its description or its arguments, has it refused, from a model or from the command line, and the change recorded as <code>integration.tool-changed</code>, until somebody reads it and pins it again. <code>quilzo integrations tools NAME</code> shows which tools are pinned and which changed.</p>
@@ -427,14 +441,25 @@ quilzo config set admin.base_url https://admin.example.com</code></pre>
   <li><strong>Refresh tokens that turn over.</strong> Each use returns a new one. One used twice means somebody has a copy, and the whole connection ends; you connect the app again.</li>
   <li><strong>Consent that expires.</strong> After thirty days the app asks you again, however often it refreshed.</li>
   <li><strong>The lockdown applies.</strong> During a <a href="#shield">shield</a> lockdown, a connection you agreed to without a passkey or single sign-on gets no new tokens.</li>
+  <li><strong>It ends when you leave.</strong> When the identity provider suspends or removes you, every app you connected is disconnected with you, and a refresh from before is refused, because nobody it acts for is here any more.</li>
   </ul>
+  <h4>When an app misbehaves</h4>
+  <p>Every call carries the id of the connection it came through (<code>gr_…</code>), so one app acting for one person can be stopped without touching anybody else's. Suspend it from the shield for up to a day, which holds the token it already has as well as the ones it would be given next, or disconnect it for good:</p>
+  <pre class="code"><code>quilzo shield suspend gr_… --for 4h --reason "deleting pages it was refused"
+quilzo apps disconnect gr_…</code></pre>
+  <p>An app that keeps reaching for what it was refused is flagged by the same watch that looks at agents, and the <a href="#shield">shield</a> tells the security contact and opens a case. An app that asked and was told it needs a person's approval has behaved correctly, and is not counted.</p>
+  <h4>A receipt for what an app did</h4>
+  <p>Beside each connection on <em>Connected apps</em> is <em>Receipt</em>: every call the app made through that connection, each with its proof of inclusion in the audit log, under a head signed with Ed25519 and ML-DSA. It is for the person the app acted for, or an administrator, and it checks anywhere against the store's published keys, the same way an agent's receipt does.</p>
+  <pre class="code"><code>quilzo apps receipt gr_… -o app-receipt.json
+quilzo agent verify-receipt app-receipt.json --keys head.pub.json</code></pre>
   <h4>Which apps may connect</h4>
   <p>An app identifies itself by a short document it publishes at an HTTPS address of its own (an OAuth Client ID Metadata Document). Only apps published from hosts an administrator allowed can ask anybody to connect; the list starts empty. An app that cannot publish a document is registered here instead and given a <code>client_id</code>. Dynamic client registration, which the 2026-07-28 revision deprecated, is not offered.</p>
   <pre class="code"><code>quilzo apps                                         what is connected, and what may connect
 quilzo apps allow claude.ai                         apps published from that host may ask
 quilzo apps disallow claude.ai                      and every connection from there ends
 quilzo apps register "Build bot" --redirect http://127.0.0.1/callback
-quilzo apps disconnect gr_…</code></pre>
+quilzo apps disconnect gr_…
+quilzo apps receipt gr_…                            what it did through that connection, with proofs</code></pre>
   <p>The <em>Connected apps</em> screen, under Administration, does the same: everybody sees and disconnects their own apps; an administrator sees everybody's and decides what may connect. Disconnecting stops the app's token at once.</p>
   <p>The metadata document is fetched only for an allowed host, over HTTPS, never from an address inside your network, without following redirects, and five kilobytes at most; it is kept an hour.</p>
   <p class="hint"><a href="#top">Back to top</a></p>
@@ -961,18 +986,28 @@ quilzo inbound status okta</code></pre>
   </tbody></table></div>
   <p>A protection a playbook sets lasts at most a day from its own start; one a person sets, at most a week. An attack that outlasts it meets a new one from the playbook's next stage, with its own start: nothing is renewed past its limit.</p>
   <h4>Playbooks</h4>
-  <p>A playbook says: when this signal comes this many times within this long, from one source (or one provider, one chatbot, or anywhere), do these things; and if it comes back within a day, do the next stage. It is data from a closed list, with no expressions and no scripts. Ten ship:</p>
+  <p>A playbook says: when this signal comes this many times within this long, from one source (or one provider, one chatbot, or anywhere), do these things; and if it comes back within a day, do the next stage. It is data from a closed list, with no expressions and no scripts. Twenty ship:</p>
   <div class="table-wrap"><table><thead><tr><th scope="col">Playbook</th><th scope="col">When</th><th scope="col">Does</th><th scope="col">Ships</th></tr></thead><tbody>
   <tr><th scope="row">Repeated failed sign-ins</th><td>5 guessed tokens from one source in an hour</td><td>blocks it from the admin 1h, then 4h, then everywhere for a day</td><td>acting</td></tr>
   <tr><th scope="row">Spread across one provider</th><td>25 guessed tokens from one provider in an hour</td><td>blocks the provider from the admin; then a lockdown</td><td>watching</td></tr>
-  <tr><th scope="row">Looking for the admin</th><td>3 different admin addresses asked for on the public site in 10 minutes</td><td>blocks the source from the site 1h, 4h, a day</td><td>acting</td></tr>
-  <tr><th scope="row">Guessing conversations</th><td>3 wrong chatbot-conversation addresses in an hour</td><td>blocks the source from the site</td><td>acting</td></tr>
-  <tr><th scope="row">Prompt injection</th><td>3 attempts at a chatbot in 10 minutes</td><td>blocks the source from the site</td><td>acting</td></tr>
+  <tr><th scope="row">Looking for the admin</th><td>3 different admin addresses asked for on the public site in 10 minutes</td><td>slows the source for an hour, then blocks it from the site 4h, a day</td><td>acting</td></tr>
+  <tr><th scope="row">Guessing conversations</th><td>3 wrong chatbot-conversation addresses in an hour</td><td>slows the source, then blocks it from the site</td><td>acting</td></tr>
+  <tr><th scope="row">Prompt injection</th><td>3 attempts at a chatbot in 10 minutes</td><td>slows the source, then blocks it from the site</td><td>acting</td></tr>
   <tr><th scope="row">Injection from everywhere</th><td>30 attempts at one chatbot in 10 minutes</td><td>limits it to quoting pages for an hour</td><td>watching</td></tr>
   <tr><th scope="row">A form flooded</th><td>100 spam submissions to one form in 10 minutes</td><td>turns that form off for 30 minutes</td><td>watching</td></tr>
+  <tr><th scope="row">Probing for other software</th><td>3 different probes for WordPress, <code>.env</code> or <code>.git</code> in 10 minutes</td><td>blocks the source from the site 1h, 4h, a day</td><td>acting</td></tr>
   <tr><th scope="row">A decoy was touched</th><td>one decoy presented</td><td>blocks the source everywhere for a day, tells the security contact, opens a case</td><td>acting</td></tr>
-  <tr><th scope="row">Decoy: lock the admin down</th><td>one decoy presented</td><td>a lockdown</td><td>watching</td></tr>
-  <tr><th scope="row">An agent was steered</th><td>an evaluation caught it following a planted instruction</td><td>pauses it for a day</td><td>acting</td></tr>
+  <tr><th scope="row">Decoy: lock the admin down</th><td>one decoy presented</td><td>a lockdown; then a lockdown and a publishing freeze</td><td>watching</td></tr>
+  <tr><th scope="row">A caller spent its model budget</th><td>a budget refused a call</td><td>tells somebody; the second time in a day, pauses the agent for a day and opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">A provider refused a route</th><td>a spend cap reached, or a key wrong or revoked</td><td>leaves the route alone for six hours and tells somebody</td><td>acting</td></tr>
+  <tr><th scope="row">Pages loading what their policy refuses</th><td>5 networks reporting the same violation on one page in an hour</td><td>tells somebody; then opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">An exploited flaw in one feature</th><td>a flaw attackers use reaches this build through one feature</td><td>turns that feature off for a day, tells somebody, opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">A flaw in this build</th><td>a flaw in its Go reaches it</td><td>tells somebody and opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">The binary changed</th><td>the running binary is not the one it says it is</td><td>tells somebody and opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">A setting put back</th><td>a setting weakened by hand, with no reason, was reverted</td><td>tells somebody and opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">A tool redefined</th><td>a tool server changed a tool somebody pinned</td><td>tells somebody and opens a case; nothing calls it until it is pinned again</td><td>acting</td></tr>
+  <tr><th scope="row">Keeps trying what it was refused</th><td>the watch flags an agent or a connected app</td><td>tells the security contact and the agent's sponsor, opens a case</td><td>acting</td></tr>
+  <tr><th scope="row">An agent was steered</th><td>an evaluation caught it following a planted instruction</td><td>pauses it for a day and tells its sponsor</td><td>acting</td></tr>
   </tbody></table></div>
   <p>The ones that act are the ones that touch a single source or a single agent; the ones that reach many people at once watch, saying what they would have done, until two administrators turn them on.</p>
   <h4>What it will not do</h4>

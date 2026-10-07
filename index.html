@@ -249,6 +249,13 @@ quilzo gateway budget person:dana --money-per-day 20.00</code></pre>
   <pre class="code"><code>quilzo gateway route add local --url http://localhost:11434/v1 --model … --personal   on this machine: personal data may go
 quilzo gateway route add hosted --url https://… --model … --key-env HOSTED_KEY          masked before it leaves</code></pre>
   <p>Mark a hosted route as receiving personal data only under an agreement with the provider to process it. The posture reports every such route (<code>model.personal-data-leaves</code>) so the agreement stays on record.</p>
+  <h4>What agents remember</h4>
+  <p>An agent can keep memory between runs. Its declaration says which kinds, of episodic, semantic and procedural, and for how long, ninety days at most. It then holds <code>remember</code> and <code>recall</code> like any other capability. What it learns in a run is about the person who started that run, and only their runs recall it. Procedural memory, how to do something, is the agent's own and about nobody.</p>
+  <p>Anything learnt after the run read content somebody else may have written is held. It is not recalled until a person confirms it, and it is removed in two weeks if nobody does. An instruction planted in a page can make an agent write a memory, which would otherwise steer every later run. Here it waits for a person. Recalling memory counts as holding something private, so the exfiltration breaker applies.</p>
+  <p>Everybody sees, on <em>What agents remember</em>, everything any agent remembers about them. They can delete any of it, or have every agent forget them at once. The log records which entries went, by id, never what they said. When the identity provider deletes somebody, every agent forgets them. Withdrawing an agent erases its memory. Expired memory is removed, not hidden, and held memory shows in the posture (<code>agent.memory-held</code>).</p>
+  <pre class="code"><code>quilzo memory list --held                what waits for a person
+quilzo memory confirm m_1a2b3c4d5e6f     let it be recalled
+quilzo memory forget                     every agent forgets you</code></pre>
   <h4>An agent's own program, in a box</h4>
   <p>A model choosing from a manifest is one way an agent decides. Its own program is the other: a coding agent's command line, a script, a runtime somebody built their agent in. Quilzo runs it in a box for one run and hands in three things over the box's own loopback, and nothing else is reachable:</p>
   <ul>

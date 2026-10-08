@@ -20,7 +20,6 @@ assets/            the stylesheet, the one script, the font and the icons
 images/            screenshots, as WebP, one folder per guide
 gen/               the generator: Go, standard library only
 sections.txt       every guide the Quilzo admin links to
-demo/              a site built with Quilzo, copied in as static files
 ```
 
 ```sh

@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://quilzo.github.io/demo/sitemap.xml

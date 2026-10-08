@@ -733,7 +733,7 @@ func checkLinks(dir string, out map[string][]byte, bySlug map[string]*Page) erro
 				switch {
 				case out[file] != nil:
 					continue
-				case strings.HasPrefix(file, "demo/") || strings.HasPrefix(file, "assets/") ||
+				case strings.HasPrefix(file, "assets/") ||
 					strings.HasPrefix(file, "images/") || path.Ext(file) != "":
 					if _, err := os.Stat(filepath.Join(dir, filepath.FromSlash(file))); err != nil && !strings.HasSuffix(file, "/") {
 						problems = append(problems, fmt.Sprintf("%s links to %s, which is not in the repository", name, href))

@@ -103,7 +103,11 @@
       s += (inT ? 10 : 0) + (inX ? 2 : 0);
       if (new RegExp("\\b" + w).test(t)) { s += 6; }
     }
-    if (phrase.length > 3 && t.indexOf(phrase) >= 0) { s += 25; }
+    // The whole phrase in a title counts most, and more the earlier it
+    // comes: a guide about it names it first.
+    var at = t.indexOf(phrase);
+    if (phrase.length > 3 && at >= 0) { s += 25 + Math.max(0, 20 - Math.floor(at / 4)); }
+    else if (phrase.length > 3 && x.indexOf(phrase) >= 0) { s += 8; }
     if (!e.s) { s += 3; }
     return s;
   }

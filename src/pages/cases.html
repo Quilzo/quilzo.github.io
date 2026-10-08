@@ -9,7 +9,7 @@ screens: Cases
 updated: 2026-10-08
 -->
 
-<figure class="shot"><img src="/images/cases/cases.webp" alt="The Cases screen"><figcaption>Cases.</figcaption></figure>
+<figure class="shot"><img src="/images/cases/cases.webp" alt="The Cases screen"><figcaption>Cases, here four the shield opened by itself.</figcaption></figure>
 <ol class="steps">
 <li><h3>Declare an incident</h3><pre><code>quilzo incident regimes eu nis2
 quilzo incident declare --title "Token used from an unknown country" --grade sev2 --finding ID</code></pre></li>
@@ -17,7 +17,7 @@ quilzo incident declare --title "Token used from an unknown country" --grade sev
 quilzo incident duties</code></pre></li>
 <li><h3>Discharge or waive each duty</h3><pre><code>quilzo incident discharge ID "NIS2 early warning" --because "sent to the CSIRT"
 quilzo incident waive ID "GDPR Article 34" --because "no personal data involved"</code></pre></li>
-<li><h3>Act on another tool, with a second person</h3><pre><code>quilzo action add okta-suspend --org example
-quilzo incident act ID okta-suspend okta:USER --because "..."
+<li><h3>Act on another tool, with a second person</h3><pre><code>quilzo action add okta-suspend-user --org example
+quilzo incident act ID okta-suspend-user okta:USER --because "..."
 quilzo incident act-approve ID 1</code></pre><p>The exact request is shown before anybody approves it, and it is sent only when a second person does.</p></li>
 </ol>

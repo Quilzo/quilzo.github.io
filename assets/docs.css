@@ -429,6 +429,10 @@ a.card:active { border-radius: var(--shape-lg); }
 .card h3 { margin: 0; font: var(--title-md); font-weight: 700; }
 .card p { margin: 0; font: var(--body-md); color: var(--on-surface-variant); }
 .see-also { margin-top: 3rem; }
+/* The prose list rules are more specific than .cards, and gave the grid an
+   indent and its items a margin. */
+.prose ul.cards { padding: 0; }
+.prose .cards > li { margin: 0; }
 
 /* -- the end of a guide ---------------------------------------------------- */
 

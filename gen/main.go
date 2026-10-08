@@ -372,6 +372,12 @@ func (p *Page) render(dir string, icons iconSet) error {
 	body = reHeading.ReplaceAllStringFunc(body, func(m string) string {
 		parts := reHeading.FindStringSubmatch(m)
 		level, attrs, inner := parts[1], parts[2], parts[3]
+		// A card's title is inside the card's own link, and a link may not
+		// hold another: an anchor here closed the card early in every
+		// browser, and its title and text fell out below it.
+		if strings.Contains(attrs, "card-title") {
+			return m
+		}
 		id := ""
 		if mm := reID.FindStringSubmatch(attrs); mm != nil {
 			id = mm[1]
@@ -743,6 +749,25 @@ func checkLinks(dir string, out map[string][]byte, bySlug map[string]*Page) erro
 			p := filepath.Join(dir, filepath.FromSlash(strings.TrimPrefix(string(m[1]), "/")))
 			if _, err := os.Stat(p); err != nil {
 				problems = append(problems, fmt.Sprintf("%s shows %s, which is not in the repository", name, m[1]))
+			}
+		}
+	}
+	// A link inside a link is not HTML: a browser closes the outer one
+	// where the inner one starts, and whatever followed falls out of it.
+	reA := regexp.MustCompile(`<a[\s>]|</a>`)
+	for name, body := range out {
+		if !strings.HasSuffix(name, ".html") {
+			continue
+		}
+		depth := 0
+		for _, m := range reA.FindAll(body, -1) {
+			if string(m) == "</a>" {
+				depth--
+				continue
+			}
+			if depth++; depth > 1 {
+				problems = append(problems, fmt.Sprintf("%s has a link inside a link", name))
+				break
 			}
 		}
 	}

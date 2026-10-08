@@ -145,6 +145,13 @@ code { font-size: 0.9em; overflow-wrap: anywhere; }
 }
 .iconbutton:hover { background: color-mix(in srgb, var(--on-surface) var(--state-hover), transparent); }
 .iconbutton:active { border-radius: var(--shape-md); }
+/* The appearance button shows what is chosen: a half circle while it follows
+   the system, a sun for light, a moon for dark. Read from the attribute the
+   page sets before it paints, so the right one is there from the first frame. */
+.theme-toggle .ti { display: none; line-height: 0; }
+:root:not([data-theme]) .theme-toggle .ti-system,
+:root[data-theme="light"] .theme-toggle .ti-light,
+:root[data-theme="dark"] .theme-toggle .ti-dark { display: inline-block; }
 
 /* -- top app bar ----------------------------------------------------------- */
 

@@ -1,61 +1,58 @@
-# Every anchor the Quilzo admin links to.
+# Every guide the Quilzo admin links to: docSections in internal/admin/nav.go
+# in the Quilzo repository. A Help link is DocsBase + slug + "/", so each line
+# must be a page here; `go run ./gen -check` fails the build if one is not.
 #
-# This is one half of a contract with the application. The admin's footer sends
-# "Help with this screen" to https://quilzo.github.io/#<anchor>, and the anchor
-# for each screen is declared in internal/admin/nav.go (docSections) in the
-# Quilzo repository. A test there refuses a screen pointing at an anchor not on
-# this list; the workflow here refuses a build where index.html has stopped
-# carrying one.
-#
-# Neither half proves the other. Each fails on its own side, and the failure a
-# reader suffers -- Help landing on nothing -- needs both to be wrong at once.
-#
-# Renaming a section means changing it in both repositories. That is the cost of
-# splitting the manual out, and it is cheaper than a Help link that 404s.
+# Renaming a guide means changing it in both repositories, in the same change
+# if you can. The home page also sends the old /#anchor links to their pages
+# (src/legacy.txt), so a Quilzo built before this still lands somewhere.
 
-# one per admin screen
-pages
-data
-types
-structure
-listings
-forms
-media
-languages
-ai
+agent-interface
 agents
-design
-publishing
-environments
-history
-transfer
-ipfs
-provenance
-security
-cases
-detection
+api
+assistant
 automations
-feeds
+cases
+chatbots
+collect
+design
+detection
+fleet
+forms
+growth
+integrations
+languages
+logging
+media
+members
+memory
+models
+pages
+passkeys
+people
+provenance
+provisioning
+publishing
+security
+settings
 shield
+sso
+start
+structure
+transfer
+types
 vulnerabilities
 workforce
-logging
-users
-provisioning
-sso
-members
-auth
-integrations
-settings
-api
-profile
-agent-interface
-
-# sections no screen owns: concepts and surfaces, reached by reading
-start
-setup
+install
 concepts
+agent-limits
+agent-identity
+evals
+programs
+chatbot-safety
+a2a
+ai-evidence
+compliance
+isolated
 privacy
-cli
-mcp
-templates
+collaboration
+licence

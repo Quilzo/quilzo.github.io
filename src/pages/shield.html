@@ -1,0 +1,27 @@
+<!--
+title: The shield: Quilzo defends itself
+short: The shield
+seo: Self-defending application: automatic, reversible protections
+description: Playbooks decided in advance block, slow, lock down or pause the moment an attack shows; every protection ends by itself; changes take two admins.
+lead: Decided beforehand, acting at once, and every protection ends by itself.
+icon: shield
+screens: Shield
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>The <strong>shield</strong> is Quilzo protecting itself: playbooks that watch signals such as failed sign-ins, prompt injection against a chatbot or an agent following a planted instruction, and respond at once with protections that always end.</p></div><figure class="shot"><img src="/images/shield/shield.webp" alt="The Shield screen: what is in force, and the playbooks with their modes"><figcaption>What is in force, and the playbooks.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>What is in force</td><td><code>quilzo shield status</code></td></tr>
+<tr><td>End one now</td><td><code>quilzo shield lift ID</code></td></tr>
+<tr><td>Block or slow a source</td><td><code>quilzo shield block CIDR --where site --for 1h --reason "..."</code></td></tr>
+<tr><td>Turn a public feature down</td><td><code>quilzo shield feature chatbot:help --for 1h --reason "..."</code></td></tr>
+<tr><td>Admin to passkeys and SSO only; no publishing</td><td><code>quilzo shield lockdown --for 6h --reason "..."</code></td></tr>
+<tr><td>Pause an agent</td><td><code>quilzo shield pause AGENT --for 24h --reason "..."</code></td></tr>
+<tr><td>Cut a model route, suspend a credential or app</td><td><code>quilzo shield cut ROUTE / quilzo shield suspend gr_ID</code></td></tr>
+<tr><td>See what playbooks would have done</td><td><code>quilzo shield dry-run --days 30</code></td></tr>
+<tr><td>Change a playbook (a second admin approves)</td><td><code>quilzo shield playbook mode NAME act --why "..."</code></td></tr>
+<tr><td>Plant a decoy token</td><td><code>quilzo shield decoy add --where "CI variable"</code></td></tr>
+<tr><td>Check this build for known flaws</td><td><code>quilzo self check</code></td></tr>
+</tbody></table></div>
+<p>It is never turned on the inside: an administrator's own address keeps the admin, internal networks are never blocked, a lockdown nobody could get past is not applied, and the command line on the machine always works.</p>

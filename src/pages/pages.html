@@ -1,0 +1,46 @@
+<!--
+title: Pages, sections and the editor
+short: Pages
+seo: Edit pages and sections, with every version kept by its hash
+description: Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.
+lead: Pages are fields, not markup, and every version of every page is kept.
+icon: pages
+screens: Pages, Sections, Notes
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>A <strong>page</strong> is a set of fields; what it looks like is the template's job, so the same page can be a web page, a feed entry and an API response. Every change writes a new object named by its hash, and nothing is overwritten.</p></div>
+<h2 id="write">Write and change pages</h2>
+<figure class="shot"><img src="/images/pages/pages.webp" alt="The Pages screen listing every page in the draft and whether it differs from live"><figcaption>Pages: everything in the draft, and what differs from live.</figcaption></figure>
+<p>Open a page to edit it. A page bound to a <a href="/types/">type</a> gets a form built from the type; any other page gets a form over its own fields. From the command line:</p>
+<pre><code>quilzo add returns=returns.json     # stage a page into the draft
+quilzo diff                          # what differs from live
+quilzo log                           # the history</code></pre>
+<h2 id="sections">Build a page from sections</h2>
+<figure class="shot"><img src="/images/pages/sections.webp" alt="The Sections screen"><figcaption>Sections, in order, with what is editable inside each.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See what a page can be built from</td><td><code>quilzo section kinds</code></td></tr>
+<tr><td>List a page's sections</td><td><code>quilzo section list PAGE</code></td></tr>
+<tr><td>Add one</td><td><code>quilzo section add PAGE KIND</code></td></tr>
+<tr><td>Reorder</td><td><code>quilzo section move PAGE N up</code></td></tr>
+<tr><td>Change what one says</td><td><code>quilzo section set PAGE N path=value</code></td></tr>
+</tbody></table></div>
+<h2 id="together">Working together</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Claim a page for 30 minutes</td><td><code>quilzo lock PAGE --note "..."</code></td></tr>
+<tr><td>Say what is wrong with a page</td><td><code>quilzo note add PAGE "..."</code></td></tr>
+<tr><td>Confirm a page is still right</td><td><code>quilzo checked set PAGE --every 168h</code></td></tr>
+<tr><td>Move a page and everything under it</td><td><code>quilzo move OLD NEW --dry-run</code></td></tr>
+<tr><td>Find broken links</td><td><code>quilzo links --broken</code></td></tr>
+</tbody></table></div>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/types/"><span class="card-icon"><icon name="types"></icon></span><h3>Types and records</h3><p>Give pages a shape every surface enforces.</p></a></li>
+<li><a class="card" href="/publishing/"><span class="card-icon"><icon name="publishing"></icon></span><h3>Publish</h3><p>Review, publish and roll back.</p></a></li>
+</ul>
+</section>

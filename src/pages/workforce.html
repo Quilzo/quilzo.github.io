@@ -1,0 +1,22 @@
+<!--
+title: Workforce risk across HR, identity and device tools
+short: Workforce risk
+seo: Workforce risk: joining HR, identity and device data
+description: Join people and their machines across HR, identity, device and training tools, find what no one system sees, and score each person with reasons.
+lead: People and their machines, joined across your tools, scored with reasons.
+icon: workforce
+screens: Workforce risk
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/workforce/workforce.webp" alt="The Workforce risk screen with a sample company: people by band and where the risk is"><figcaption>The sample company, Northwind Labs.</figcaption></figure><p>Only administrators see this screen, and opening a person's page is written to the log. Try it with sample data before connecting anything: <code>quilzo estate sample</code>, then <code>quilzo estate build</code>; <code>quilzo estate sample --remove</code> takes it away.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Read every installed tool, then build</td><td><code>quilzo estate sync</code></td></tr>
+<tr><td>On a schedule</td><td><code>quilzo estate auto --every 24h</code></td></tr>
+<tr><td>Scores and their reasons</td><td><code>quilzo estate scores</code></td></tr>
+<tr><td>What no single system could see</td><td><code>quilzo workforce gaps</code></td></tr>
+<tr><td>Confirm two records are one person</td><td><code>quilzo workforce link A B --because W</code></td></tr>
+<tr><td>Remind people, inside working hours</td><td><code>quilzo remind send</code></td></tr>
+</tbody></table></div>

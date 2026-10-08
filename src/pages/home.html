@@ -1,0 +1,128 @@
+<!--
+title: Quilzo manual
+seo: Quilzo: the open-source, self-hosted AI agent control plane
+description: Quilzo gives every AI agent an identity, a policy, a budget and a signed record, asks a person before the actions that matter, and runs as one self-hosted binary.
+lead: The manual for Quilzo, the self-hosted control plane for AI agents.
+icon: start
+updated: 2026-10-08
+-->
+<section class="hero">
+  <p class="eyebrow"><icon name="code"></icon>Open source · self-hosted · one binary, no dependencies</p>
+  <h1>The control plane for your <em>AI agents</em></h1>
+  <p class="lead">Quilzo gives every AI agent an identity, a policy, a budget and a signed record, whichever model or sandbox it runs on, and asks a person before the actions that matter. Around it: an MCP gateway, chatbots that cite their sources, AI compliance evidence, a security console, and the content platform the agents work on.</p>
+  <div class="actions">
+    <a class="btn" href="/start/"><icon name="arrow_forward"></icon>Get started in ten minutes</a>
+    <a class="btn btn-tonal" href="/agents/">Build an AI agent</a>
+    <a class="btn btn-outlined" href="https://github.com/Quilzo/Quilzo"><icon name="code"></icon>Source on GitHub</a>
+  </div>
+</section>
+<figure class="hero-shot"><img src="/images/agents/approval.webp" alt="A Quilzo agent stopped before writing a page: the exact call it wants to make, field by field, with Let it go ahead and Decline"></figure>
+<section class="home-section" id="why">
+<h2 id="why-title">A declaration, not a prompt</h2>
+<p>Most agent frameworks give a model your tools and a system prompt asking it to behave. Quilzo starts from the other end: the model never holds the authority.</p>
+<div class="pillars">
+<div class="pillar"><h3>Limits enforced outside the model</h3><p>Each agent declares what it may do, read and spend, and one gate enforces it on every action. A hijacked agent still cannot do anything it did not declare.</p></div>
+<div class="pillar"><h3>A person decides what matters</h3><p>Capabilities marked ask first stop the run until somebody approves the exact call. Autonomy is earned through evaluations with planted instructions.</p></div>
+<div class="pillar"><h3>Every action is provable</h3><p>Runs, app calls and forgotten memory come with receipts proved against a log head signed with Ed25519 and ML-DSA, checkable by anybody.</p></div>
+</div>
+</section>
+<section class="home-section" id="get-started">
+<h2 id="get-started-title">Get started</h2>
+<ul class="cards">
+<li><a class="card" href="/start/"><span class="card-icon"><icon name="start"></icon></span><h3 id="card-start">Get started</h3><p>From nothing to a running admin, a published site and your first agent, in the order Quilzo needs them.</p></a></li>
+<li><a class="card" href="/install/"><span class="card-icon"><icon name="download"></icon></span><h3 id="card-install">Install and run it</h3><p>Get the program, check it came from this project, and run it the way it is meant to be run.</p></a></li>
+<li><a class="card" href="/concepts/"><span class="card-icon"><icon name="section-reference"></icon></span><h3 id="card-concepts">Glossary</h3><p>Short definitions of the terms this manual uses, from agents to the content store.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="ai-agents">
+<h2 id="ai-agents-title">AI agents</h2>
+<ul class="cards">
+<li><a class="card" href="/agents/"><span class="card-icon"><icon name="agents"></icon></span><h3 id="card-agents">Build an agent</h3><p>Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.</p></a></li>
+<li><a class="card" href="/agent-limits/"><span class="card-icon"><icon name="rule"></icon></span><h3 id="card-agent-limits">Limits that hold</h3><p>The declaration is enforced by code outside the model, so it holds however the model is persuaded.</p></a></li>
+<li><a class="card" href="/agent-identity/"><span class="card-icon"><icon name="badge"></icon></span><h3 id="card-agent-identity">Identity and receipts</h3><p>Every agent is a principal of its own, a person answers for it, and every run can be proved to somebody who does not trust you.</p></a></li>
+<li><a class="card" href="/evals/"><span class="card-icon"><icon name="labs"></icon></span><h3 id="card-evals">Evaluate agents</h3><p>Test sets from real runs, each case run k times, and every case run again with somebody trying to steer the agent.</p></a></li>
+<li><a class="card" href="/programs/"><span class="card-icon"><icon name="deployed_code"></icon></span><h3 id="card-programs">Programs in a box</h3><p>When an agent's own program decides instead of a model, Quilzo runs it in a box and hands in only what the declaration allows.</p></a></li>
+<li><a class="card" href="/memory/"><span class="card-icon"><icon name="memory"></icon></span><h3 id="card-memory">Memory</h3><p>What an agent learns about a person is theirs to see, correct and remove, and what it learnt from somebody else's words waits for a person.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="models-and-chatbots">
+<h2 id="models-and-chatbots-title">Models and chatbots</h2>
+<ul class="cards">
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3 id="card-models">Models and the gateway</h3><p>One gateway for every model call: which model answers, what each caller may spend, and what may leave in a prompt.</p></a></li>
+<li><a class="card" href="/chatbots/"><span class="card-icon"><icon name="assistants"></icon></span><h3 id="card-chatbots">Chatbots</h3><p>Answers from what you have published, a citation on every sentence, and a person when the visitor wants one.</p></a></li>
+<li><a class="card" href="/chatbot-safety/"><span class="card-icon"><icon name="security"></icon></span><h3 id="card-chatbot-safety">Prompt injection in RAG</h3><p>Four layers between a planted instruction and a visitor, each one working without the others.</p></a></li>
+<li><a class="card" href="/assistant/"><span class="card-icon"><icon name="assist"></icon></span><h3 id="card-assistant">Assistant and decisions</h3><p>A model that proposes pages for a person to accept, and one that answers fixed questions and hands the uncertain ones to a person.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="connect">
+<h2 id="connect-title">Connect</h2>
+<ul class="cards">
+<li><a class="card" href="/agent-interface/"><span class="card-icon"><icon name="apps"></icon></span><h3 id="card-agent-interface">Connect AI apps (MCP)</h3><p>Quilzo's operations for any agent or AI app, with each app acting for one person, with their access and no more.</p></a></li>
+<li><a class="card" href="/integrations/"><span class="card-icon"><icon name="integrations"></icon></span><h3 id="card-integrations">Tools and the MCP gateway</h3><p>Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.</p></a></li>
+<li><a class="card" href="/a2a/"><span class="card-icon"><icon name="handshake"></icon></span><h3 id="card-a2a">A2A</h3><p>Tell other agents what yours may do, and take their tasks under your own rules.</p></a></li>
+<li><a class="card" href="/fleet/"><span class="card-icon"><icon name="fleet"></icon></span><h3 id="card-fleet">The fleet</h3><p>Every agent, app, tool server and model route, who answers for each, and what nobody registered.</p></a></li>
+<li><a class="card" href="/api/"><span class="card-icon"><icon name="playground"></icon></span><h3 id="card-api">API and command line</h3><p>The content API for applications, and the command line for scripts, pipelines and agents.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="content">
+<h2 id="content-title">Content</h2>
+<ul class="cards">
+<li><a class="card" href="/pages/"><span class="card-icon"><icon name="pages"></icon></span><h3 id="card-pages">Pages</h3><p>Pages are fields, not markup, and every version of every page is kept.</p></a></li>
+<li><a class="card" href="/types/"><span class="card-icon"><icon name="types"></icon></span><h3 id="card-types">Types and records</h3><p>A type says which fields a page must have, and every surface checks it.</p></a></li>
+<li><a class="card" href="/structure/"><span class="card-icon"><icon name="structure"></icon></span><h3 id="card-structure">Structure and listings</h3><p>Declared queries, navigation that resolves, and vocabularies with defined terms.</p></a></li>
+<li><a class="card" href="/forms/"><span class="card-icon"><icon name="forms"></icon></span><h3 id="card-forms">Forms</h3><p>Forms the public site can write and never read back, kept only as long as declared.</p></a></li>
+<li><a class="card" href="/media/"><span class="card-icon"><icon name="media"></icon></span><h3 id="card-media">Media</h3><p>Uploads checked on the way in, originals kept, and where each picture came from recorded.</p></a></li>
+<li><a class="card" href="/design/"><span class="card-icon"><icon name="design"></icon></span><h3 id="card-design">Design</h3><p>A theme from one colour, contrast checked, in a template language that cannot run code.</p></a></li>
+<li><a class="card" href="/languages/"><span class="card-icon"><icon name="languages"></icon></span><h3 id="card-languages">Languages</h3><p>Locales, and which translations are stale or missing.</p></a></li>
+<li><a class="card" href="/members/"><span class="card-icon"><icon name="members"></icon></span><h3 id="card-members">Members and boards</h3><p>Accounts for visitors, with passkeys and no passwords, and boards they can write on.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="release">
+<h2 id="release-title">Release</h2>
+<ul class="cards">
+<li><a class="card" href="/publishing/"><span class="card-icon"><icon name="publishing"></icon></span><h3 id="card-publishing">Publish</h3><p>Publishing moves a pointer, so it cannot half-complete and rolling back is instant.</p></a></li>
+<li><a class="card" href="/growth/"><span class="card-icon"><icon name="analytics"></icon></span><h3 id="card-growth">Analytics and experiments</h3><p>Measure without cookies, test without scripts, and personalise without profiles.</p></a></li>
+<li><a class="card" href="/transfer/"><span class="card-icon"><icon name="transfer"></icon></span><h3 id="card-transfer">Import and export</h3><p>No lock-in, and how that is proved: every way out and in.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="security-operations">
+<h2 id="security-operations-title">Security operations</h2>
+<ul class="cards">
+<li><a class="card" href="/collect/"><span class="card-icon"><icon name="feeds"></icon></span><h3 id="card-collect">Collect events</h3><p>Get events in: connectors that read, feeds that push, and files that arrive.</p></a></li>
+<li><a class="card" href="/detection/"><span class="card-icon"><icon name="detections"></icon></span><h3 id="card-detection">Detection and findings</h3><p>Rules with fixtures, one ranked queue, and an analyst agent that can only suggest.</p></a></li>
+<li><a class="card" href="/cases/"><span class="card-icon"><icon name="cases"></icon></span><h3 id="card-cases">Cases and incidents</h3><p>Incidents with the clocks each law starts, and actions a second person approves.</p></a></li>
+<li><a class="card" href="/automations/"><span class="card-icon"><icon name="automations"></icon></span><h3 id="card-automations">Automations and sign-ins</h3><p>When this happens, do this: watch, ask, or act.</p></a></li>
+<li><a class="card" href="/vulnerabilities/"><span class="card-icon"><icon name="vulns"></icon></span><h3 id="card-vulnerabilities">Vulnerabilities</h3><p>What to work on, not sorted by severity alone.</p></a></li>
+<li><a class="card" href="/workforce/"><span class="card-icon"><icon name="workforce"></icon></span><h3 id="card-workforce">Workforce risk</h3><p>People and their machines, joined across your tools, scored with reasons.</p></a></li>
+<li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 id="card-shield">The shield</h3><p>Decided beforehand, acting at once, and every protection ends by itself.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="compliance-and-audit">
+<h2 id="compliance-and-audit-title">Compliance and audit</h2>
+<ul class="cards">
+<li><a class="card" href="/security/"><span class="card-icon"><icon name="security"></icon></span><h3 id="card-security">Security posture</h3><p>Continuous checks of this deployment, read as the frameworks you answer to.</p></a></li>
+<li><a class="card" href="/ai-evidence/"><span class="card-icon"><icon name="fact_check"></icon></span><h3 id="card-ai-evidence">AI evidence</h3><p>The duties, each with evidence from what your AI actually did, and what is still yours to show.</p></a></li>
+<li><a class="card" href="/compliance/"><span class="card-icon"><icon name="gavel"></icon></span><h3 id="card-compliance">Evidence for assessment</h3><p>What Quilzo does for each control, who does the rest, and evidence an auditor can check.</p></a></li>
+<li><a class="card" href="/provenance/"><span class="card-icon"><icon name="provenance"></icon></span><h3 id="card-provenance">Provenance</h3><p>Who or what wrote each page, and the mark AI-generated content carries.</p></a></li>
+<li><a class="card" href="/logging/"><span class="card-icon"><icon name="logs"></icon></span><h3 id="card-logging">The audit log</h3><p>Every action recorded, chained, signed and provable entry by entry.</p></a></li>
+<li><a class="card" href="/privacy/"><span class="card-icon"><icon name="privacy_tip"></icon></span><h3 id="card-privacy">Privacy</h3><p>What is kept about people, for how long, and how it goes.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="administration">
+<h2 id="administration-title">Administration</h2>
+<ul class="cards">
+<li><a class="card" href="/people/"><span class="card-icon"><icon name="people"></icon></span><h3 id="card-people">People and access</h3><p>Who may do what, where, and until when.</p></a></li>
+<li><a class="card" href="/sso/"><span class="card-icon"><icon name="sso"></icon></span><h3 id="card-sso">Single sign-on</h3><p>Sign in through the identity provider you already run.</p></a></li>
+<li><a class="card" href="/provisioning/"><span class="card-icon"><icon name="provisioning"></icon></span><h3 id="card-provisioning">Provisioning</h3><p>People kept in step by the identity provider, including when they leave.</p></a></li>
+<li><a class="card" href="/passkeys/"><span class="card-icon"><icon name="passkeys"></icon></span><h3 id="card-passkeys">Passkeys and tokens</h3><p>Passkeys for people, scoped tokens for programs, and sessions that end.</p></a></li>
+<li><a class="card" href="/settings/"><span class="card-icon"><icon name="settings"></icon></span><h3 id="card-settings">Settings and network</h3><p>Every setting explained, and every connection this program makes named.</p></a></li>
+<li><a class="card" href="/isolated/"><span class="card-icon"><icon name="wifi_off"></icon></span><h3 id="card-isolated">Isolated networks</h3><p>No connection leaves the host, and what crosses the gap is recorded and checked.</p></a></li>
+</ul>
+</section>
+<section class="home-section" id="more">
+<h2 id="more-title">More</h2>
+<ul class="cards">
+<li><a class="card" href="/collaboration/"><span class="card-icon"><icon name="forum"></icon></span><h3 id="card-collaboration">Rooms and calls</h3><p>The building blocks of real-time collaboration, demonstrated from the command line.</p></a></li>
+<li><a class="card" href="/licence/"><span class="card-icon"><icon name="license"></icon></span><h3 id="card-licence">Licence</h3><p>Two licences, and you choose one. They are alternatives, not conditions to meet together.</p></a></li>
+</ul>
+</section>

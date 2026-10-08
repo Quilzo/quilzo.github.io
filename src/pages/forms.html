@@ -1,0 +1,20 @@
+<!--
+title: Forms with retention and erasure
+short: Forms
+seo: Website forms with retention, erasure and spam protection
+description: Collect form submissions the public server cannot read back, keep them only as long as their stated purpose needs, and erase what a person asks you to.
+lead: Forms the public site can write and never read back, kept only as long as declared.
+icon: forms
+screens: Forms
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/forms/forms.webp" alt="The Forms screen listing the restock and wholesale forms with their retention"><figcaption>Forms, and how long each keeps what it receives.</figcaption></figure>
+<p>Each form declares its fields, what they are for and how long submissions are kept. The public site may write a submission and cannot read one back; they are read in the admin.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>List forms, held submissions and retention</td><td><code>quilzo form list</code></td></tr>
+<tr><td>Remove what is past retention</td><td><code>quilzo form expire</code></td></tr>
+<tr><td>Erase everything matching a value, such as an email</td><td><code>quilzo form erase VALUE</code></td></tr>
+</tbody></table></div><p>A chatbot can offer a form as an action (see <a href="/chatbots/#actions">Chatbots</a>), and the form's own checks still apply.</p>

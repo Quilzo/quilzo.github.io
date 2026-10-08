@@ -1,0 +1,85 @@
+<!--
+title: AI agent memory people can see, correct and erase
+short: Memory
+seo: AI agent memory: per person, poisoning-resistant, erasable
+description: Let AI agents remember between runs without a hidden profile: memory per person, held when it came from untrusted text, and erasable with a receipt.
+lead: What an agent learns about a person is theirs to see, correct and remove, and what it learnt from somebody else's words waits for a person.
+icon: memory
+screens: Memory
+updated: 2026-10-08
+-->
+
+<div class="definition"><p><strong>Governed memory</strong> is what an agent keeps between runs, held so that the person it is about can see it and so that what somebody else wrote cannot quietly become what the agent believes. Memory is off by default. Each kind an agent keeps, and how long it keeps it, is part of its declaration.</p></div>
+
+<h2 id="turn-it-on">Give an agent memory</h2>
+<ol class="steps">
+<li>
+<h3>Declare what it keeps, and for how long</h3>
+<p>On the agent's page, under <strong>What it remembers between runs</strong>, choose the kinds and the retention. In a declaration file:</p>
+<pre><code>{
+  "name": "concierge",
+  "kind": "copilot",
+  "purpose": "Help customers choose stationery, remembering what each customer prefers",
+  "capabilities": ["read_page", "search_pages", "remember", "recall"],
+  "autonomy": "propose",
+  "memory": { "semantic": true, "retain": "720h0m0s" },
+  "budget": { "steps": 12, "tool_calls": 6, "duration": "3m0s" }
+}</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Kind</th><th scope="col">Keeps</th></tr></thead>
+<tbody>
+<tr><th scope="row">episodic</th><td>What happened in a run, turn by turn.</td></tr>
+<tr><th scope="row">semantic</th><td>What was concluded from it. This is the kind that quietly builds a profile ("prefers X"), so turn it on deliberately.</td></tr>
+<tr><th scope="row">procedural</th><td>Reusable procedures distilled from what worked. It belongs to the agent, is recalled for everybody, and is never about anybody.</td></tr>
+</tbody></table></div>
+<p>Retention is required whenever any kind is on, and 90 days at most. The agent uses memory through the <code>remember</code> and <code>recall</code> capabilities.</p>
+</li>
+<li>
+<h3>Run it</h3>
+<p>What an agent learns in a run is about the person who started that run, and only that person's runs of that agent recall it. What it learnt helping one customer is not what it tells the next.</p>
+<pre><code>quilzo agent run --model concierge "Please remember that I prefer dotted notebooks"
+quilzo agent run --model concierge "Read the delivery page and remember what it says about ink"</code></pre>
+</li>
+<li>
+<h3>Review what is waiting</h3>
+<p>Open <span class="where">Administration › Memory</span>. Anything learnt after the agent read content somebody else may have written is <strong>held</strong>. It is not recalled until a person reads it and presses <strong>Confirm</strong>, and it lapses after two weeks if nobody does.</p>
+<figure class="shot"><img src="/images/memory/memory.webp" alt="The Memory screen: one memory waiting for a person, learnt after reading the delivery page, with Edit, Confirm and Delete; one memory from what the person said; and a Forget me button"><figcaption>One memory waiting for a person, and one from what the person said themselves.</figcaption></figure>
+<pre><code>quilzo memory list --held
+quilzo memory confirm m_f7df1fd760ab</code></pre>
+</li>
+</ol>
+
+<h2 id="poisoning">Why held memory matters</h2>
+<p>Memory poisoning (OWASP's agentic risk ASI06) works like this: an instruction planted in a page makes an agent write a memory, and the memory steers every later run long after the page is fixed. Here, a memory learnt after reading untrusted content waits for a person instead.</p>
+<p>Each memory also records how far it can be trusted, from what the run had read when it learnt it:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Tier</th><th scope="col">Learnt from</th><th scope="col">Kept at most</th></tr></thead>
+<tbody>
+<tr><th scope="row">person</th><td>Nothing but what the person said</td><td>90 days</td></tr>
+<tr><th scope="row">published</th><td>Only published pages, which somebody reviewed</td><td>90 days</td></tr>
+<tr><th scope="row">unreviewed</th><td>Something nobody here reviewed: a draft, a tool's answer, another agent's output</td><td>30 days</td></tr>
+</tbody></table></div>
+<p>The tier is shown beside every memory, and recalled entries carry it, so a person reviewing a run can see how far each was trusted. Expired entries are removed by the server's upkeep, not merely hidden.</p>
+
+<h2 id="see-correct-forget">See it, correct it, forget it</h2>
+<p>Everybody can open <span class="where">Memory</span> and see what every agent remembers about them. Administrators see everybody's. From there, or the command line:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">On the command line</th></tr></thead>
+<tbody>
+<tr><td>List what agents remember about you</td><td><code>quilzo memory list [--agent A] [--held]</code></td></tr>
+<tr><td>Rewrite one, as you would say it</td><td><code>quilzo memory edit ID "Prefers dotted A5 notebooks."</code></td></tr>
+<tr><td>Delete one</td><td><code>quilzo memory delete ID</code></td></tr>
+<tr><td>Make every agent forget you</td><td><code>quilzo memory forget</code> (an administrator adds <code>--about PERSON</code>)</td></tr>
+<tr><td>Prove what was forgotten, deleted or rewritten</td><td><code>quilzo memory receipt -o forgotten.json</code></td></tr>
+</tbody></table></div>
+<pre class="out"><code>rewrote m_0fd76d9f6839; it is recalled as you wrote it
+1 record about dana, each with its proof, against a head of 79 signed by 0e667cb95d838091</code></pre>
+<p>The receipt is checked like any other: <code>quilzo agent verify-receipt forgotten.json --keys head.pub.json</code>. The audit log records which entries went and how many, never what they said. The log cannot forget, and a digest of "Dana is in Lisbon" is that sentence to anybody who can guess it. When the identity provider deletes somebody through <a href="/provisioning/">SCIM</a>, everything agents remember about them goes too.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/privacy/"><span class="card-icon"><icon name="privacy_tip"></icon></span><h3>Privacy</h3><p>Everything Quilzo keeps about people, and how each is erased.</p></a></li>
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3>Models and the gateway</h3><p>Personal data masked before a prompt leaves.</p></a></li>
+</ul>
+</section>

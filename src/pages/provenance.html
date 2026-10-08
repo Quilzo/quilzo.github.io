@@ -1,0 +1,19 @@
+<!--
+title: Content provenance and AI disclosure
+short: Provenance
+seo: Content provenance, C2PA and labelling AI-generated content
+description: Record who or what wrote every page, mark AI-generated content as the EU AI Act asks, and refuse to publish a page whose origin is unrecorded.
+lead: Who or what wrote each page, and the mark AI-generated content carries.
+icon: provenance
+screens: Provenance
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/provenance/provenance.webp" alt="The Provenance screen"><figcaption>Who or what wrote each page.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Check every page has provenance</td><td><code>quilzo provenance check</code></td></tr>
+<tr><td>Record it by hand</td><td><code>quilzo provenance set PAGE --source humanEdits --author WHO</code></td></tr>
+<tr><td>Mark content from before records existed</td><td><code>quilzo provenance backfill --dry-run</code></td></tr>
+<tr><td>Verify image manifests (C2PA)</td><td><code>quilzo media verify</code></td></tr>
+</tbody></table></div><p>Sources use the IPTC digital source type names: <code>humanEdits</code>, <code>trainedAlgorithmicMedia</code>, <code>compositeWithTrainedAlgorithmicMedia</code> and <code>algorithmicMedia</code>. Whatever an agent or the assistant writes is recorded as AI-generated, and that cannot be turned off.</p>

@@ -1,0 +1,23 @@
+<!--
+title: Security automations, sign-ins, canaries and access reviews
+short: Automations and sign-ins
+seo: Security automation, impossible travel and access reviews
+description: Automate responses that watch, ask or act; see sign-ins by office, VPN and impossible travel; plant canaries; and run access reviews and vendor checks.
+lead: When this happens, do this: watch, ask, or act.
+icon: automations
+screens: Automations, Sign-ins
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/automations/automations.webp" alt="The Automations screen"><figcaption>Automations and their modes.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Start from a template</td><td><code>quilzo automate templates / quilzo automate add TEMPLATE</code></td></tr>
+<tr><td>Choose how far it goes</td><td><code>quilzo automate mode ID watch|ask|act</code></td></tr>
+<tr><td>Approve a run that asks</td><td><code>quilzo automate approve RUN</code></td></tr>
+<tr><td>Name your offices and VPNs</td><td><code>quilzo geo network add 203.0.113.0/24 London --kind office</code></td></tr>
+<tr><td>Plant a value nothing should read</td><td><code>quilzo canary plant --where W --why Y</code></td></tr>
+<tr><td>Run an access review</td><td><code>quilzo access open ID --scope S</code></td></tr>
+<tr><td>Check vendors against real credentials</td><td><code>quilzo vendor reconcile</code></td></tr>
+<tr><td>GDPR notices and their deadlines</td><td><code>quilzo notify list</code></td></tr>
+</tbody></table></div><figure class="shot"><img src="/images/automations/signins.webp" alt="The Sign-ins screen"><figcaption>Where sign-ins come from.</figcaption></figure>

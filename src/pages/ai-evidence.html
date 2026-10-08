@@ -1,0 +1,18 @@
+<!--
+title: EU AI Act and ISO/IEC 42001 evidence, and an AI bill of materials
+short: AI evidence
+seo: EU AI Act deployer obligations and ISO 42001 evidence
+description: Evidence for the EU AI Act's deployer duties and ISO/IEC 42001 Annex A, read from what your agents, chatbots and models did, and a CycloneDX AI bill of materials.
+lead: The duties, each with evidence from what your AI actually did, and what is still yours to show.
+icon: fact_check
+screens: Frameworks › AI evidence
+updated: 2026-10-08
+-->
+
+<div class="definition"><p><strong>AI evidence</strong> reads the EU AI Act's duties for deployers (Regulation (EU) 2024/1689 as amended), ISO/IEC 42001's Annex A as a statement of applicability, and an AI bill of materials from the running system. Each item is marked shown, partly, or yours to show. It is evidence, not a certification.</p></div><figure class="shot"><img src="/images/ai-evidence/ai-evidence.webp" alt="AI evidence: the EU AI Act's deployer duties, each shown, partly shown, or yours"><figcaption>The deployer duties, with evidence.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>The EU AI Act's deployer duties</td><td><code>quilzo compliance ai-act --days 90</code></td></tr>
+<tr><td>ISO/IEC 42001 Annex A</td><td><code>quilzo compliance iso42001</code></td></tr>
+<tr><td>An AI bill of materials, CycloneDX 1.6</td><td><code>quilzo compliance aibom aibom.json</code></td></tr>
+</tbody></table></div><p>The AI bill of materials lists models, agents, data and services, and who uses which; it is also served at <code>/security/ai-evidence/aibom.json</code> in the admin.</p>

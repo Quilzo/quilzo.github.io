@@ -1,0 +1,23 @@
+<!--
+title: Cases, incidents and regulatory clocks
+short: Cases and incidents
+seo: Incident response with NIS2, GDPR, DORA and SEC clocks
+description: Open incidents that start the reporting clocks each regime sets (NIS2, GDPR, DORA, SEC, CIRCIA, HIPAA), run playbooks, and take two-person actions on other tools.
+lead: Incidents with the clocks each law starts, and actions a second person approves.
+icon: cases
+screens: Cases
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/cases/cases.webp" alt="The Cases screen"><figcaption>Cases.</figcaption></figure>
+<ol class="steps">
+<li><h3>Declare an incident</h3><pre><code>quilzo incident regimes eu nis2
+quilzo incident declare --title "Token used from an unknown country" --grade sev2 --finding ID</code></pre></li>
+<li><h3>Start the clocks</h3><p>A clock starts when somebody decides the organisation is aware, and that decision is recorded with its reason.</p><pre><code>quilzo incident decide ID aware --because "..."
+quilzo incident duties</code></pre></li>
+<li><h3>Discharge or waive each duty</h3><pre><code>quilzo incident discharge ID "NIS2 early warning" --because "sent to the CSIRT"
+quilzo incident waive ID "GDPR Article 34" --because "no personal data involved"</code></pre></li>
+<li><h3>Act on another tool, with a second person</h3><pre><code>quilzo action add okta-suspend --org example
+quilzo incident act ID okta-suspend okta:USER --because "..."
+quilzo incident act-approve ID 1</code></pre><p>The exact request is shown before anybody approves it, and it is sent only when a second person does.</p></li>
+</ol>

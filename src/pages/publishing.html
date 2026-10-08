@@ -1,0 +1,35 @@
+<!--
+title: Review, publish, schedule and roll back
+short: Publish
+seo: Publishing workflow: review, environments, rollback
+description: Review what changed, let the accessibility and content gates run, publish by moving a pointer, promote through environments, and roll back at once.
+lead: Publishing moves a pointer, so it cannot half-complete and rolling back is instant.
+icon: publishing
+screens: Review, Publishing, History, Notes
+updated: 2026-10-08
+-->
+
+<ol class="steps">
+<li><h3>Review what changed</h3><figure class="shot"><img src="/images/publishing/review.webp" alt="The Review screen showing what differs from live and the accessibility checks"><figcaption>What is about to change, and what the checks say.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Who has agreed</td><td><code>quilzo review status</code></td></tr>
+<tr><td>Agree to it (authors cannot)</td><td><code>quilzo review approve --note "..."</code></td></tr>
+<tr><td>Require approvals</td><td><code>quilzo review require 2</code></td></tr>
+</tbody></table></div></li>
+<li><h3>Let the gates run</h3><p>Accessibility, provenance, claims that need substantiating, image rights and content scans stop a publish rather than warn. Each can be overridden with a reason, and the reason is recorded.</p><pre><code>quilzo a11y
+quilzo provenance check
+quilzo brand check
+quilzo scan</code></pre></li>
+<li><h3>Publish</h3><pre><code>quilzo publish</code></pre><figure class="shot"><img src="/images/publishing/publishing.webp" alt="The Publishing screen: each environment, what it serves and what waits"><figcaption>Environments and what is waiting.</figcaption></figure></li>
+<li><h3>Roll back if you need to</h3><pre><code>quilzo rollback --steps 1</code></pre><figure class="shot"><img src="/images/publishing/history.webp" alt="The History screen"><figcaption>Every version, still stored.</figcaption></figure></li>
+</ol>
+<h2 id="environments">Environments and scheduling</h2><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Add a stage</td><td><code>quilzo env add staging --before production</code></td></tr>
+<tr><td>Promote: the same bytes</td><td><code>quilzo env promote staging production</code></td></tr>
+<tr><td>Compare</td><td><code>quilzo env diff staging production</code></td></tr>
+<tr><td>Publish later</td><td><code>quilzo schedule add 48h</code></td></tr>
+<tr><td>Call it off</td><td><code>quilzo schedule cancel ID</code></td></tr>
+</tbody></table></div>

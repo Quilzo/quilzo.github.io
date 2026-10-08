@@ -1,0 +1,120 @@
+<!--
+title: Build an AI agent that asks before it acts
+short: Build an agent
+seo: Build an AI agent with human-in-the-loop approval
+description: Declare an AI agent's capabilities, budget and autonomy, make it ask a person before it writes anything, and read every run step by step, in the admin or as JSON.
+lead: Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.
+icon: agents
+screens: Agents
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>An <strong>agent</strong> in Quilzo is a declaration: what it is for, which capabilities it has, what it may read, how far it may go on its own, and how much one run may spend. A model or a program decides each step. The declaration decides what is allowed, and a hijacked agent still cannot do anything the declaration does not list.</p></div>
+
+<h2 id="declare">Declare an agent</h2>
+
+<ol class="steps">
+<li>
+<h3>Start from a template</h3>
+<p>Open <span class="where">Administration › Agents</span>. Under <strong>Start from a template</strong>, pick the archetype closest to what you want. Each one starts with as little permission as it needs, and you add only what is missing. Most agents are <em>retrieval</em>: they answer from published content and cannot write.</p>
+<figure class="shot"><img src="/images/agents/agents.webp" alt="The Agents screen listing two agents, help-desk and returns-editor, with their kind, autonomy and capabilities"><figcaption>Your agents, and the templates to start a new one from.</figcaption></figure>
+</li>
+<li>
+<h3>Fill in the declaration, or describe it</h3>
+<p>The <strong>Declare an agent</strong> form has a section for each part of the declaration: what it is for, what it may read, what it may do, which other agents it may hand work to, what it remembers between runs, how far it may go on its own, and how much one run may spend. A banner at the top says, as you go, whether the declaration as it stands would be accepted.</p>
+<figure class="shot"><img src="/images/agents/declare.webp" alt="The Declare an agent form, starting from the retrieval template, with an Or describe it box"><figcaption>Starting from the retrieval template. The banner says what is still missing.</figcaption></figure>
+<p>If a model is connected, you can describe the agent in a sentence under <strong>Or describe it</strong> and press <strong>Draft it</strong>. The model drafts a declaration, Quilzo keeps only the fields a declaration has, and the checker shows what the draft could do before anything is saved. A draft never adds tools or the ability to publish: the screen lists what it left out, and only a person can add those.</p>
+<figure class="shot"><img src="/images/agents/draft.webp" alt="A drafted declaration: the checker says it may list, read, search, recall and remember pages, and that tools and publishing were left out"><figcaption>A drafted declaration. What the model asked for and the draft may not have is listed under it.</figcaption></figure>
+</li>
+<li>
+<h3>Mark what must wait for a person</h3>
+<p>Under <strong>What it may do</strong>, tick <strong>ask first</strong> beside any capability that should stop the run until a person agrees. For an agent that edits pages, that is <code>write_page</code>.</p>
+</li>
+<li>
+<h3>Check the map, then save</h3>
+<p>The map under <strong>What it reads, and what it may do</strong> is drawn from the declaration itself, so the two cannot disagree. Capabilities that ask first are highlighted. Press <strong>Declare it</strong>.</p>
+<figure class="shot"><img src="/images/agents/map.webp" alt="The agent map: returns-editor reads the live site and may write, list, read and search pages; write_page is marked asks a person first"><figcaption>returns-editor reads one source and may do four things. One of them writes, and that one asks first.</figcaption></figure>
+</li>
+</ol>
+
+<h3 id="declare-as-json">The same thing as a file</h3>
+<p>A declaration is one JSON document, so it can be reviewed and kept in version control. <code>quilzo agent new NAME --kind KIND</code> creates one from a template. To declare one written out, save it to a file and pass it to <code>quilzo agent declare</code>, which validates it on the way in:</p>
+<pre><code>{
+  "name": "returns-editor",
+  "kind": "task",
+  "purpose": "Keep the Returns and Delivery pages accurate, asking before each change",
+  "capabilities": ["list_pages", "read_page", "search_pages", "write_page"],
+  "autonomy": "draft",
+  "ask_first": ["write_page"],
+  "budget": { "steps": 25, "tool_calls": 15, "duration": "10m0s", "money": "0.50" }
+}</code></pre>
+<pre><code>quilzo agent declare returns-editor.json
+quilzo agent show returns-editor --json      # what is saved, as JSON
+quilzo agent check                           # does every declaration still validate</code></pre>
+
+<h2 id="run">Run it</h2>
+<p>On the agent's page, under <strong>Try it</strong>, write what it should do and press <strong>Run it once</strong>. Tick <strong>Let a model choose the actions</strong> to have a model decide. Leave it unticked to try every capability once without a model, which costs nothing and shows what this store answers. From the command line:</p>
+<pre><code>quilzo agent run --model returns-editor "Explain on the Returns page how to start a return"</code></pre>
+<p>A run never has more authority than the person who started it, and never more than the declaration allows.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>A new agent driven by a model starts at propose.</strong> Quilzo lets a model drive an agent at its declared autonomy only after evaluations show the model is not steered by instructions planted in what it reads. Drafting takes at least three evaluation cases, each run three times. Until then, the run says <code>a model drives returns-editor at propose rather than draft</code> and explains why. <a href="/evals/">Evaluate an agent</a> shows how.</p></div></div>
+
+<h2 id="approve">Approve or decline what it asks for</h2>
+<p>When the run reaches a capability marked ask first, it stops. The run's page shows the exact call it wants to make, field by field, with the full JSON one click away, and says what it had read before asking.</p>
+<figure class="shot"><img src="/images/agents/approval.webp" alt="A run waiting before step 3: returns-editor wants to use write_page on the returns page with a new body, and offers Let it go ahead or Decline"><figcaption>The run is waiting. Nothing has been written or charged yet.</figcaption></figure>
+<ul>
+<li><strong>Let it go ahead</strong> performs exactly the stored call, through the same limits as everything else. The model is not asked again, so it cannot change the call after you agreed to it.</li>
+<li><strong>Decline</strong> refuses it, and the run carries on without it.</li>
+</ul>
+<pre><code>quilzo agent approve RUN 3
+quilzo agent decline RUN 3</code></pre>
+<p>A model cannot approve its own work, declare an agent, or widen one. What an agent writes is a draft: it goes live only when somebody publishes (see <a href="/publishing/">Review, publish and roll back</a>).</p>
+
+<h2 id="read-runs">Read what it did</h2>
+<p>Every run is kept, step by step, as it happens: what it tried, whether that was allowed, how long it took, and what came back. If it read content somebody else could have written, the run says so, names what it read, and its output needs a person before anybody relies on it.</p>
+<figure class="shot"><img src="/images/agents/trace.webp" alt="A completed run: did 3, refused 0, failed 0, a warning that it read stored content, and the steps search_pages, read_page and write_page"><figcaption>A finished run. Each step can be run again from that point.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">In the admin</th><th scope="col">On the command line</th></tr></thead>
+<tbody>
+<tr><td>List runs</td><td><span class="where">Agents › Runs</span></td><td><code>quilzo agent runs [NAME]</code></td></tr>
+<tr><td>Read one step by step</td><td>The run's page</td><td><code>quilzo agent trace RUN</code></td></tr>
+<tr><td>Continue a run that was cut off</td><td><strong>Continue from there</strong></td><td><code>quilzo agent resume RUN</code></td></tr>
+<tr><td>Run again from after a step, as a new run</td><td><strong>Run again from here</strong></td><td><code>quilzo agent replay RUN STEP</code></td></tr>
+<tr><td>Keep a run as an evaluation case</td><td><strong>Keep it</strong></td><td><code>quilzo eval keep RUN</code></td></tr>
+<tr><td>Prove what a run did</td><td>&nbsp;</td><td><code>quilzo agent receipt RUN -o receipt.json</code></td></tr>
+</tbody></table></div>
+<figure class="shot"><img src="/images/agents/runs.webp" alt="The list of kept runs with each one's goal, outcome and counts"><figcaption>Every run, kept.</figcaption></figure>
+
+<h2 id="templates">The eight templates</h2>
+<p><code>quilzo agent templates</code> lists them with when to use each. Their defaults:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Kind</th><th scope="col">For</th><th scope="col">Autonomy</th><th scope="col">Budget</th></tr></thead>
+<tbody>
+<tr><th scope="row">retrieval</th><td>Answers questions from published content and cannot write. Start here.</td><td>propose</td><td>8 steps, 4 tool calls, 2 minutes</td></tr>
+<tr><th scope="row">task</th><td>Performs one bounded operation on request.</td><td>draft</td><td>25 steps, 15 tool calls, 10 minutes</td></tr>
+<tr><th scope="row">copilot</th><td>Works alongside a person, on what they are looking at.</td><td>propose</td><td>12 steps, 6 tool calls, 3 minutes</td></tr>
+<tr><th scope="row">autonomous</th><td>Pursues a goal across many steps without being asked each time.</td><td>draft</td><td>60 steps, 40 tool calls, 30 minutes</td></tr>
+<tr><th scope="row">supervisor</th><td>Breaks work into stages and hands each to a named agent.</td><td>draft</td><td>40 steps, 20 tool calls, 20 minutes</td></tr>
+<tr><th scope="row">archivist</th><td>Keeps long-horizon memory: why a decision was made, what was tried. Use deliberately, because it accumulates personal data as a side effect.</td><td>propose</td><td>15 steps, 8 tool calls, 5 minutes</td></tr>
+<tr><th scope="row">learner</th><td>Keeps what worked as a reusable procedure, for repeated work with a checkable outcome.</td><td>draft</td><td>40 steps, 25 tool calls, 15 minutes</td></tr>
+<tr><th scope="row">operator</th><td>Does errands outside Quilzo, in the apps you already use. The most useful archetype, and by a distance the most dangerous.</td><td>propose</td><td>20 steps, 10 tool calls, 5 minutes</td></tr>
+</tbody></table></div>
+
+<h2 id="autonomy">How far an agent may go on its own</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Autonomy</th><th scope="col">What happens to what it writes</th></tr></thead>
+<tbody>
+<tr><th scope="row">propose</th><td>It suggests, and a person does it.</td></tr>
+<tr><th scope="row">draft</th><td>It writes drafts, which nobody is served until a person publishes.</td></tr>
+<tr><th scope="row">publish</th><td>What it writes goes live.</td></tr>
+</tbody></table></div>
+<p>The autonomy you declare is a ceiling. A model reaches it only by passing evaluations, and loses it the moment it follows a planted instruction (see <a href="/evals/">Evaluate agents</a>).</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/agent-limits/"><span class="card-icon"><icon name="rule"></icon></span><h3>Limits that hold</h3><p>What an agent can reach, budgets in money, and the exfiltration breaker.</p></a></li>
+<li><a class="card" href="/evals/"><span class="card-icon"><icon name="labs"></icon></span><h3>Evaluate agents</h3><p>Test cases with planted instructions, and autonomy that is earned.</p></a></li>
+<li><a class="card" href="/agent-identity/"><span class="card-icon"><icon name="badge"></icon></span><h3>Identity and receipts</h3><p>Who answers for each agent, and proof of what a run did.</p></a></li>
+<li><a class="card" href="/memory/"><span class="card-icon"><icon name="memory"></icon></span><h3>Memory</h3><p>What agents remember, held when tainted, and forgotten on request.</p></a></li>
+</ul>
+</section>

@@ -1,0 +1,16 @@
+<!--
+title: SCIM provisioning from Okta and Entra
+short: Provisioning
+seo: SCIM provisioning: Okta and Entra ID user lifecycle
+description: Let Okta, Microsoft Entra or another identity provider create, update, suspend and delete people through SCIM, with their groups mapped to Quilzo roles and jobs.
+lead: People kept in step by the identity provider, including when they leave.
+icon: provisioning
+screens: Provisioning
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/provisioning/provisioning.webp" alt="The Provisioning screen"><figcaption>SCIM provisioning.</figcaption></figure><ol class="steps"><li><h3>Issue the SCIM token</h3><pre><code>quilzo scim token</code></pre><p>Give the identity provider the SCIM address and this token.</p></li>
+<li><h3>Say what each group means</h3><pre><code>quilzo scim map Editors author
+quilzo scim map Security analyst</code></pre></li>
+<li><h3>Check it</h3><pre><code>quilzo scim status</code></pre></li></ol>
+<p>Only grants made by provisioning are ever changed by it; access granted by hand is left alone. Deactivation suspends a person at once: their sessions, tokens and connected apps stop, and agents they sponsor stop. Deletion also erases what agents remember about them.</p>

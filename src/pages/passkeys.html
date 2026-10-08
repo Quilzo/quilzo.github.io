@@ -1,0 +1,19 @@
+<!--
+title: Passkeys, tokens and sessions
+short: Passkeys and tokens
+seo: Passkeys, API tokens and session limits
+description: Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.
+lead: Passkeys for people, scoped tokens for programs, and sessions that end.
+icon: passkeys
+screens: Passkeys
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/passkeys/passkeys.webp" alt="The Passkeys screen"><figcaption>Your passkeys.</figcaption></figure><p>Everybody manages their own passkeys under <span class="where">Administration › Passkeys</span>. There is no password: no password storage, no reset flow and nothing to stuff.</p><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Issue a token</td><td><code>quilzo token issue ci --principal deploy --role publisher --ttl 720h</code></td></tr>
+<tr><td>Short-lived and read-only, for an integration</td><td><code>quilzo token issue ... --api</code></td></tr>
+<tr><td>Trade a stored token for a short session</td><td><code>quilzo token exchange</code></td></tr>
+<tr><td>List, revoke, find stale ones</td><td><code>quilzo token list / quilzo token revoke ID / quilzo token stale</code></td></tr>
+</tbody></table></div><p>A token can carry less than the person holding it, never more. Session limits are organisation policy (see <a href="/compliance/#policy">NIST parameters</a>).</p>

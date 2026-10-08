@@ -1,0 +1,20 @@
+<!--
+title: Analytics, A/B tests and personalisation
+short: Analytics and experiments
+seo: Cookieless analytics, A/B testing and personalisation
+description: Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.
+lead: Measure without cookies, test without scripts, and personalise without profiles.
+icon: analytics
+screens: Analytics, Experiments, Personalisation
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/growth/analytics.webp" alt="The Analytics screen"><figcaption>Analytics without a cookie.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Views, visitors, referrers, conversions</td><td><code>quilzo analytics --days 30</code></td></tr>
+<tr><td>Start an A/B test</td><td><code>quilzo experiment add NAME --page P --variant b=PAGE --goal G</code></td></tr>
+<tr><td>Read its result</td><td><code>quilzo experiment report NAME</code></td></tr>
+<tr><td>Personalise by campaign, language or device</td><td><code>quilzo personalise add NAME --page P --variant V --when campaign=X</code></td></tr>
+<tr><td>Test a rule</td><td><code>quilzo personalise test PAGE --campaign X</code></td></tr>
+</tbody></table></div><figure class="shot"><img src="/images/growth/experiments.webp" alt="The Experiments screen"><figcaption>Experiments, and a verdict only when there is one.</figcaption></figure>

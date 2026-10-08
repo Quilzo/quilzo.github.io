@@ -1,0 +1,24 @@
+<!--
+title: Design, themes and templates
+short: Design
+seo: Website themes from one colour, with contrast checked
+description: Start from a template, generate a palette from one colour with contrast checked, and move design tokens in and out, in templates that cannot run code.
+lead: A theme from one colour, contrast checked, in a template language that cannot run code.
+icon: design
+screens: Design
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/design/design.webp" alt="The Design screen with the theme's colours and styles"><figcaption>The theme, and its knobs.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>List starting points</td><td><code>quilzo template list</code></td></tr>
+<tr><td>Use one</td><td><code>quilzo template use NAME</code></td></tr>
+<tr><td>Generate a palette from one colour</td><td><code>quilzo theme generate "#0b57d0"</code></td></tr>
+<tr><td>Change one token; unreadable values are refused</td><td><code>quilzo theme set TOKEN VALUE</code></td></tr>
+<tr><td>Check contrast and fonts</td><td><code>quilzo theme check</code></td></tr>
+<tr><td>Import design tokens</td><td><code>quilzo theme import tokens.json --set T=PATH</code></td></tr>
+<tr><td>Export them</td><td><code>quilzo theme export --out tokens.json</code></td></tr>
+<tr><td>Convert a template from another system</td><td><code>quilzo template adopt FILE</code></td></tr>
+</tbody></table></div>
+<p>Templates use four constructs: a value, <code>if</code>, <code>for</code> and filters. There are no function calls, no arithmetic and no includes, so a template cannot be made to run anything.</p>

@@ -1,0 +1,17 @@
+<!--
+title: Single sign-on with OIDC and SAML
+short: Single sign-on
+seo: Single sign-on: Okta, Entra ID, Google Workspace, SAML, OIDC
+description: Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.
+lead: Sign in through the identity provider you already run.
+icon: sso
+screens: Single sign-on
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/sso/sso.webp" alt="The Single sign-on screen"><figcaption>Identity providers.</figcaption></figure><h2 id="oidc">OpenID Connect</h2><pre><code>quilzo oidc configure --provider google --domain example.com
+quilzo oidc configure --provider microsoft --tenant TENANT
+quilzo oidc configure --issuer https://idp.example.com --client-id ID
+quilzo oidc check</code></pre><h2 id="saml">SAML</h2><pre><code>quilzo saml presets
+quilzo saml add okta --metadata metadata.xml --url https://quilzo.example.com --preset okta
+quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have checked it</code></pre><p>Presets: Okta, Microsoft Entra, Google, JumpCloud, OneLogin, PingOne, AD FS and Keycloak. Single sign-on can be required, with named break-glass accounts that keep working when the provider does not.</p>

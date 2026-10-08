@@ -1,0 +1,96 @@
+<!--
+title: A RAG chatbot that answers from your pages and cites its sources
+short: Chatbots
+seo: RAG chatbot for your website, with citations and no tracking
+description: Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and stores nothing a visitor asks.
+lead: Answers from what you have published, a citation on every sentence, and a person when the visitor wants one.
+icon: assistants
+screens: Chatbots, Inbox
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>A Quilzo <strong>chatbot</strong> is retrieval-augmented generation (RAG) over your own published pages. It retrieves passages by keywords and by meaning, answers only from them, and puts a citation on every sentence. With a model connected, each sentence is checked against the passage it cites and dropped if the passage does not support it. Without a model it answers extractively, quoting the passages. Nothing a visitor asks is stored.</p></div>
+
+<h2 id="create">Create a chatbot</h2>
+<ol class="steps">
+<li>
+<h3>Name it and choose what it reads</h3>
+<p>Open <span class="where">Content › Chatbots</span> and fill in <strong>New chatbot</strong>. By default a chatbot reads every published page. Limit it to the pages it should know about, so it cannot answer from a page you did not mean it to read.</p>
+<figure class="shot"><img src="/images/chatbots/chatbots.webp" alt="The Chatbots screen listing the Marginalia help chatbot and a form to create a new one"><figcaption>Your chatbots, and a new one.</figcaption></figure>
+<p>From the command line, the same chatbot with everything turned on:</p>
+<pre><code>quilzo assistant add help --title "Marginalia help" \
+  --greeting "Ask about orders, delivery and returns." \
+  --pages returns,delivery,about,stockists,wholesale \
+  --public --launcher \
+  --suggest "Can I return opened ink?|How long does delivery to Canada take?|Where can I buy in person?" \
+  --handoff --voice --translate</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Option</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>--pages</code>, <code>--exclude</code></td><td>Page prefixes it may, and may not, read.</td></tr>
+<tr><td><code>--documents</code></td><td>Files from the media library it may also read, such as PDFs.</td></tr>
+<tr><td><code>--model</code></td><td>Answer with the configured model, every sentence checked against its source. Without it, answers are extractive.</td></tr>
+<tr><td><code>--public</code></td><td>Serve it on the site at <code>/ask/NAME</code>.</td></tr>
+<tr><td><code>--launcher</code></td><td>Put a button on the site's pages that opens it beside the page. Style it with <code>--launcher-style</code>, <code>--launcher-side</code> and <code>--panel</code>.</td></tr>
+<tr><td><code>--embed</code></td><td>Other sites allowed to show it in a frame.</td></tr>
+<tr><td><code>--static</code></td><td>Answer on static copies of the site too, in the visitor's browser, from published pages only.</td></tr>
+<tr><td><code>--handoff</code></td><td>Let a visitor ask for a person. The conversation goes to the Inbox.</td></tr>
+<tr><td><code>--voice</code>, <code>--translate</code></td><td>Speech and translation on the visitor's own device, where the browser offers them.</td></tr>
+<tr><td><code>--suggest</code>, <code>--nudge</code></td><td>Questions offered before the first, and a short line shown beside the button once a visit.</td></tr>
+</tbody></table></div>
+</li>
+<li>
+<h3>Try it before anybody else does</h3>
+<p>On the chatbot's page, ask something under <strong>Try it</strong>. You see the answer, every passage it retrieved with its keyword, vector and heading rank, and anything it was not allowed to read. Or:</p>
+<pre><code>quilzo assistant ask help "Can I return an opened bottle of ink?"</code></pre>
+<pre class="out"><code>Thirty days, unused, and we pay the postage back. [1] Ink is the exception: once a bottle is opened we cannot resell it, so we cannot take it back. [1] …
+  [1] Returns (returns)
+  [2] Delivery (delivery)
+  extractive mode — extractive by declaration</code></pre>
+<figure class="shot"><img src="/images/chatbots/settings.webp" alt="The settings of the Marginalia help chatbot: title, greeting, what it reads, and whether it is public"><figcaption>Each chatbot's settings and its test console.</figcaption></figure>
+</li>
+<li>
+<h3>Measure it</h3>
+<p>Write questions you know the answers to, with the page each should come from, and questions the site does not answer, which it should refuse. A test set of only answerable questions rewards a chatbot that always answers, which is the opposite of what a site wants.</p>
+<pre><code>{"question": "Can I return an opened bottle of ink?", "page": "returns", "contains": ["ink"]}
+{"question": "How long does ink take to reach Canada?", "page": "delivery"}
+{"question": "What is the weather in Lisbon?"}</code></pre>
+<pre><code>quilzo assistant eval help cases.jsonl</code></pre>
+<pre class="out"><code>3 case(s): 2 answerable, 1 not
+  right page first      1/2
+  right page retrieved  1/2  (MRR 0.50)
+  answered              1/2
+  refused correctly     1/1
+  sentences removed     0
+  refused "How long does ink take to reach Canada?", which delivery answers</code></pre>
+<p>That last line is a real finding: the Delivery page says ink goes "outside Europe … by surface", and the question says "Canada". Rewording the page, or turning on <code>--model</code>, is the fix, and the evaluation says when it worked.</p>
+</li>
+</ol>
+
+<h2 id="on-the-site">Put it on the site</h2>
+<p>A public chatbot has its own page at <code>/ask/NAME</code>. Every sentence links to its source, and the page tells visitors they are talking to an automated assistant, as Article 50 of the EU AI Act requires.</p>
+<figure class="shot"><img src="/images/chatbots/answer.webp" alt="The public chatbot page answering whether opened ink can be returned, each sentence with a citation to the Returns page"><figcaption>An answer on the site, with its source.</figcaption></figure>
+<p>With <code>--launcher</code>, a button on every page opens the chatbot beside what the visitor is reading:</p>
+<figure class="shot"><img src="/images/chatbots/launcher.webp" alt="The Delivery page of the demo shop with the chatbot panel open beside it, offering three suggested questions"><figcaption>The launcher, opened on the Delivery page.</figcaption></figure>
+<p>Speech is recognised on the visitor's device, and nothing they say leaves it. Translation uses the browser's on-device translator, so the answer is still the site's own words.</p>
+
+<h2 id="handoff">Hand the conversation to a person</h2>
+<p>With <code>--handoff</code>, a visitor can choose <strong>Talk to a person instead</strong>. Unlike questions to the chatbot, that conversation is kept, for 30 days after it last moves by default and 90 at most, and the visitor is told so before sending.</p>
+<figure class="shot"><img src="/images/chatbots/inbox.webp" alt="The Inbox with one conversation waiting for a reply, about a cracked ink bottle"><figcaption>The Inbox, with a conversation waiting for a reply.</figcaption></figure>
+<p>Answer from <span class="where">Content › Inbox</span>, or:</p>
+<pre><code>quilzo inbox list
+quilzo inbox reply help/ID "Sorry about that. A new bottle goes out today."
+quilzo inbox close help/ID</code></pre>
+
+<h2 id="actions">Let it offer to do something</h2>
+<p>A chatbot can offer a link or a form, and never more. It proposes, the visitor chooses, and the form's own checks apply:</p>
+<pre><code>quilzo assistant action help wholesale --kind form --target wholesale \
+  --description "Ask about wholesale prices" --fields name,email,message</code></pre>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/chatbot-safety/"><span class="card-icon"><icon name="security"></icon></span><h3>Prompt injection in RAG</h3><p>Planted instructions left out, an outside guardrail, poisoned pages caught.</p></a></li>
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3>Models</h3><p>The model behind <code>--model</code>, and its daily budget.</p></a></li>
+</ul>
+</section>

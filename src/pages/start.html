@@ -1,0 +1,121 @@
+<!--
+title: Get started with Quilzo in ten minutes
+short: Get started
+seo: Get started: run an AI agent control plane in ten minutes
+description: Install Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.
+lead: From nothing to a running admin, a published site and your first agent, in the order Quilzo needs them.
+icon: start
+screens: Get started, Find, You
+updated: 2026-10-08
+-->
+
+<div class="definition"><p><strong>Quilzo</strong> is a self-hosted control plane for AI agents. Each agent has a declaration saying what it may do, and one gate enforces it on every action. A person decides on the actions that matter, and every run is recorded in a signed log. It ships as a single program with no dependencies.</p></div>
+
+<p>This guide takes about ten minutes. You need a terminal on Linux, macOS or Windows. A model is optional: an agent can walk its declaration without one, and you can connect a model at the end.</p>
+
+<h2 id="install">Install and sign in</h2>
+
+<ol class="steps">
+<li>
+<h3>Get the program</h3>
+<p>Download a release for your platform and check it. Releases are built for Linux, macOS and Windows, on amd64 and arm64.</p>
+<pre><code>curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/quilzo-linux-amd64
+curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/SHA256SUMS
+sha256sum -c --ignore-missing SHA256SUMS
+sudo install -m 0755 quilzo-linux-amd64 /usr/local/bin/quilzo</code></pre>
+<p>Or build from source with Go 1.27. There are no third-party modules to download:</p>
+<pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
+go build -o quilzo ./cmd/quilzo</code></pre>
+<p>Released binaries trail <code>main</code>, so build from source if you want everything this manual describes. <a href="/install/">Install and run it for real</a> covers checking a release's provenance, the container image, and running it as a service.</p>
+</li>
+<li>
+<h3>Create a store</h3>
+<p>A store is a directory holding everything Quilzo keeps: content, history, access policy, credentials, agents and the audit log. Back up that one directory and you have backed up everything.</p>
+<pre><code>quilzo init</code></pre>
+<pre class="out"><code>created .quilzo
+  content is immutable and addressed by hash; publishing moves a pointer</code></pre>
+<p>Commands use <code>.quilzo</code> in the current directory. Pass <code>--root DIR</code> to use another.</p>
+</li>
+<li>
+<h3>Make yourself an administrator and get a sign-in token</h3>
+<p>Access is granted before any credential exists. The policy names who may do what, and a token only proves you are one of those people.</p>
+<pre><code>quilzo auth grant you admin
+quilzo token issue you --principal you --role admin</code></pre>
+<pre class="out"><code>granted admin to you on /
+  you can now: view, edit-draft, publish, rollback, grant, manage-tokens on /</code></pre>
+<p>The token is printed once, and only its hash is stored. Save it to <code>~/.quilzo/token</code> with mode 0600 and the command line uses it from then on; the command line also accepts <code>--token</code> or <code>QUILZO_TOKEN</code>. If you lose it, issue another and revoke the first with <code>quilzo token revoke ID</code>.</p>
+</li>
+<li>
+<h3>Load something to work on (optional)</h3>
+<p><code>quilzo demo</code> installs Marginalia, a small paper shop: pages, a product catalogue as structured records, images, listings and forms. Every screenshot in this manual was taken from it.</p>
+<pre><code>quilzo demo</code></pre>
+<pre class="out"><code>Marginalia is installed. A paper shop: products as structured records, a catalogue a machine can read, …
+  11 page(s), 15 record(s), 12 image(s), 7 listing(s), 2 form(s)</code></pre>
+</li>
+<li>
+<h3>Open the admin and sign in</h3>
+<p>The admin listens on loopback by default. <code>--open</code> opens it in your browser.</p>
+<pre><code>quilzo serve --open</code></pre>
+<p>Paste the token from step 3. Once you are in, you can add a passkey under <span class="where">Administration › Passkeys</span> or connect single sign-on (see <a href="/sso/">Single sign-on</a>).</p>
+<figure class="shot"><img src="/images/start/signin.webp" alt="The Quilzo admin sign-in screen, asking for a token"><figcaption>Signing in with the token. There is no password to store or reset.</figcaption></figure>
+</li>
+</ol>
+
+<h2 id="find-your-way">Find your way around the admin</h2>
+
+<p>The <span class="where">Get started</span> screen opens the first time you sign in. Its checklist ticks each step when the store shows it is done, not when you click past it.</p>
+<figure class="shot"><img src="/images/start/get-started.webp" alt="The Get started screen with a numbered checklist: write something, give it a shape, publish it"><figcaption>The checklist reads the store, so it stays accurate when you come back to it.</figcaption></figure>
+<p>The menu on the left groups the screens: <strong>Content</strong>, <strong>Release</strong>, <strong>Assurance</strong>, <strong>Security operations</strong>, <strong>Administration</strong> and <strong>Reference</strong>. To jump anywhere, press <kbd>Ctrl</kbd> <kbd>K</kbd> (<kbd>⌘</kbd> <kbd>K</kbd> on a Mac) and type: Find covers every screen, page, setting and content type.</p>
+<figure class="shot"><img src="/images/start/find.webp" alt="The Find palette open over the Pages screen, showing the Memory screen as a result for the word memory"><figcaption>Find, opened with Ctrl K. The same search is <code>quilzo find WORDS</code> on the command line.</figcaption></figure>
+<p>Every screen has a <strong>Help</strong> link in its footer that opens the guide for that screen. What you may do, your sessions, and how the admin looks to you are under <span class="where">Reference › You</span>.</p>
+
+<h2 id="first-agent">Run your first agent</h2>
+
+<ol class="steps">
+<li>
+<h3>Declare one</h3>
+<p>A <em>retrieval</em> agent answers questions from published content and cannot write anything. It is where most agents should start.</p>
+<pre><code>quilzo agent new help-desk --kind retrieval</code></pre>
+<pre class="out"><code>declared help-desk (retrieval)
+  Answer questions using published content only.
+  capabilities  read_page, list_pages, search_pages, similar_pages
+  autonomy      propose</code></pre>
+</li>
+<li>
+<h3>Run it without a model</h3>
+<p>With no model, a run tries each capability once. It shows what the store answers and what the gate allows, which makes it a cheap first test.</p>
+<pre><code>quilzo agent run help-desk</code></pre>
+</li>
+<li>
+<h3>Connect a model and ask it something</h3>
+<p>Point Quilzo at any OpenAI-compatible endpoint. A local model through Ollama is enough; nothing leaves the machine.</p>
+<pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1
+export QUILZO_MODEL=llama3.1
+quilzo agent run --model help-desk "Can I return an opened bottle of ink?"</code></pre>
+<p>The model picks each step from the agent's declared capabilities and cannot add to them. Every run is kept, and you can read it step by step:</p>
+<pre><code>quilzo agent runs
+quilzo agent trace RUN</code></pre>
+<pre class="out"><code>help-desk  complete  Can I return an opened bottle of ink?
+   1  search_pages   done   1 page(s) match, best first: returns
+   2  read_page      done   body: Thirty days, unused, and we pay the postage back. Ink is the exception…
+   3  finished       done   done</code></pre>
+</li>
+</ol>
+
+<h2 id="publish">Publish the site</h2>
+<p>The public site is a second process with no editing surface, so the part facing the internet cannot change anything.</p>
+<pre><code>quilzo site --addr 127.0.0.1:8081</code></pre>
+<figure class="shot"><img src="/images/start/site.webp" alt="The Marginalia demo shop's home page as the public site serves it"><figcaption>The demo shop, served by <code>quilzo site</code>.</figcaption></figure>
+
+<h2 id="three-ways-in">Three ways in, one set of rules</h2>
+<p>Everything is reachable from the admin, from the command line (<code>quilzo help</code> lists every command, and each one takes <code>--json</code>), and from the agent interface over MCP. A rule enforced in one of them is enforced in all three, because they share one code path.</p>
+
+<section class="see-also">
+<h2 id="next">Where to go next</h2>
+<ul class="cards">
+<li><a class="card" href="/agents/"><span class="card-icon"><icon name="agents"></icon></span><h3>Build an AI agent</h3><p>Declare one in the admin, have it ask before it acts, and read its runs.</p></a></li>
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3>Connect models</h3><p>Routes, budgets in money, and personal data kept out of prompts.</p></a></li>
+<li><a class="card" href="/chatbots/"><span class="card-icon"><icon name="assistants"></icon></span><h3>Add a chatbot</h3><p>Answers from your published pages, with a citation on every sentence.</p></a></li>
+<li><a class="card" href="/install/"><span class="card-icon"><icon name="download"></icon></span><h3>Run it in production</h3><p>TLS, two processes, a service account, backups and upgrades.</p></a></li>
+</ul>
+</section>

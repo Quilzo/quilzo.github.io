@@ -1,0 +1,21 @@
+<!--
+title: Member accounts and boards
+short: Members and boards
+seo: Website member accounts with passkeys, and moderated boards
+description: Let visitors have accounts that sign in with passkeys, invite them, write on moderated boards, and erase an account completely on request.
+lead: Accounts for visitors, with passkeys and no passwords, and boards they can write on.
+icon: members
+screens: Members, Boards
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/members/members.webp" alt="The Members screen"><figcaption>Members.</figcaption></figure><p>Turn accounts on with the setting <code>site.members</code>. Members sign in with passkeys, with recovery codes, and no password.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>List and inspect accounts</td><td><code>quilzo member list</code></td></tr>
+<tr><td>Sign-up by invitation</td><td><code>quilzo member invite --note T</code></td></tr>
+<tr><td>Stop one signing in, or erase it</td><td><code>quilzo member disable ID / quilzo member remove ID</code></td></tr>
+<tr><td>Make a board</td><td><code>quilzo board add NAME --title T --moderation pre</code></td></tr>
+<tr><td>Moderate</td><td><code>quilzo board held / quilzo board approve ID</code></td></tr>
+</tbody></table></div><figure class="shot"><img src="/images/members/boards.webp" alt="The Boards screen"><figcaption>Boards, and what waits for moderation.</figcaption></figure>

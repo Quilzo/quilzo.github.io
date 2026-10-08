@@ -1,0 +1,104 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{.Page.SEO}}{{if .Page.Slug}} | Quilzo{{end}}</title>
+<meta name="description" content="{{.Page.Desc}}">
+<link rel="canonical" href="{{.Site}}{{.Page.URL}}">
+<meta name="color-scheme" content="light dark">
+<meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#131314" media="(prefers-color-scheme: dark)">
+<meta property="og:type" content="{{if .Page.Slug}}article{{else}}website{{end}}">
+<meta property="og:site_name" content="Quilzo manual">
+<meta property="og:title" content="{{.Page.SEO}}">
+<meta property="og:description" content="{{.Page.Desc}}">
+<meta property="og:url" content="{{.Site}}{{.Page.URL}}">
+<meta property="og:image" content="{{.Site}}{{.Page.Image}}">
+<meta property="og:locale" content="en_GB">
+{{if .Page.Slug}}<meta property="article:modified_time" content="{{.Page.Updated}}">{{end}}
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{.Page.SEO}}">
+<meta name="twitter:description" content="{{.Page.Desc}}">
+<meta name="twitter:image" content="{{.Site}}{{.Page.Image}}">
+<link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="/assets/mark.png">
+<link rel="preload" href="/assets/fonts/quilzo-ui.woff2" as="font" type="font/woff2" crossorigin>
+<link rel="stylesheet" href="/assets/docs.css">
+<link rel="sitemap" type="application/xml" href="/sitemap.xml">
+<script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
+{{if not .Page.Slug}}<script>(function(){var m={{.Legacy}},h=decodeURIComponent(location.hash.slice(1));if(Object.prototype.hasOwnProperty.call(m,h))location.replace(m[h])})()</script>{{end}}
+<script src="/assets/docs.js" defer></script>
+<script type="application/ld+json">{{.Page.LD}}</script>
+</head>
+<body{{if not .Page.Slug}} class="home"{{end}}>
+<a class="skip" href="#main">Skip to the content</a>
+<header class="bar">
+  <button class="iconbutton menu-toggle" type="button" aria-controls="drawer" aria-expanded="false" aria-label="Open the menu">{{icon "menu"}}</button>
+  <a class="brand" href="/" aria-label="Quilzo manual, home">
+    <svg class="mark" viewBox="0 0 24 24" width="28" height="28" aria-hidden="true" focusable="false"><path class="mark-loop" d="M16.34 17.89A9.00 9.00 0 1 1 19.14 7.43A1.70 1.70 0 0 1 15.99 8.70A5.60 5.60 0 1 0 14.25 15.21A1.70 1.70 0 0 1 16.34 17.89Z"/><path class="mark-tail" d="M14.80 12.40L22.40 20.00A1.70 1.70 0 0 1 20.00 22.40L12.40 14.80A1.70 1.70 0 0 1 14.80 12.40Z"/></svg>
+    <span class="brand-name">Quilzo</span><span class="brand-sub">manual</span>
+  </a>
+  <div class="search" role="search" hidden>
+    <label class="sr" for="q">Search the manual</label>
+    {{icon "search"}}
+    <input id="q" type="search" placeholder="Search the manual" autocomplete="off" spellcheck="false" aria-controls="results" aria-expanded="false" aria-autocomplete="list" role="combobox">
+    <kbd class="search-key" aria-hidden="true">/</kbd>
+    <ul id="results" class="results" role="listbox" aria-label="Search results" hidden></ul>
+  </div>
+  <nav class="bar-links" aria-label="Elsewhere">
+    <a class="btn btn-text" href="https://github.com/Quilzo/Quilzo">{{icon "code"}}<span>GitHub</span></a>
+  </nav>
+  <button class="iconbutton theme-toggle" type="button" aria-label="Appearance: follow the system" hidden>{{icon "contrast"}}</button>
+</header>
+<div class="shell">
+<nav class="drawer" id="drawer" aria-label="Guides">
+  <ul class="nav nav-home"><li><a href="/"{{if not .Page.Slug}} aria-current="page"{{end}}>{{icon "home"}}<span>Overview</span></a></li></ul>
+{{range .Groups}}
+  <details class="navgroup"{{if or (not $.Page.Slug) (eq .Name $.Page.Group)}} open{{end}} data-group="{{.ID}}">
+    <summary><h2>{{.Name}}</h2><span class="chev">{{icon "expand_more"}}</span></summary>
+    <ul class="nav">
+{{range .Pages}}      <li><a href="{{.URL}}"{{if eq .Slug $.Page.Slug}} aria-current="page"{{end}}>{{icon .Icon}}<span>{{.Short}}</span></a></li>
+{{end}}    </ul>
+  </details>
+{{end}}
+</nav>
+<main id="main" class="main">
+{{if .Page.Slug}}
+<article class="guide">
+  <header class="guide-head">
+    <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Manual</a><span aria-hidden="true">›</span>{{if .Page.Group}}<a href="/#{{range .Groups}}{{if eq .Name $.Page.Group}}{{.ID}}{{end}}{{end}}">{{.Page.Group}}</a>{{else}}<span>Reference</span>{{end}}</nav>
+    <h1>{{.Page.Title}}</h1>
+    <p class="lead">{{.Page.Lead}}</p>
+{{if .Page.Screens}}    <p class="screens"><span class="screens-label">In the admin</span>{{range .Page.Screens}}<span class="chip">{{.}}</span>{{end}}</p>
+{{end}}  </header>
+  <div class="prose">
+{{.Page.Body}}
+  </div>
+  <footer class="guide-foot">
+    <p class="updated">Updated {{.Page.Updated}} · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/{{.Page.Source}}">Edit this page on GitHub</a></p>
+{{if or .Page.Prev .Page.Next}}    <nav class="pager" aria-label="Previous and next guides">
+{{with .Page.Prev}}      <a class="pager-prev" href="{{.URL}}" rel="prev"><span class="pager-dir">{{icon "arrow_back"}}Previous</span><span class="pager-title">{{.Title}}</span></a>
+{{end}}{{with .Page.Next}}      <a class="pager-next" href="{{.URL}}" rel="next"><span class="pager-dir">Next{{icon "arrow_forward"}}</span><span class="pager-title">{{.Title}}</span></a>
+{{end}}    </nav>
+{{end}}  </footer>
+</article>
+{{else}}
+{{.Page.Body}}
+{{end}}
+</main>
+{{if .Page.TOC}}<aside class="toc" aria-label="On this page">
+  <h2>On this page</h2>
+  <ul>
+{{range .Page.TOC}}    <li><a href="#{{.ID}}">{{.Text}}</a></li>
+{{end}}  </ul>
+</aside>{{end}}
+</div>
+<footer class="foot">
+  <div class="foot-inner">
+    <p><strong>Quilzo</strong> is the self-hosted control plane for an organisation's AI agents and the content they produce. One Go binary, no third-party dependencies.</p>
+    <p>Free software under <a href="/licence/">AGPL-3.0-or-later, or a commercial licence</a>. This manual describes <code>main</code>; released binaries trail it. <a href="https://github.com/Quilzo/Quilzo">Source</a> · <a href="https://github.com/Quilzo/Quilzo/releases">Releases</a> · <a href="https://github.com/Quilzo/Quilzo/blob/main/SECURITY.md">Report a vulnerability</a> · <a href="/llms.txt">llms.txt</a></p>
+  </div>
+</footer>
+</body>
+</html>

@@ -1,0 +1,26 @@
+<!--
+title: Agent governance extension for A2A, version 1
+short: Agent governance extension
+seo: A2A agent governance extension, version 1
+description: An A2A agent card extension stating what each agent may do: capabilities, autonomy, writes, human approval, taint, scope, budget, delegates, hosts and memory.
+lead: What an agent card says about each agent that the A2A protocol itself cannot.
+icon: handshake
+updated: 2026-10-08
+-->
+
+<p>URI: <code>https://quilzo.github.io/spec/agent-governance/v1</code>. This is a proposal with an implementation behind it, namespaced to this project rather than to A2A, not a standard.</p>
+<h2 id="fields">Fields, one entry per skill</h2>
+<p>Every field is read from the enforced declaration, so it describes the gate rather than a promise beside it.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Field</th><th scope="col">Meaning</th></tr></thead><tbody>
+<tr><td><code>capabilities</code></td><td>The closed list of operations. Anything else is refused, however the request is phrased.</td></tr>
+<tr><td><code>autonomy</code></td><td><code>propose</code>, <code>draft</code> or <code>publish</code>: what the agent may do with what it produces.</td></tr>
+<tr><td><code>writes</code></td><td>Whether any capability changes stored content, derived from the list.</td></tr>
+<tr><td><code>humanApproval</code></td><td>Whether a person must agree before anything the agent did becomes public. Always on for publish.</td></tr>
+<tr><td><code>taintsOnRead</code></td><td>The run is marked once it reads stored content, and a marked run cannot publish itself.</td></tr>
+<tr><td><code>scope</code></td><td>The content it may read: which ref, types and locales. Empty means unrestricted, stated rather than implied.</td></tr>
+<tr><td><code>budget</code></td><td>What one run may spend, so a caller can price delegated work before spending anything.</td></tr>
+<tr><td><code>delegates</code></td><td>The agents it may hand work to, by name.</td></tr>
+<tr><td><code>hosts</code></td><td>The outside systems it may reach. Empty means none.</td></tr>
+<tr><td><code>memory</code></td><td>What it retains and for how long; absent when it retains nothing.</td></tr>
+</tbody></table></div>
+<p>See <a href="/a2a/">A2A</a> for how Quilzo publishes and uses it.</p>

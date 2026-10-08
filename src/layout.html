@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>{{.Page.SEO}}{{if .Page.Slug}} | Quilzo{{end}}</title>
 <meta name="description" content="{{.Page.Desc}}">
-<link rel="canonical" href="{{.Site}}{{.Page.URL}}">
+{{if eq .Page.Slug "404"}}<meta name="robots" content="noindex">{{else}}<link rel="canonical" href="{{.Site}}{{.Page.URL}}">{{end}}
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131314" media="(prefers-color-scheme: dark)">

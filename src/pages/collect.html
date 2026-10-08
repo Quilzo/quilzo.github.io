@@ -19,6 +19,6 @@ quilzo collect auto 15m
 quilzo collect status</code></pre><p>Mappings exist for 17 platforms, including AWS CloudTrail, Google Workspace, Google Cloud, Azure, Kubernetes, CrowdStrike, Cloudflare, Slack, Salesforce and Snowflake. A log that arrives as a file goes in with <code>quilzo collect file ISSUER/STREAM FILE</code>; your own application's log with <code>quilzo source add MAPPING.json --sample RECORDS.json</code>.</p></li>
 <li><h3>Take pushed events</h3><pre><code>quilzo inbound add okta okta-hooks
 quilzo inbound add ssf entra-signals
-quilzo inbound add webhook ci-events</code></pre><p>Okta event hooks, OpenID Shared Signals (SSF, CAEP and RISC) and signed webhooks.</p><figure class="shot"><img src="/images/collect/feeds.webp" alt="The Feeds screen"><figcaption>Feeds pushing events here.</figcaption></figure></li>
+quilzo inbound add webhook ci-events</code></pre><p>Okta event hooks, OpenID Shared Signals (SSF, CAEP and RISC) and signed webhooks.</p><figure class="shot"><img src="/images/collect/feeds.webp" alt="The Feeds screen"><figcaption>Adding a feed: Okta event hooks, Shared Signals, signed webhooks or GitHub.</figcaption></figure></li>
 </ol>
 <p>Events are stored sealed and digested; <code>quilzo spool verify</code> checks every segment, and <code>quilzo spool hold NAME --why W</code> keeps everything while something is investigated.</p>

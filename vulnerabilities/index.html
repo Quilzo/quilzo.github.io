@@ -14,13 +14,13 @@
 <meta property="og:title" content="Vulnerability prioritisation: CISA KEV, EPSS, SSVC and VEX">
 <meta property="og:description" content="Import SBOMs and advisories, rank vulnerabilities by exploitation and exposure with CISA KEV, EPSS and SSVC, plan upgrades, and publish OpenVEX.">
 <meta property="og:url" content="https://quilzo.github.io/vulnerabilities/">
-<meta property="og:image" content="https://quilzo.github.io/images/vulnerabilities/vulnerabilities.webp">
+<meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
 <meta property="article:modified_time" content="2026-10-08">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vulnerability prioritisation: CISA KEV, EPSS, SSVC and VEX">
 <meta name="twitter:description" content="Import SBOMs and advisories, rank vulnerabilities by exploitation and exposure with CISA KEV, EPSS and SSVC, plan upgrades, and publish OpenVEX.">
-<meta name="twitter:image" content="https://quilzo.github.io/images/vulnerabilities/vulnerabilities.webp">
+<meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
 <link rel="preload" href="/assets/fonts/quilzo-ui.woff2" as="font" type="font/woff2" crossorigin>
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Import SBOMs and advisories, rank vulnerabilities by exploitation and exposure with CISA KEV, EPSS and SSVC, plan upgrades, and publish OpenVEX.","headline":"Vulnerability prioritisation with KEV, EPSS, SSVC and VEX","image":"https://quilzo.github.io/images/vulnerabilities/vulnerabilities.webp","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/vulnerabilities/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/vulnerabilities/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#security-operations","name":"Security operations","position":2},{"@type":"ListItem","name":"Vulnerabilities","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Import SBOMs and advisories, rank vulnerabilities by exploitation and exposure with CISA KEV, EPSS and SSVC, plan upgrades, and publish OpenVEX.","headline":"Vulnerability prioritisation with KEV, EPSS, SSVC and VEX","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/vulnerabilities/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/vulnerabilities/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#security-operations","name":"Security operations","position":2},{"@type":"ListItem","name":"Vulnerabilities","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -163,9 +163,9 @@
     <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Vulnerabilities</span></p>
   </header>
   <div class="prose">
-<figure class="shot"><img src="/images/vulnerabilities/vulnerabilities.webp" alt="The Vulnerabilities screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>The queue.</figcaption></figure><ol class="steps">
+<figure class="shot"><img src="/images/vulnerabilities/vulnerabilities.webp" alt="The Vulnerabilities screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Before anything is loaded, the screen says how to load it.</figcaption></figure><ol class="steps">
 <li><h3 id="load-what-you-run-and-what-is-known">Load what you run and what is known<a class="anchor" href="#load-what-you-run-and-what-is-known" aria-hidden="true" tabindex="-1">#</a></h3><pre><code>quilzo vuln import --bom sbom.json --where shop-api --osv osv/ --kev kev.json --epss epss.csv</code></pre></li>
-<li><h3 id="say-what-you-know-about-your-machines">Say what you know about your machines<a class="anchor" href="#say-what-you-know-about-your-machines" aria-hidden="true" tabindex="-1">#</a></h3><pre><code>quilzo vuln asset shop-api --exposure internet --impact high --because "..."
+<li><h3 id="say-what-you-know-about-your-machines">Say what you know about your machines<a class="anchor" href="#say-what-you-know-about-your-machines" aria-hidden="true" tabindex="-1">#</a></h3><pre><code>quilzo vuln asset shop-api --exposure open --impact high --because "..."
 quilzo vuln reach --source ./src --where shop-api</code></pre></li>
 <li><h3 id="work-the-queue">Work the queue<a class="anchor" href="#work-the-queue" aria-hidden="true" tabindex="-1">#</a></h3><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
@@ -173,7 +173,7 @@ quilzo vuln reach --source ./src --where shop-api</code></pre></li>
 <tr><td>What to work on</td><td><code>quilzo vuln queue</code></td></tr>
 <tr><td>The smallest upgrades that clear the most</td><td><code>quilzo vuln plan</code></td></tr>
 <tr><td>Leave one, until a date</td><td><code>quilzo vuln accept CVE PKG --owner W --until DATE --because "..."</code></td></tr>
-<tr><td>Record that it does not apply</td><td><code>quilzo vuln assess CVE PKG not_affected</code></td></tr>
+<tr><td>Record that it does not apply, and why</td><td><code>quilzo vuln assess CVE-ID Go:example.com/lib not_affected --reason vulnerable_code_not_in_execute_path --because "..."</code></td></tr>
 <tr><td>Publish your decisions as OpenVEX</td><td><code>quilzo vuln vex --author A --id URL</code></td></tr>
 </tbody></table></div></li></ol>
   </div>

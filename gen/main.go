@@ -188,8 +188,12 @@ func build(dir string) (map[string][]byte, error) {
 			return nil, fmt.Errorf("%s: %w", p.Source, err)
 		}
 		name := path.Join(p.Slug, "index.html")
-		if p.Slug == "" {
+		switch p.Slug {
+		case "":
 			name = "index.html"
+		case "404":
+			// GitHub Pages serves /404.html for anything not found.
+			name = "404.html"
 		}
 		out[name] = tidy(b.Bytes())
 	}
@@ -417,12 +421,10 @@ func (p *Page) render(dir string, icons iconSet) error {
 		return string(icons.svg(reIcon.FindStringSubmatch(m)[1]))
 	})
 	p.Body = template.HTML(body)
+	// The card a shared link shows. One branded PNG at the size the
+	// platforms ask for (1200 by 630), because some still refuse a WebP.
 	if p.Image == "" {
-		if m := reSrc.FindStringSubmatch(body); m != nil {
-			p.Image = m[1]
-		} else {
-			p.Image = "/assets/social.png"
-		}
+		p.Image = "/assets/social.png"
 	}
 	return nil
 }
@@ -567,7 +569,7 @@ func searchIndex(pages []*Page) []byte {
 		if len(locs) > 0 {
 			intro = body[:locs[0][0]]
 		}
-		all = append(all, entry{Page: p.Title, URL: p.URL, Text: clip(p.Lead + " " + text(intro))})
+		all = append(all, entry{Page: p.Title, URL: p.URL, Text: clip(p.Lead + " " + p.Desc + " " + text(intro))})
 		for i, l := range locs {
 			end := len(body)
 			if i+1 < len(locs) {
@@ -583,8 +585,10 @@ func searchIndex(pages []*Page) []byte {
 
 func clip(s string) string {
 	s = strings.Join(strings.Fields(s), " ")
-	if len(s) > 600 {
-		s = s[:600]
+	// Long enough to hold a whole section: a word past the cut is a word
+	// search cannot find. Pages served by GitHub are compressed.
+	if len(s) > 6000 {
+		s = s[:6000]
 		if i := strings.LastIndexByte(s, ' '); i > 0 {
 			s = s[:i]
 		}
@@ -670,6 +674,9 @@ func sitemap(pages []*Page) []byte {
 	b.WriteString(`<?xml version="1.0" encoding="UTF-8"?>` + "\n" +
 		`<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">` + "\n")
 	for _, p := range pages {
+		if p.Slug == "404" {
+			continue
+		}
 		fmt.Fprintf(&b, "  <url><loc>%s%s</loc><lastmod>%s</lastmod></url>\n", Site, p.URL, p.Updated)
 	}
 	b.WriteString("</urlset>\n")

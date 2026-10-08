@@ -1,0 +1,23 @@
+<!--
+title: Import, export, replicas and the permanent web
+short: Import and export
+seo: Export a CMS to Markdown, WordPress or IPFS: no lock-in
+description: Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.
+lead: No lock-in, and how that is proved: every way out and in.
+icon: transfer
+screens: Transfer, Permanent web
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/transfer/transfer.webp" alt="The Transfer screen"><figcaption>Export and import.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Markdown for Hugo, Astro, Eleventy, Jekyll</td><td><code>quilzo export markdown --to DIR</code></td></tr>
+<tr><td>WordPress</td><td><code>quilzo export wxr --to DIR</code></td></tr>
+<tr><td>Lossless, re-importable</td><td><code>quilzo export json --to DIR</code></td></tr>
+<tr><td>A research deposit</td><td><code>quilzo export ro-crate --licence URI</code></td></tr>
+<tr><td>Import from WordPress</td><td><code>quilzo import FILE --from wordpress</code></td></tr>
+<tr><td>Replicate from another store</td><td><code>quilzo peer add NAME https://host</code></td></tr>
+<tr><td>Render for IPFS</td><td><code>quilzo ipfs write -o site</code></td></tr>
+<tr><td>Federate on the fediverse</td><td><code>quilzo fediverse init</code></td></tr>
+</tbody></table></div><figure class="shot"><img src="/images/transfer/permanent-web.webp" alt="The Permanent web screen"><figcaption>The site's IPFS identifier.</figcaption></figure>

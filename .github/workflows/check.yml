@@ -1,59 +1,28 @@
 name: check
 
-# The manual is the target of a link in another repository, so the thing worth
-# checking on every push is not that the HTML is pretty but that the anchors
-# the application sends people to still exist.
+# The manual is the target of every Help link in the Quilzo admin, so the
+# thing worth checking on every push is that each guide the application links
+# to exists, that no link inside the manual lands nowhere, that every picture is
+# in the repository, and that the committed pages are what src/ builds.
 on:
   push:
     branches: [main]
   pull_request:
   workflow_dispatch:
 
-# Read-only. This workflow checks files and writes nothing, so the token it is
-# handed should not be able to. The default is write access to the whole
-# repository, which is a great deal of authority for a shell script that greps
-# an HTML file.
+# Read-only: this checks files and writes nothing.
 permissions:
   contents: read
 
 jobs:
-  anchors:
+  build:
     runs-on: ubuntu-latest
     steps:
-      # Pinned by commit, not by tag. A tag is a mutable pointer in somebody
-      # else's repository: actions/checkout@v4 is whatever that repository
-      # decides v4 means on the morning your workflow runs, and this one runs
-      # on every pull request from anybody. The SHA was checked against the
-      # tag it claims before it was written down.
+      # Pinned by commit, not by tag: a tag is a mutable pointer in somebody
+      # else's repository. The same commits as Quilzo's own workflows.
       - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: Every section the app links to is present
-        run: ./check-anchors.sh
-
-  links:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
-      - name: No in-page link points at a section that does not exist
-        run: |
-          # Internal hrefs only: #foo must have a matching id="foo".
-          fail=0
-          for a in $(grep -o 'href="#[a-z0-9-]*"' index.html | sed 's/href="#//;s/"//' | sort -u); do
-            if ! grep -q "id=\"$a\"" index.html; then
-              echo "dangling: href=\"#$a\" has no matching id"
-              fail=1
-            fi
-          done
-          [ "$fail" -eq 0 ] && echo "no dangling anchors"
-          exit $fail
-
-      - name: Every referenced image exists
-        run: |
-          fail=0
-          for src in $(grep -o 'src="images/[^"]*"' index.html | sed 's/src="//;s/"//' | sort -u); do
-            if [ ! -f "$src" ]; then
-              echo "missing image: $src"
-              fail=1
-            fi
-          done
-          [ "$fail" -eq 0 ] && echo "all images present"
-          exit $fail
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: The site is what src/ builds, and every link and picture resolves
+        run: go run ./gen -check

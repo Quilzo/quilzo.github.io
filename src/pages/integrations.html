@@ -1,0 +1,127 @@
+<!--
+title: MCP gateway: govern the tools AI agents call, with pinning and approvals
+short: Tools and the MCP gateway
+seo: MCP gateway: tool pinning, approvals and audit for AI agents
+description: Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.
+lead: Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.
+icon: integrations
+screens: Integrations
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>An <strong>MCP gateway</strong> sits between AI agents and MCP servers and decides each tool call: who may call which tool, how often, whether a person approves it first, and with which credential. Quilzo is one for its own agents, and offers the same to other vendors' agents at <code>/mcp/gateway/NAME</code>.</p></div>
+
+<h2 id="declare">Declare a tool server</h2>
+<ol class="steps">
+<li>
+<h3>Write the declaration</h3>
+<p>Declarations live in <code>integrations.json</code> in the store. Each names one host, why this install reaches it, and the tools it may call there. Everything is off until somebody turns it on, so an example pasted from somewhere does nothing by accident.</p>
+<pre><code>{
+  "declared": [
+    {
+      "name": "tracker",
+      "kind": "mcp",
+      "enabled": true,
+      "purpose": "File and read issues in the support tracker",
+      "endpoint": "tracker.example.com",
+      "uses": ["list_issues", "create_issue"],
+      "writes": true,
+      "secret": "tracker-token"
+    }
+  ]
+}</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">Means</th></tr></thead>
+<tbody>
+<tr><td><code>endpoint</code></td><td>Exactly one hostname: no scheme, no path, no wildcard. Quilzo always uses https.</td></tr>
+<tr><td><code>uses</code></td><td>The tools this install may call there. Never "everything the server offers": a server can add or redefine a tool after the day you trusted it.</td></tr>
+<tr><td><code>writes</code></td><td>The tools change something on the far side, so a reviewer does not have to guess from their names.</td></tr>
+<tr><td><code>secret</code></td><td>The name of the credential. Its value is read from <code>QUILZO_SECRET_TRACKER_TOKEN</code> (the name in capitals, with anything else turned into <code>_</code>), never from the store, because the store keeps history that cannot be deleted.</td></tr>
+</tbody></table></div>
+<pre><code>quilzo integrations list</code></pre>
+<pre class="out"><code>tracker  mcp  enabled
+  File and read issues in the support tracker
+  reaches tracker.example.com
+  may call list_issues, create_issue
+  changes something on the far side</code></pre>
+</li>
+<li>
+<h3>Look at what the server offers, and pin it</h3>
+<p><code>quilzo integrations tools tracker</code> asks the server what it offers and marks what you agreed to. The difference between the two lists is worth reading. When you are satisfied, pin the tools: Quilzo records a SHA-256 of each tool's definition (name, description and input schema) as the server gave it that day.</p>
+<pre><code>quilzo integrations tools tracker
+quilzo integrations pin tracker list_issues create_issue</code></pre>
+<p>A pinned tool whose definition later changes is refused until a person pins it again, and the shield is told. This is the answer to tool poisoning: a name staying the same is not the tool staying the same. Only a pinned tool can be chosen by a model.</p>
+</li>
+<li>
+<h3>Check it in the admin</h3>
+<p><span class="where">Administration › Integrations</span> shows each server, what it may call, how it authenticates, and whether it is offered through the gateway.</p>
+<figure class="shot"><img src="/images/integrations/integrations.webp" alt="The Integrations screen: tracker reaches tracker.example.com, may call list_issues and create_issue, is enabled and offered through the gateway to authors"><figcaption>A declared tool server, offered through the gateway. The waiting call shown is sample data in the program's own format.</figcaption></figure>
+</li>
+</ol>
+
+<h2 id="agents-use-tools">Let an agent use a tool</h2>
+<p>An agent names each tool it needs, on its host, with a purpose, in its declaration. Tools that change something can ask first:</p>
+<pre><code>"tools": [
+  { "name": "list_issues", "host": "tracker.example.com", "purpose": "see whether a problem is already reported" },
+  { "name": "create_issue", "host": "tracker.example.com", "purpose": "report a problem it finds", "writes": true }
+],
+"ask_first": ["create_issue"]</code></pre>
+<p>A call is allowed only if the agent declares the tool, an enabled integration offers it, and it is pinned. Every call is recorded, and the exfiltration breaker stops a call when the run holds something private and has read somebody else's words (see <a href="/agent-limits/#exfiltration-breaker">Limits that hold</a>). Try a call by hand with <code>quilzo integrations call tracker list_issues</code>.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>Public addresses only, for now.</strong> The client refuses loopback and private network addresses, as protection against a declaration being pointed at internal services. A tool server on your private network cannot be declared yet.</p></div></div>
+
+<h2 id="gateway">Offer your MCP servers to other agents</h2>
+<p>Another vendor's agent, or one your teams built, can reach a declared server through Quilzo instead of directly. It gets only the pinned tools, at the role and daily limit you set, with Quilzo's credential injected and never its own. Every call is checked, counted and recorded with a digest of its arguments.</p>
+<ol class="steps">
+<li>
+<h3>Turn the gateway on for one server</h3>
+<pre><code>quilzo integrations gateway tracker --role author --daily 200 --ask create_issue</code></pre>
+<p><code>--role</code> is the least role a caller needs (reader, author or publisher). <code>--daily</code> caps one caller's calls a day (500 if you name none). <code>--ask</code> lists tools a person approves call by call. <code>--off</code> stops offering it.</p>
+</li>
+<li>
+<h3>Give the caller the address and a token</h3>
+<p>The server is offered at <code>https://YOUR-ADMIN/mcp/gateway/tracker</code>. A caller authenticates with a Quilzo token or an OAuth connection (see <a href="/agent-interface/">Connect AI apps</a>), and is limited by that principal's access.</p>
+</li>
+<li>
+<h3>Decide the calls that wait</h3>
+<p>A call to a tool under <code>--ask</code> waits under <strong>Calls waiting for a person</strong>. Approved, exactly that call goes through once, within the hour. Somebody other than the person it acts for must decide.</p>
+<figure class="shot"><img src="/images/integrations/held.webp" alt="Calls waiting for a person: create_issue on tracker for helpdesk-bot through the help desk agent, with its arguments, and Approve or Decline"><figcaption>A call waiting for a second person (sample data).</figcaption></figure>
+<pre><code>quilzo integrations held
+quilzo integrations approve gq_915959844d12
+quilzo integrations decline gq_915959844d12</code></pre>
+</li>
+</ol>
+<p>Every caller of the gateway, and every tool server, also appears on the <a href="/fleet/">Fleet</a> map.</p>
+
+<h2 id="webhooks">Tell other systems when something happens</h2>
+<p>A webhook is a signed POST to a URL you choose when something is <code>published</code>, <code>rolled-back</code>, <code>scheduled</code>, <code>submitted</code> (a form) or <code>proposed</code> (a change waiting for approval). Only https endpoints are accepted.</p>
+<pre><code>quilzo webhook add https://deploy.example.com/hooks/quilzo</code></pre>
+<p>The signing key is printed once. Each delivery carries <code>X-Quilzo-Event</code>, <code>X-Quilzo-Delivery</code>, <code>X-Quilzo-Timestamp</code> and <code>X-Quilzo-Signature</code>. The signature is an HMAC-SHA256 over the timestamp and the body, each prefixed with its length, so the boundary between them cannot be moved. Reject anything more than five minutes old. A receiver in Python:</p>
+<pre><code>import hmac, hashlib, struct, time
+
+def verify(key, timestamp, body, signature, now=None):
+    if abs((now or time.time()) - int(timestamp)) &gt; 300:
+        return False                      # too old or from the future: a replay
+    mac = hmac.new(key.encode(), digestmod=hashlib.sha256)
+    for field in (timestamp.encode(), body):
+        mac.update(struct.pack("&gt;Q", len(field)) + field)
+    return hmac.compare_digest("v1=" + mac.hexdigest(), signature)</code></pre>
+<figure class="shot"><img src="/images/integrations/webhooks.webp" alt="The Webhooks section: one endpoint receiving every event, its key partly shown, with Turn off and Remove"><figcaption>Webhooks, under Integrations.</figcaption></figure>
+<p><code>quilzo webhook list</code>, <code>webhook test</code> and <code>webhook remove ID</code> manage them.</p>
+
+<h2 id="telemetry">Traces and the audit log, to your own tools</h2>
+<p>Set <code>telemetry.otlp_endpoint</code> and every agent run is sent as OpenTelemetry spans using the GenAI semantic conventions (<code>gen_ai.operation.name</code>, <code>gen_ai.tool.name</code> and the rest) to the collector you already run.</p>
+<p>The audit log exports to a SIEM as OCSF (the default), CEF or JSON Lines. <code>--envelope</code> writes every exported event's hash, in order, beside the export, so the receiving side can tell whether anything was added, removed or reordered:</p>
+<pre><code>quilzo siem ocsf --envelope envelope.json &gt; audit.ocsf.jsonl
+quilzo siem jsonl --envelope evidence.json &gt; audit.jsonl
+quilzo siem verify audit.jsonl --envelope evidence.json</code></pre>
+<pre class="out"><code>verified  185 event(s), sequences 1-185
+  nothing was added, removed, reordered or altered since export</code></pre>
+<p>An OCSF or CEF record carries its event's hash (<code>metadata.uid</code>, or <code>cs3</code> in CEF) rather than the whole event, so compare those with the envelope. A JSON Lines export carries each event whole, which is what <code>siem verify</code> recomputes; keep one of those as evidence.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/fleet/"><span class="card-icon"><icon name="fleet"></icon></span><h3>The fleet</h3><p>Every agent, app and tool server, and who called what.</p></a></li>
+<li><a class="card" href="/a2a/"><span class="card-icon"><icon name="handshake"></icon></span><h3>A2A</h3><p>Tasks from other agents, run under your declarations.</p></a></li>
+</ul>
+</section>

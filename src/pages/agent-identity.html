@@ -1,0 +1,79 @@
+<!--
+title: AI agent identity: sponsors, principals and signed receipts
+short: Identity and receipts
+seo: AI agent identity, accountability and signed audit receipts
+description: Give every AI agent its own identity and a person who answers for it, stop it when they leave, and prove what any run did with a signed, checkable receipt.
+lead: Every agent is a principal of its own, a person answers for it, and every run can be proved to somebody who does not trust you.
+icon: badge
+screens: Agents
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>Each agent is a <strong>principal</strong>, <code>agent/NAME</code>. What it writes is authored by that name, the audit log records it as the actor, and the access policy can grant it a role like anybody else. A <strong>sponsor</strong> is the person who answers for it: told when it misbehaves, and without whom it stops.</p></div>
+
+<h2 id="sponsor">Give each agent a sponsor</h2>
+<ol class="steps">
+<li>
+<h3>Name the person who answers for it</h3>
+<pre><code>quilzo agent sponsor returns-editor dana</code></pre>
+<pre class="out"><code>returns-editor is answered for by dana until 6 January 2027</code></pre>
+<p>The sponsor must be somebody who can act in this installation. An identity lasts 90 days unless you say otherwise, and a year at most.</p>
+</li>
+<li>
+<h3>See who answers for what</h3>
+<p>The <strong>Answered for by</strong> column on <span class="where">Administration › Agents</span> shows each sponsor and when the identity ends. An agent nobody answers for is marked <em>nobody</em>, with the command that fixes it.</p>
+<figure class="shot"><img src="/images/agent-identity/sponsors.webp" alt="The agents table: returns-editor is answered for by dana until 6 January 2027; help-desk is answered for by nobody"><figcaption>One agent with a sponsor, and one without.</figcaption></figure>
+</li>
+<li>
+<h3>Renew it before it ends</h3>
+<pre><code>quilzo agent renew returns-editor --for 2160h</code></pre>
+<p>Most agents nobody looks after are agents nobody needs. Renewal is when somebody decides which.</p>
+</li>
+</ol>
+
+<h2 id="when-it-stops">When an agent stops</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">What happened</th><th scope="col">What the agent does</th></tr></thead>
+<tbody>
+<tr><td>Its sponsor's access ended, or the identity provider suspended or removed them</td><td>Does not run, and the Agents screen says the sponsor can no longer act here.</td></tr>
+<tr><td>Its identity reached its end date</td><td>Does not run until somebody renews it.</td></tr>
+<tr><td>It was never given a sponsor</td><td>Runs, and the security posture reports it (<code>agent.no-sponsor</code>) until somebody answers for it.</td></tr>
+<tr><td>The shield paused it</td><td>Does not run until the pause ends or is lifted.</td></tr>
+</tbody></table></div>
+<p>Evaluations still run in every case. They change nothing, and they are how a new sponsor finds out what they are taking on. Because the sponsor is checked against the same access the identity provider manages, deprovisioning a person through <a href="/provisioning/">SCIM</a> also stops the agents they answer for.</p>
+
+<h2 id="receipts">Prove what a run did</h2>
+<p>A <strong>receipt</strong> is every record of one run, taken from the hash-chained audit log, each with a proof that it is in the log, and a log head signed with Ed25519 and ML-DSA. Somebody holding only the receipt and your public keys can check it without access to your installation.</p>
+<ol class="steps">
+<li>
+<h3>Write the receipt</h3>
+<pre><code>quilzo agent receipt RUN -o receipt.json</code></pre>
+<pre class="out"><code>6 records of run run-20261008-f8cd3989, each with its proof, against a head of 52 signed by 0e667cb95d838091</code></pre>
+</li>
+<li>
+<h3>Publish your public keys</h3>
+<p>The head's public keys are in <code>head.pub.json</code>, beside the audit log in the store. Put them somewhere the people who will check your receipts can fetch them independently, such as your own website.</p>
+</li>
+<li>
+<h3>Check it anywhere</h3>
+<pre><code>quilzo agent verify-receipt receipt.json --keys head.pub.json</code></pre>
+<pre class="out"><code>verified  6 records of run run-20261008-f8cd3989 by returns-editor, steps [1 2 3 4]
+  each is in the log under a head signed by 0e667cb95d838091</code></pre>
+<p>Without <code>--keys</code>, the receipt is checked against the keys it carries, which proves only that it agrees with itself. Checking against keys you were given proves it came from that log.</p>
+</li>
+</ol>
+<p>A receipt includes what the run was asked, what it did, what it was refused, what it cost, whether it finished, and the memory it recalled and kept. Refusals are part of the outcome: a run that tried to publish four times and was stopped is a different product from one that did the work, and somebody paying per outcome is entitled to know which they got.</p>
+<p>The same kind of receipt exists for an app's calls through one connection (<code>quilzo apps receipt</code>) and for what was forgotten about a person (<code>quilzo memory receipt</code>).</p>
+
+<h2 id="principals">Grant an agent a role</h2>
+<p>Because an agent is a principal, the access policy can bound it whoever starts it:</p>
+<pre><code>quilzo auth grant agent/returns-editor author --on /help</code></pre>
+<p>A run is then limited by three things at once: the declaration, the agent's own role, and the person who started it. See <a href="/people/">People and access</a>.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/logging/"><span class="card-icon"><icon name="logs"></icon></span><h3>The audit log</h3><p>Hash-chained, signed, and provable entry by entry.</p></a></li>
+<li><a class="card" href="/fleet/"><span class="card-icon"><icon name="fleet"></icon></span><h3>The fleet</h3><p>Every agent, who answers for it, and who called what.</p></a></li>
+</ul>
+</section>

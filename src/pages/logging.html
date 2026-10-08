@@ -1,0 +1,24 @@
+<!--
+title: Tamper-evident audit log with signed heads and proofs
+short: The audit log
+seo: Tamper-evident audit log: hash chain, signed heads, proofs
+description: Every action in a hash-chained log, identifiers pseudonymised, heads signed with Ed25519 and ML-DSA, with proofs, anchoring and RFC 3161 timestamps.
+lead: Every action recorded, chained, signed and provable entry by entry.
+icon: logs
+screens: Log
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/logging/log.webp" alt="The Log screen"><figcaption>The audit log.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Recompute the chain</td><td><code>quilzo auditlog verify</code></td></tr>
+<tr><td>One entry in full</td><td><code>quilzo auditlog show SEQ</code></td></tr>
+<tr><td>Commit to every entry so far</td><td><code>quilzo auditlog head --save</code></td></tr>
+<tr><td>Check a saved head</td><td><code>quilzo auditlog verify-head head.json</code></td></tr>
+<tr><td>Prove one entry is in the log</td><td><code>quilzo auditlog prove SEQ</code></td></tr>
+<tr><td>Prove nothing before a head moved</td><td><code>quilzo auditlog consistency</code></td></tr>
+<tr><td>Anchor the head where you cannot alter it</td><td><code>quilzo auditlog anchor</code></td></tr>
+<tr><td>RFC 3161 proof of when you published</td><td><code>quilzo timestamp stamp</code></td></tr>
+<tr><td>Run the writer as its own account</td><td><code>quilzo logd</code></td></tr>
+</tbody></table></div><p>Identifiers are pseudonymised in the log, and a secret that was refused is never written. Receipts for runs, apps and forgotten memory are built from it (see <a href="/agent-identity/#receipts">receipts</a>), and it exports to a SIEM (see <a href="/integrations/#telemetry">traces and the audit log</a>).</p>

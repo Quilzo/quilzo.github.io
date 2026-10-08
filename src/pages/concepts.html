@@ -1,0 +1,46 @@
+<!--
+title: Glossary: AI agents, MCP, A2A and the words Quilzo uses
+short: Glossary
+seo: Glossary: AI agent control plane, MCP gateway, A2A and more
+description: What an AI agent control plane, an MCP gateway, A2A, prompt injection, human in the loop, earned autonomy and the other terms in this manual mean, in one place.
+lead: Short definitions of the terms this manual uses, from agents to the content store.
+icon: section-reference
+updated: 2026-10-08
+-->
+
+<h2 id="agents-and-ai">Agents and AI</h2>
+<dl class="glossary">
+<dt id="ai-agent-control-plane">AI agent control plane</dt><dd>The layer that decides what AI agents may do: identity, policy, budgets, approvals, and an audit trail of every action, enforced outside the model. Quilzo is one, self-hosted.</dd>
+<dt id="ai-agent">AI agent</dt><dd>A program in which a model, or the agent's own code, chooses actions toward a goal. In Quilzo every agent has a declaration.</dd>
+<dt id="declaration">Declaration (manifest)</dt><dd>One JSON document saying what an agent is for, what it may do and read, how far it may go on its own and what one run may spend. The gate enforces it on every action. See <a href="/agents/">Build an agent</a>.</dd>
+<dt id="capability">Capability</dt><dd>An operation an agent may use, such as <code>read_page</code> or <code>write_page</code>. A model picks from the declared list and cannot add to it.</dd>
+<dt id="autonomy">Autonomy</dt><dd>propose, draft or publish: what happens to what an agent produces.</dd>
+<dt id="earned-autonomy">Earned autonomy</dt><dd>A model drives an agent at its declared autonomy only after evaluations show it is not steered by planted instructions. See <a href="/evals/">Evaluate agents</a>.</dd>
+<dt id="human-in-the-loop">Human in the loop (ask first)</dt><dd>A capability marked ask first stops the run until a person approves the exact call.</dd>
+<dt id="run">Run</dt><dd>One execution of an agent, kept step by step.</dd>
+<dt id="receipt">Receipt</dt><dd>The records of one run, each with an inclusion proof against a signed log head, checkable by anybody. See <a href="/agent-identity/">Identity and receipts</a>.</dd>
+<dt id="sponsor">Sponsor</dt><dd>The person who answers for an agent. When they leave, the agent stops.</dd>
+<dt id="prompt-injection">Prompt injection</dt><dd>Text an AI reads that tells it to do something its user did not ask for. Indirect prompt injection hides it in content: a page, an email, a tool result. See <a href="/chatbot-safety/">Prompt injection in RAG</a>.</dd>
+<dt id="taint">Taint</dt><dd>A mark on a run that has read content somebody else could have written. Its output needs a person before it is relied on.</dd>
+<dt id="exfiltration-breaker">Exfiltration breaker</dt><dd>Stops a run that holds something private and has read somebody else's words from sending anything out without a person.</dd>
+<dt id="pass-k">pass^k</dt><dd>An evaluation case counts only if every one of k runs passed it.</dd>
+<dt id="rag">RAG (retrieval-augmented generation)</dt><dd>Answering from retrieved passages rather than from a model's memory. Quilzo's chatbots cite a passage for every sentence.</dd>
+<dt id="mcp">MCP (Model Context Protocol)</dt><dd>The open protocol AI apps use to call tools. Quilzo is an MCP server and an MCP client. See <a href="/agent-interface/">Connect AI apps</a>.</dd>
+<dt id="mcp-gateway">MCP gateway</dt><dd>A control point between agents and MCP servers that decides each tool call. See <a href="/integrations/">The MCP gateway</a>.</dd>
+<dt id="tool-pinning">Tool pinning</dt><dd>Recording a hash of each approved tool's definition, so a tool the server later redefines is refused.</dd>
+<dt id="a2a">A2A (Agent2Agent)</dt><dd>The protocol agents use to describe themselves (an agent card) and hand each other tasks. See <a href="/a2a/">A2A</a>.</dd>
+<dt id="shadow-ai">Shadow AI</dt><dd>AI services people or programs use directly, outside the controls you run. See <a href="/fleet/">The fleet</a>.</dd>
+<dt id="llm-gateway">Model (LLM) gateway</dt><dd>Where every model call goes: routes, budgets and the privacy guard. See <a href="/models/">Models</a>.</dd>
+</dl>
+<h2 id="content-and-access">Content and access</h2>
+<dl class="glossary">
+<dt id="store">Store</dt><dd>A directory holding everything Quilzo keeps.</dd>
+<dt id="object">Object</dt><dd>A blob, tree or commit, named by the SHA-256 of its own bytes. Nothing is overwritten.</dd>
+<dt id="commit">Commit</dt><dd>A tree of content plus who, when, why and what came before.</dd>
+<dt id="ref">Ref</dt><dd>A name pointing at a commit. Publishing moves the live ref.</dd>
+<dt id="draft-live">Draft and live</dt><dd>Where work happens, and what the public site serves.</dd>
+<dt id="environment">Environment</dt><dd>A named ref in a promotion sequence, such as staging and production.</dd>
+<dt id="principal">Principal</dt><dd>Who somebody, or some agent, is. Policies are written in terms of principals.</dd>
+<dt id="binding">Binding</dt><dd>A grant or a deny: this principal, this role, this part of the site.</dd>
+<dt id="token">Token</dt><dd>A credential proving you are a principal. Only its hash is stored.</dd>
+</dl>

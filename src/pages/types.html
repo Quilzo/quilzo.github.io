@@ -1,0 +1,36 @@
+<!--
+title: Content types and records
+short: Types and records
+seo: Structured content: content types, records and collections
+description: Define content types every surface enforces, bind pages to them, and keep structured records in collections, from the admin, the command line, the API or an agent.
+lead: A type says which fields a page must have, and every surface checks it.
+icon: types
+screens: Types, Data
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>A <strong>type</strong> is a flat list of fields. Bind a page or a collection to it and every write must satisfy it, from the admin, the command line, the API and the agent interface, with no way to write around it.</p></div>
+<h2 id="types">Define a type and bind pages to it</h2>
+<figure class="shot"><img src="/images/types/types.webp" alt="The Types screen with the demo shop's product type and the pages bound to it"><figcaption>Types, and what must satisfy them.</figcaption></figure>
+<pre><code>quilzo type example &gt; product.json   # a definition you can edit
+quilzo type add product.json
+quilzo type bind PAGE product
+quilzo type check                     # validate every bound page</code></pre>
+<h2 id="records">Keep records in collections</h2>
+<figure class="shot"><img src="/images/types/records.webp" alt="The Data screen listing the products collection"><figcaption>Collections of records.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>List collections</td><td><code>quilzo records collections</code></td></tr>
+<tr><td>Query</td><td><code>quilzo records list products --where range=archive</code></td></tr>
+<tr><td>Add one</td><td><code>quilzo records add products field=value</code></td></tr>
+<tr><td>Import many in one commit</td><td><code>quilzo records import products rows.json</code></td></tr>
+<tr><td>Require a type</td><td><code>quilzo type bind-collection products product</code></td></tr>
+</tbody></table></div>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/structure/"><span class="card-icon"><icon name="structure"></icon></span><h3>Structure and listings</h3><p>Show records on pages, and navigation that resolves.</p></a></li>
+<li><a class="card" href="/pages/"><span class="card-icon"><icon name="pages"></icon></span><h3>Pages</h3><p>Edit what the types describe.</p></a></li>
+</ul>
+</section>

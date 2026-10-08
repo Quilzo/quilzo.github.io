@@ -1,0 +1,21 @@
+<!--
+title: Settings and outbound network control
+short: Settings and network
+seo: Settings that explain themselves, and outbound network control
+description: Every setting with what it is for and what it costs, a recorded reason for any weakening, and every outbound connection named, with an offline mode.
+lead: Every setting explained, and every connection this program makes named.
+icon: settings
+screens: Settings
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/settings/settings.webp" alt="The Settings screen"><figcaption>Settings.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Everything settable, and its default</td><td><code>quilzo config show</code></td></tr>
+<tr><td>What one is for, and what it costs</td><td><code>quilzo config explain KEY</code></td></tr>
+<tr><td>Change one; a weakening needs a reason</td><td><code>quilzo config set KEY VALUE --accept-risk "why"</code></td></tr>
+<tr><td>Put one back</td><td><code>quilzo config unset KEY</code></td></tr>
+<tr><td>What this may connect to, and why</td><td><code>quilzo network</code></td></tr>
+</tbody></table></div>
+<h2 id="network">Every connection, named</h2><p>Each outbound connection has a declared purpose (models, integrations, connectors, webhooks, guardrail, fleet and others) and is checked against the address actually dialled, after DNS. Set <code>network.mode</code> to <code>offline</code> and every connection that would leave the host is refused before a packet is sent, naming the feature that wanted it; loopback still works, so a local model keeps working.</p>

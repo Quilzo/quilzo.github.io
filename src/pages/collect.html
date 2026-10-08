@@ -1,0 +1,24 @@
+<!--
+title: Collect security logs from Okta, Entra, GitHub, AWS and more
+short: Collect events
+seo: SIEM log collection: Okta, Entra ID, GitHub, AWS CloudTrail
+description: Read sign-in and audit logs from Okta, Entra, GitHub, AWS and more; take events from Okta hooks, webhooks and Shared Signals; map any log you have.
+lead: Get events in: connectors that read, feeds that push, and files that arrive.
+icon: feeds
+screens: Feeds, Events
+updated: 2026-10-08
+-->
+
+<ol class="steps">
+<li><h3>Install a connector</h3><p>Connectors read Okta, Microsoft Entra, GitHub and EVM chains, plus the device and training tools workforce risk uses. Each is a readable manifest that says exactly what it may touch.</p><pre><code>quilzo connect catalogue
+quilzo connect add okta --org example
+quilzo connect secret okta        # from the environment
+quilzo connect check okta</code></pre></li>
+<li><h3>Collect on a schedule</h3><pre><code>quilzo collect run
+quilzo collect auto 15m
+quilzo collect status</code></pre><p>Mappings exist for 17 platforms, including AWS CloudTrail, Google Workspace, Google Cloud, Azure, Kubernetes, CrowdStrike, Cloudflare, Slack, Salesforce and Snowflake. A log that arrives as a file goes in with <code>quilzo collect file ISSUER/STREAM FILE</code>; your own application's log with <code>quilzo source add MAPPING.json --sample RECORDS.json</code>.</p></li>
+<li><h3>Take pushed events</h3><pre><code>quilzo inbound add okta okta-hooks
+quilzo inbound add ssf entra-signals
+quilzo inbound add webhook ci-events</code></pre><p>Okta event hooks, OpenID Shared Signals (SSF, CAEP and RISC) and signed webhooks.</p><figure class="shot"><img src="/images/collect/feeds.webp" alt="The Feeds screen"><figcaption>Feeds pushing events here.</figcaption></figure></li>
+</ol>
+<p>Events are stored sealed and digested; <code>quilzo spool verify</code> checks every segment, and <code>quilzo spool hold NAME --why W</code> keeps everything while something is investigated.</p>

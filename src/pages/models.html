@@ -1,0 +1,79 @@
+<!--
+title: LLM gateway: model routes, budgets in money and a privacy guard
+short: Models and the gateway
+seo: LLM gateway: routes, cost budgets and PII masking
+description: Route every model call through one gateway: local or hosted models in fallback order, budgets in money, and personal data masked before a prompt leaves.
+lead: One gateway for every model call: which model answers, what each caller may spend, and what may leave in a prompt.
+icon: models
+screens: Models
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, analyst triage, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much.</p></div>
+
+<h2 id="one-model">The quickest start: one model</h2>
+<p>With no routes declared, every call goes to the model in two environment variables. Any OpenAI-compatible endpoint works: Ollama, vLLM, LM Studio, llama.cpp, or a hosted provider.</p>
+<pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1
+export QUILZO_MODEL=llama3.1</code></pre>
+<p>A key, if the endpoint needs one, goes in <code>QUILZO_MODEL_KEY</code>. Quilzo sends a key only over https, or to a model on this machine.</p>
+
+<h2 id="routes">Add routes, in fallback order</h2>
+<ol class="steps">
+<li>
+<h3>Add each model as a route</h3>
+<p>Open <span class="where">Administration › Models</span> and fill in <strong>Add a route</strong>: a name, the address, the model name, the environment variable holding its key (never the key itself), and what a million tokens cost there. Or:</p>
+<pre><code>quilzo gateway currency GBP
+quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model llama3.1 \
+  --personal --price-in 0.05 --price-out 0.20 --first
+quilzo gateway route add hosted --url https://models.example.com/v1 --model example-large \
+  --key-env EXAMPLE_API_KEY --price-in 2.50 --price-out 10.00</code></pre>
+<p>Mark a route <code>--personal</code> only if it may receive personal data: it runs on your own machines, or you have an agreement with the provider to process it.</p>
+</li>
+<li>
+<h3>Check the order</h3>
+<p>Routes are tried in the order shown. A route that fails three times in a row rests for a minute while the next one answers. <strong>Try first</strong> moves a route to the top.</p>
+<figure class="shot"><img src="/images/models/models.webp" alt="The Models screen with two routes: on-premises, which may receive personal data, and hosted, where personal data is masked and the key is not set"><figcaption>Two routes. Personal data is sent to the first and masked for the second.</figcaption></figure>
+</li>
+<li>
+<h3>Set budgets</h3>
+<p>Under <strong>Budgets</strong>, give a caller limits per minute, per day and per month: calls, characters, tokens and money. A caller is <code>agent:NAME</code>, <code>person:NAME</code>, <code>chatbot:NAME</code>, or <code>*</code> for everybody without a budget of their own.</p>
+<pre><code>quilzo gateway budget agent:returns-editor --money-per-day 5.00 --money-per-month 60.00
+quilzo gateway budget agent:concierge --per-minute 20 --tokens-per-day 200000
+quilzo gateway budget '*' --money-per-day 20.00</code></pre>
+<p>A chatbot over its daily budget answers from its pages without the model, which gives a plainer answer rather than an outage. Each agent run also has its own cap in its declaration (see <a href="/agent-limits/#budgets">Limits that hold</a>).</p>
+</li>
+<li>
+<h3>Watch what each caller spent</h3>
+<p><strong>Today</strong> shows every caller's characters, tokens, money, calls, failures and refusals, for the day and the month.</p>
+<figure class="shot"><img src="/images/models/spend.webp" alt="Today's spending by caller: person dana, agent help-desk and agent returns-editor, with tokens and money, and the budgets table below"><figcaption>Spending by caller, against their budgets.</figcaption></figure>
+<pre><code>quilzo gateway status</code></pre>
+<pre class="out"><code>routes, in fallback order
+  on-premises  http://127.0.0.1:11434/v1 llama3.1  no key needed; may receive personal data
+  hosted  https://models.example.com/v1 example-large  key in $EXAMPLE_API_KEY; personal data masked
+today
+  agent:returns-editor  4463 characters no daily limit, 3 call(s), 0 failed, 0 refused
+    1112 tokens, 0.000067 GBP today of 5.00, 0.000067 this month of 60.00</code></pre>
+</li>
+</ol>
+
+<h2 id="privacy-guard">The privacy guard</h2>
+<p>Before a prompt leaves for a route that may not receive personal data, Quilzo replaces each personal value with a placeholder such as <code>&lt;quilzo:email:1&gt;</code>. The same value gets the same placeholder every time, so the model can still tell one customer from another. The placeholders are swapped back in the answer, so it reads as if nothing was taken out. The model never sees a value, and the record of what was masked holds only counts by kind.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Masked</th><th scope="col">For which routes</th></tr></thead>
+<tbody>
+<tr><td>Email addresses (except your own site's domains), telephone numbers, IBANs</td><td>Routes not marked <code>--personal</code></td></tr>
+<tr><td>National identity numbers: US SSN, UK National Insurance, Spanish DNI and NIE, Indian Aadhaar, Brazilian CPF, Canadian SIN, each checked with its own rules</td><td>Routes not marked <code>--personal</code></td></tr>
+<tr><td>Payment card numbers and credentials (API keys, tokens, private keys)</td><td>Every route, including personal ones</td></tr>
+</tbody></table></div>
+<p>A credential caught in a prompt is also a sign that a key was pasted somewhere it should not have been, so the shield's <code>secret-in-prompt</code> playbook opens a case for somebody to look at it and rotate it (see <a href="/shield/">The shield</a>). A hosted route allowed to receive personal data is a posture finding until an agreement is on record.</p>
+
+<h2 id="invisible-text">Invisible text never reaches a model</h2>
+<p>Characters that draw nothing, such as the Unicode tag block, zero-width characters and bidirectional controls, are taken out of every text before any model reads it. They are a known way to hide an instruction from the person reviewing a page while a model still reads it.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/chatbots/"><span class="card-icon"><icon name="assistants"></icon></span><h3>Chatbots</h3><p>Answers from your pages, using the gateway.</p></a></li>
+<li><a class="card" href="/privacy/"><span class="card-icon"><icon name="privacy_tip"></icon></span><h3>Privacy</h3><p>Everything Quilzo keeps about people.</p></a></li>
+</ul>
+</section>

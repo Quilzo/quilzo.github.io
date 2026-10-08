@@ -1,0 +1,28 @@
+<!--
+title: Detections, findings and threat hunting
+short: Detection and findings
+seo: Threat detection rules, Sigma import, findings and hunting
+description: Detection rules with their own fixtures, Sigma import, one ranked findings queue, hunting for what is rare, and an analyst agent that can only suggest.
+lead: Rules with fixtures, one ranked queue, and an analyst agent that can only suggest.
+icon: detections
+screens: Findings, Risk, Events, Hunt, Detections, Indicators
+updated: 2026-10-08
+-->
+
+<h2 id="rules">Run the rules</h2><pre><code>quilzo detect pack install    # the rules that ship
+quilzo detect test            # every rule against its own fixtures
+quilzo detect run
+quilzo sigma import ./rules   # bring your own, in the open standard</code></pre><figure class="shot"><img src="/images/detection/detections.webp" alt="The Detections screen listing rules with what each reads and its ring"><figcaption>Rules, and what each has been worth.</figcaption></figure>
+<p>A new rule can run in a trial ring before it reaches the queue (<code>quilzo detect ring RULE trial</code>). <code>quilzo detect replay</code> runs every rule over the events people have already ruled on, so a change that would have missed something is caught first. Suppressions end on a date.</p>
+<h2 id="findings">Work the queue</h2><figure class="shot"><img src="/images/detection/findings.webp" alt="The Findings screen ranked by severity, with critical findings at the top"><figcaption>One queue, ranked by severity, age, recurrence and ownership.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>The queue</td><td><code>quilzo finding list</code></td></tr>
+<tr><td>What is open about each person or machine</td><td><code>quilzo finding risk</code></td></tr>
+<tr><td>Decide one</td><td><code>quilzo finding decide ID STATE</code></td></tr>
+<tr><td>Who decided what, and why</td><td><code>quilzo finding story ID</code></td></tr>
+<tr><td>What is rare</td><td><code>quilzo hunt --field F</code></td></tr>
+<tr><td>Indicators from STIX, then look back</td><td><code>quilzo intel import FILE --source NAME</code></td></tr>
+<tr><td>A model's first pass, as suggestions</td><td><code>quilzo analyst triage --limit 20</code></td></tr>
+<tr><td>How often it agrees with people</td><td><code>quilzo analyst eval --k 3</code></td></tr>
+</tbody></table></div>

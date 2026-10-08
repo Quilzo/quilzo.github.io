@@ -2,98 +2,53 @@
 
 # quilzo.github.io
 
-The Quilzo manual. **[quilzo.github.io](https://quilzo.github.io)**
+The manual for [Quilzo](https://github.com/Quilzo/Quilzo), the self-hosted
+control plane for AI agents: **[quilzo.github.io](https://quilzo.github.io)**.
 
-Quilzo is a content management system where stored content is immutable,
-publishing moves a pointer, and the template language cannot execute anything.
-The program lives at [Quilzo/Quilzo](https://github.com/Quilzo/Quilzo); this is
-its documentation.
+A guide per page, each with steps taken in a real store and screenshots of the
+screens it describes, in the admin's own Material 3 Expressive design. Every
+screen in the Quilzo admin has a Help link to its guide.
 
-## Why the manual is its own repository
+## How it is built
 
-It used to be compiled into the binary — about 1,800 lines of Go describing
-every screen, served at `/docs`, with the screenshots embedded in the
-executable. That made documentation a release artefact. A wrong sentence waited
-for a build and a tag before anybody could read the right one, and a screenshot
-went stale the moment a screen changed.
+```
+src/pages/*.html   one guide each: a header comment, then the body
+src/nav.txt        the menu, in order
+src/layout.html    the frame around every page
+src/legacy.txt     the old one-page manual's anchors, and where each moved
+assets/            the stylesheet, the one script, the font and the icons
+images/            screenshots, as WebP, one folder per guide
+gen/               the generator: Go, standard library only
+sections.txt       every guide the Quilzo admin links to
+demo/              a site built with Quilzo, copied in as static files
+```
 
-Documentation is corrected far more often than software is released, so it is
-published on its own now and can be fixed the day somebody notices.
+```sh
+go run ./gen           # build every page, search.json, sitemap.xml, robots.txt and llms.txt
+go run ./gen -check    # what CI runs: fail if anything differs from src/,
+                       # a link lands nowhere, or a picture is missing
+```
 
-The cost of splitting it out is that the application can no longer prove its
-Help links land somewhere. That is what `sections.txt` is for.
-
-## The demonstration site
-
-**[/demo](https://quilzo.github.io/demo/)** is a site built with Quilzo and
-copied in as static files by `quilzo ipfs write`. It is the manual's worked
-example: everything on it was produced by the commands the manual describes.
-
-It is rendered with `--base-path`, because every link a Quilzo page carries
-is rooted and a bundle copied into a subdirectory would otherwise resolve one
-level too high.
+Each page's header sets its heading, its title and description for search
+results (the generator refuses a title over about 60 characters or a
+description outside 70 to 165), the admin screens it is the Help for, and the
+date it last changed. Pages carry JSON-LD (TechArticle and breadcrumbs; the
+home page SoftwareApplication and WebSite), Open Graph cards and a canonical
+URL.
 
 ## The contract with the application
 
-Every screen in the Quilzo admin has a Help link in the same place, pointing at
-the section for the screen you are looking at — `#types` from the Types screen,
-`#logging` from the audit log. A link that lands on a heading somebody renamed
-is worse than no link at all: the person following it concludes the feature was
-removed, which is the belief documentation exists to correct.
-
-Two halves keep that honest, one in each repository:
-
-| Where | What it refuses |
-|---|---|
-| `sections.txt` + `check-anchors.sh` here | a build where `index.html` has stopped carrying an anchor the app links to |
-| `docSections` in `internal/admin/nav.go` there | a screen pointing at an anchor this manual does not publish |
-
-Neither half proves the other. Each fails loudly on its own side, and the
-failure a reader actually suffers — Help landing on nothing — needs both to be
-wrong at once.
-
-**Renaming a section means changing it in both repositories.** That is the real
-cost of splitting the manual out, and it is cheaper than a Help link that 404s.
-
-```sh
-./check-anchors.sh    # run before pushing a section rename
-```
-
-## What's here
-
-```
-index.html        the manual — one page, ~30 sections
-style.css         its styles
-app.js            table-of-contents highlighting and the mobile contents toggle
-images/           the 8 screenshots
-sections.txt      the anchors the application links to (see above)
-check-anchors.sh  verifies index.html still carries every one of them
-.nojekyll         serve these files as-is, without Jekyll
-```
-
-No build step and no framework. Edit `index.html`, push to `main`, and GitHub
-Pages serves it.
-
-## Editing
-
-- **Fixing wording** — edit the section in `index.html` and push.
-- **Adding a section** — give it an `id`, add it to the table of contents in the
-  sidebar, and add it to `sections.txt` only if a screen in the app links to it.
-- **Renaming a section** — change the `id` here *and* `docSections` in
-  `internal/admin/nav.go` in the main repository, in the same change if you can.
-- **Replacing a screenshot** — same filename in `images/`, so nothing else moves.
-
-CI checks three things on every push: that every anchor in `sections.txt`
-exists, that no in-page link points at a missing section, and that every
-referenced image is actually in the repository.
+A Help link is `https://quilzo.github.io/SLUG/`, and `docSections` in
+`internal/admin/nav.go` in the Quilzo repository lists the slugs. `sections.txt`
+lists the same, and the build fails if one is not a page. Renaming a guide means
+changing it in both repositories. A Help link from a Quilzo built before the
+manual had pages lands on `/#anchor`; the home page sends it to the page in
+`src/legacy.txt`.
 
 ## Licence
 
-The software is dual-licensed: `AGPL-3.0-or-later OR LicenseRef-Quilzo-Commercial`,
-at the user's choice. The AGPL one applies unless you have signed the other, and it
-is not a trial. See [LICENSING.md](https://github.com/Quilzo/Quilzo/blob/main/LICENSING.md)
-in the software repository, and the `#licence` section of this manual.
-
-This documentation describes the software and carries the same terms. There is one
-version of the software and this manual describes all of it — no page in here
-documents something a reader cannot have.
+The software is `AGPL-3.0-or-later OR LicenseRef-Quilzo-Commercial`, at the
+user's choice; see [LICENSING.md](https://github.com/Quilzo/Quilzo/blob/main/LICENSING.md).
+This manual describes it and carries the same terms. The interface font is
+derived from Google Sans Flex (SIL Open Font License 1.1, in `assets/fonts`), and
+the icons are Material Symbols (Apache-2.0, in `assets/icons`).

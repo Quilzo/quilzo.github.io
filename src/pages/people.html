@@ -1,0 +1,22 @@
+<!--
+title: People, roles and access control
+short: People and access
+seo: Role-based access control with denies, jobs and expiry
+description: Grant reader, author, publisher or admin on any part of the site, give time-limited jobs, deny where it must win, and explain why anybody can act.
+lead: Who may do what, where, and until when.
+icon: people
+screens: People, Access
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/people/people.webp" alt="The People screen"><figcaption>People and their access.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Grant a role on part of the site</td><td><code>quilzo auth grant dana author --on /help</code></td></tr>
+<tr><td>A job that must end</td><td><code>quilzo auth grant sam analyst --for 30d</code></td></tr>
+<tr><td>Access that ends by itself</td><td><code>quilzo auth grant ... --until 2026-12-31</code></td></tr>
+<tr><td>A deny wins wherever it sits</td><td><code>quilzo auth deny sam publisher --on /legal</code></td></tr>
+<tr><td>Why somebody can or cannot</td><td><code>quilzo auth explain sam publish</code></td></tr>
+<tr><td>Take a grant back</td><td><code>quilzo auth revoke sam author --on /help</code></td></tr>
+<tr><td>Break-glass when every admin token is lost</td><td><code>quilzo auth recover</code></td></tr>
+</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p><figure class="shot"><img src="/images/people/access.webp" alt="The Access screen"><figcaption>Every binding.</figcaption></figure>

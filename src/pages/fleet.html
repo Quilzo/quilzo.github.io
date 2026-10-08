@@ -1,0 +1,29 @@
+<!--
+title: AI agent inventory and shadow AI detection
+short: The fleet
+seo: AI agent inventory, agent map and shadow AI detection
+description: One inventory of every AI agent, app, tool server and model route, who answers for each, who called what from the signed log, and shadow AI.
+lead: Every agent, app, tool server and model route, who answers for each, and what nobody registered.
+icon: fleet
+screens: Fleet
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>The <strong>fleet</strong> is Quilzo's inventory of AI: its own agents, connected apps, MCP tool servers, model routes, and other vendors' agents registered by their A2A cards, with a map of who called what drawn from the signed audit log.</p></div>
+<h2 id="map">Read the map</h2>
+<figure class="shot"><img src="/images/fleet/fleet.webp" alt="The Fleet screen: a map of agents, apps and tool servers, and a table of every agent with its sponsor, standing, autonomy and spend"><figcaption>The map is drawn from the log, so it shows what happened rather than what was declared.</figcaption></figure>
+<pre><code>quilzo fleet --days 30</code></pre>
+<h2 id="register">Register other vendors' agents</h2>
+<pre><code>quilzo fleet add https://agents.example.com/.well-known/agent-card.json --name helpdesk-bot
+quilzo fleet check
+quilzo fleet remove helpdesk-bot</code></pre><p>Quilzo reads the card when you register it and again on <code>fleet check</code>; a card that changed is a posture finding (<code>fleet.card-changed</code>).</p>
+<h2 id="shadow-ai">Find shadow AI</h2>
+<p>AI services reached directly, not through Quilzo, are found in the security events you already collect: destinations in proxy and DNS logs, app grants in your identity provider, browser extensions, and connections your own agents' programs made. Lookalike hosts are not matched.</p>
+<pre><code>quilzo fleet shadow --days 7</code></pre><p>Direct use becomes the posture finding <code>ai.shadow-use</code>, and counts in the <a href="/ai-evidence/">AI evidence</a>.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/collect/"><span class="card-icon"><icon name="feeds"></icon></span><h3>Collect events</h3><p>Where shadow AI is found.</p></a></li>
+<li><a class="card" href="/agent-identity/"><span class="card-icon"><icon name="badge"></icon></span><h3>Identity and receipts</h3><p>Who answers for each agent.</p></a></li>
+</ul>
+</section>

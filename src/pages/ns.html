@@ -1,0 +1,16 @@
+<!--
+title: The Quilzo ActivityPub vocabulary
+short: ActivityPub vocabulary
+seo: Quilzo ActivityPub namespace: contentHash and publishedRef
+description: The terms Quilzo adds to ActivityPub objects it federates: contentHash, the SHA-256 of the published content, and publishedRef, the commit it was published from.
+lead: Two terms Quilzo adds to the objects it federates.
+icon: code
+updated: 2026-10-08
+-->
+
+<p>Namespace: <code>https://quilzo.github.io/ns#</code>, declared in the JSON-LD context as <code>quilzo</code>.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Term</th><th scope="col">Meaning</th></tr></thead><tbody>
+<tr><td id="contentHash"><code>quilzo:contentHash</code></td><td><code>sha256:</code> followed by the hash of the published content, so a follower can check it against the site.</td></tr>
+<tr><td id="publishedRef"><code>quilzo:publishedRef</code></td><td>The commit the content was published from.</td></tr>
+</tbody></table></div>
+<p>See <a href="/transfer/">Import, export and the permanent web</a>.</p>

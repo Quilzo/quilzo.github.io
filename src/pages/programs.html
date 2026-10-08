@@ -1,0 +1,97 @@
+<!--
+title: Run an AI agent's own code in a sandbox
+short: Programs in a box
+seo: Sandbox an AI agent's own code: Landlock, seccomp, OpenShell
+description: Run a coding agent, script or agent runtime in a kernel sandbox where every action goes through its declaration and models are reached through Quilzo.
+lead: When an agent's own program decides instead of a model, Quilzo runs it in a box and hands in only what the declaration allows.
+icon: deployed_code
+screens: Agents
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>A <strong>program</strong> is the other way an agent decides: a coding agent's command line, a script, or a runtime somebody built their agent in. Quilzo never runs it as itself. It runs it in a box with no capabilities, its own namespaces, Landlock for files and ports, and a system call filter. It hands in three things over the box's own loopback: the agent interface for this run, a model endpoint through the gateway, and a proxy to the declared hosts.</p></div>
+
+<h2 id="check-backends">Check where programs can run</h2>
+<pre><code>quilzo agent backends</code></pre>
+<pre class="out"><code>native     available
+  namespaces true, Landlock 7 (files true, ports true), system call filter true, no capabilities true
+openshell  unavailable
+  the openshell command is not installed here (https://docs.nvidia.com/openshell)</code></pre>
+<p>The <strong>native</strong> backend is built from the Linux kernel's own parts. It needs no root, no daemon and no container runtime: user, PID, network, IPC and UTS namespaces, Landlock for files and ports (port rules need Linux 6.7, Landlock ABI 4), seccomp, no capabilities, and resource limits. <strong>NVIDIA OpenShell</strong> is a second backend, with the same services handed in and the declaration compiled to its policy.</p>
+
+<h2 id="run-a-program">Give an agent a program, and run it</h2>
+<ol class="steps">
+<li>
+<h3>Write the program</h3>
+<p>Inside the box the program finds what it needs in its environment. This one lists its tools and reads a page:</p>
+<pre><code>import json, os, urllib.request
+
+MCP = os.environ["QUILZO_MCP_URL"]
+TOKEN = os.environ["QUILZO_RUN_TOKEN"]
+
+def mcp(method, params, id=1):
+    body = json.dumps({"jsonrpc": "2.0", "id": id, "method": method, "params": params}).encode()
+    req = urllib.request.Request(MCP, data=body, headers={
+        "Content-Type": "application/json", "Accept": "application/json",
+        "Authorization": "Bearer " + TOKEN})
+    return json.load(urllib.request.urlopen(req))
+
+tools = mcp("tools/list", {})["result"]["tools"]
+print("tools:", ", ".join(t["name"] for t in tools))
+page = mcp("tools/call", {"name": "quilzo_read",
+           "arguments": {"operation": "read_page", "arguments": {"page": "returns"}}}, 2)
+print(page["result"]["content"][0]["text"][:200])</code></pre>
+</li>
+<li>
+<h3>Declare it as the agent's program</h3>
+<p>Name the command by its absolute path, and every directory it needs to read with <code>--read</code>. Settings go in with <code>--env K=V</code>, never secrets.</p>
+<pre><code>quilzo agent program help-desk --read /opt/agent -- /usr/bin/python3 /opt/agent/agent.py</code></pre>
+</li>
+<li>
+<h3>Run it</h3>
+<pre><code>quilzo agent run help-desk --program "What do the returns rules say?"</code></pre>
+<pre class="out"><code>  deciding with program:python3; the manifest is still the only vocabulary
+  its program ran on native for 164ms: namespaces true, Landlock 7, system call filter true, capabilities dropped true
+help-desk  retrieval
+  its program chose each action, in its box; each one went through the manifest as a step
+  it said: tools: quilzo_find, quilzo_read, quilzo_write, quilzo_check
+body: Thirty days, unused, and we pay the postage back. Ink is the exception: …
+  did 1, refused 0, failed 0
+  was decided by a program, so anything it produced needs a person</code></pre>
+<p>The run is kept and traced like any other, and has a receipt.</p>
+</li>
+</ol>
+
+<h2 id="inside-the-box">What the program finds inside</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Variable</th><th scope="col">What it is</th></tr></thead>
+<tbody>
+<tr><td><code>QUILZO_MCP_URL</code></td><td>The agent interface for this run only, as MCP. Every operation is one step of the run, through the same gate, budget, approvals, audit records and receipt as any other.</td></tr>
+<tr><td><code>QUILZO_RUN_TOKEN</code></td><td>The credential for this run's services. It is worth nothing outside the box or after the run.</td></tr>
+<tr><td><code>OPENAI_BASE_URL</code>, <code>OPENAI_API_KEY</code></td><td>An OpenAI-compatible model endpoint through the model gateway. The run is charged, budgets hold, and no provider key is ever inside.</td></tr>
+<tr><td><code>HTTPS_PROXY</code>, <code>HTTP_PROXY</code></td><td>A proxy to the hosts the declaration names and nothing else. Each connection is recorded.</td></tr>
+<tr><td><code>QUILZO_RUN</code>, <code>QUILZO_AGENT</code>, <code>QUILZO_GOAL</code></td><td>The run, the agent and what it was asked to do.</td></tr>
+</tbody></table></div>
+<p>Nothing else is reachable. The program has a working directory of its own, reads the system's libraries and the directories you named, and nothing of the store. Because <code>OPENAI_BASE_URL</code> is the usual variable, most agent frameworks pick up the gateway without changes.</p>
+
+<h2 id="limits">Limits a program cannot get round</h2>
+<ul>
+<li><strong>Time</strong> is the declaration's duration. CPU time, memory, file size, open files and processes are capped too; <code>--memory-mb</code> sets the memory cap.</li>
+<li><strong>A connection to a host the declaration does not name</strong> is refused by the proxy, and the network namespace leaves no other way out.</li>
+<li><strong>The exfiltration breaker</strong> applies. A program cannot wait for a person, so once its run holds something private and has read somebody else's words, an outbound connection is refused, with the reason.</li>
+<li><strong>Ask-first capabilities</strong> wait for a person exactly as they do for a model.</li>
+</ul>
+<p>Ask in advance with <code>quilzo agent could --program NAME host:api.example.com</code>.</p>
+
+<h2 id="openshell">Run it in NVIDIA OpenShell</h2>
+<p>With the <code>openshell</code> command installed, choose it per agent and name the image the sandbox is made from:</p>
+<pre><code>quilzo agent program help-desk --backend openshell --image IMAGE -- /usr/bin/python3 /opt/agent/agent.py</code></pre>
+<p>The same three services are handed in, and the declaration is compiled to OpenShell's policy. Take a program away with <code>quilzo agent program help-desk --remove</code>.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/agent-limits/"><span class="card-icon"><icon name="rule"></icon></span><h3>Limits that hold</h3><p>The gate a program's every step goes through.</p></a></li>
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3>Models and the gateway</h3><p>What the program's model endpoint is charged against.</p></a></li>
+</ul>
+</section>

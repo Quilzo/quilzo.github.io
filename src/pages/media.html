@@ -1,0 +1,25 @@
+<!--
+title: Media: images, video and provenance
+short: Media
+seo: Media library with alt text, renditions and C2PA provenance
+description: Upload images and video with required descriptions, derive crops and renditions without losing the original, require captions, and verify C2PA provenance.
+lead: Uploads checked on the way in, originals kept, and where each picture came from recorded.
+icon: media
+screens: Media
+updated: 2026-10-08
+-->
+
+<figure class="shot"><img src="/images/media/media.webp" alt="The Media screen with the demo shop's product photographs"><figcaption>The media library.</figcaption></figure><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Add a file, with its description</td><td><code>quilzo media add FILE --alt "..."</code></td></tr>
+<tr><td>Fetch one, checked at connect time</td><td><code>quilzo media get https://... --alt "..."</code></td></tr>
+<tr><td>Derive a crop; the original stays</td><td><code>quilzo media edit ID --crop 16:9</code></td></tr>
+<tr><td>Choose which part survives a crop</td><td><code>quilzo media focus ID --at top-left</code></td></tr>
+<tr><td>Narrower copies for phones</td><td><code>quilzo media renditions</code></td></tr>
+<tr><td>Add captions to a video (required to publish)</td><td><code>quilzo media captions VIDEO FILE --lang en</code></td></tr>
+<tr><td>Declare how a picture was made</td><td><code>quilzo media origin ID --source-type T</code></td></tr>
+<tr><td>Check every C2PA manifest</td><td><code>quilzo media verify</code></td></tr>
+<tr><td>Generate one, marked as generated</td><td><code>quilzo media generate "..." --alt "..."</code></td></tr>
+<tr><td>See licences that are running out</td><td><code>quilzo rights</code></td></tr>
+</tbody></table></div>

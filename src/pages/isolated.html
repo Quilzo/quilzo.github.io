@@ -1,0 +1,21 @@
+<!--
+title: Run Quilzo on an isolated or air-gapped network
+short: Isolated networks
+seo: Air-gapped deployment: offline mode, markings and transfer
+description: Run Quilzo on an isolated network with no outbound connections, a local model, classification markings, encrypted storage and recorded transfers across the gap.
+lead: No connection leaves the host, and what crosses the gap is recorded and checked.
+icon: wifi_off
+updated: 2026-10-08
+-->
+
+<ol class="steps">
+<li><h3>Refuse every outbound connection</h3><pre><code>quilzo config set network.mode offline
+quilzo network</code></pre></li>
+<li><h3>Use a model on this machine</h3><p>Point the gateway at a local OpenAI-compatible server on loopback (see <a href="/models/">Models</a>). Loopback is not egress, so it keeps working offline.</p></li>
+<li><h3>Mark what is published</h3><p><code>quilzo marking</code> shows the classification scheme, if one is set; published pages carry the banner it requires.</p></li>
+<li><h3>Carry exports across the gap</h3><pre><code>quilzo export json --to out/
+quilzo transfer record out/ --approved-by dana
+quilzo transfer verify out/        # on the other side</code></pre></li>
+<li><h3>Keep self-checks current offline</h3><pre><code>quilzo self update vulndb.zip   # a newer Go vulnerability database, read offline
+quilzo self check</code></pre></li>
+<li><h3>Seal what is stored</h3><pre><code>quilzo vault enable</code></pre></li></ol>

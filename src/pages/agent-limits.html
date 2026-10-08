@@ -1,0 +1,99 @@
+<!--
+title: Limits that hold: what a hijacked AI agent still cannot do
+short: Limits that hold
+seo: AI agent permissions, budgets and prompt injection defence
+description: Scope what an AI agent reads and calls, cap what it spends in money, and stop a hijacked agent leaking data, with limits enforced outside the model.
+lead: The declaration is enforced by code outside the model, so it holds however the model is persuaded.
+icon: rule
+screens: Agents
+updated: 2026-10-08
+-->
+
+<div class="definition"><p><strong>Prompt injection</strong> is text an agent reads that tells it to do something its user did not ask for. No classifier reliably tells those words from honest content. Quilzo does not try to: it limits what a run <em>can</em> do, records what it read, and stops for a person when private material and somebody else's words meet an outbound call.</p></div>
+
+<h2 id="reach">Decide what it can reach</h2>
+<p>Every field of the declaration narrows the agent. Leave one out and the agent has less, not more.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">Limits</th></tr></thead>
+<tbody>
+<tr><td><code>capabilities</code></td><td>The operations it may use: <code>read_page</code>, <code>write_page</code>, <code>search_pages</code> and the rest. The model picks from this list and cannot add to it.</td></tr>
+<tr><td><code>retrieval.ref</code></td><td>Whether it reads the <code>live</code> site (the default) or the <code>draft</code>, which nobody outside has seen.</td></tr>
+<tr><td><code>retrieval.types</code>, <code>locales</code>, <code>path</code></td><td>Only pages of these content types, in these languages, under this part of the site.</td></tr>
+<tr><td><code>tools</code></td><td>Tools on outside systems, each on exactly one host with a stated purpose. There are no wildcards. Tools are reached through integrations a person approved (see <a href="/integrations/">Tools and the MCP gateway</a>).</td></tr>
+<tr><td><code>delegates</code></td><td>For a supervisor, the agents it may hand work to. Each runs as the intersection of both declarations, on what is left of the supervisor's budget.</td></tr>
+<tr><td><code>ask_first</code></td><td>The capabilities and tools that stop the run for a person.</td></tr>
+<tr><td><code>autonomy</code></td><td>propose, draft or publish: the most it may ever do. A model reaches it only by passing <a href="/evals/">evaluations</a>.</td></tr>
+</tbody></table></div>
+<p>A run is also bounded by the person who starts it. Somebody with only read access who runs an agent that may write gets a run that cannot write, and the run says which capabilities it lost and why.</p>
+
+<h2 id="budgets">Set a budget it cannot argue with</h2>
+<p>Every agent has a budget, and a declaration without one is refused. One run may use at most:</p>
+<pre><code>"budget": { "steps": 25, "tool_calls": 15, "duration": "10m0s", "tokens": 40000, "money": "0.50" }</code></pre>
+<p>Money is counted at each model route's own prices, in the gateway's currency. Across runs, the model gateway caps each caller by the minute, the day and the month, and an agent is charged against its own line:</p>
+<pre><code>quilzo gateway budget agent:returns-editor --money-per-day 5.00 --money-per-month 60.00</code></pre>
+<p>An agent talked into a loop stops at its limit. See <a href="/models/">Models and the gateway</a> for routes and prices.</p>
+
+<h2 id="taint">Know what it read</h2>
+<p>A run records everything it read, by page, listing, tool and delegate. Reading content that somebody else could have written marks the run, and anything it produced then needs a person before it is relied on or published. The run's page and its receipt both list what it read.</p>
+<p>Text from a page, a tool or a delegate reaches the model inside a fence marked as untrusted content, with characters a person could not see taken out first. The fence tells the model what is data. The limits above are what hold if it is persuaded anyway.</p>
+
+<h2 id="exfiltration-breaker">The exfiltration breaker</h2>
+<p>Three things together let an agent leak data: it holds something private, it has read something somebody else wrote, and it can send something outside. Each alone is ordinary. Together, the words somebody else wrote can tell it to take what is private and send it.</p>
+<p>So when a call would complete all three, the run stops and a person sees exactly what it read, what is private about it, and where the call would go. Private material includes the unpublished draft, memory it recalled, personal data a tool returned, and what a delegate read privately. An outbound call is a call to a tool or a program's connection to a host. A program cannot wait for a person, so for a program the call is refused, with the reason.</p>
+<p>The breaker does not inspect what is in the call, which would make it the classifier it exists to avoid. It is deliberately coarse: a run that should send private material out is approved once, by a person who has seen why it stopped.</p>
+
+<h2 id="could-it">Ask whether it could, before it does</h2>
+<p><code>quilzo agent could</code> answers whether a run of an agent could do something, and why. It asks the same code the run uses, so the answer is not a second opinion:</p>
+<pre><code>quilzo agent could --model returns-editor write_page returns</code></pre>
+<pre class="out"><code>yes  returns-editor could write_page returns, decided by a model, started by dana
+  then: a person approves the exact call first
+  then: what it read was written by somebody, so a person decides before anything it produced goes live</code></pre>
+<pre><code>quilzo agent could help-desk write_page returns</code></pre>
+<pre class="out"><code>no  help-desk could write_page returns, decided by walking its declaration, started by dana
+  help-desk: write_page refused "write_page" is not in this agent's capabilities (list_pages, read_page, search_pages, similar_pages)</code></pre>
+<p>Ask about a tool with <code>tool:NAME</code>, a host with <code>host:NAME</code>, a run somebody else would start with <code>--as PERSON</code>, and an agent's own program with <code>--program</code>. For apps connected over MCP, <code>quilzo apps could CONNECTION OP [PAGE]</code> answers the same question about one connection.</p>
+
+<h2 id="probe">The gate as a service</h2>
+<p><code>quilzo agent probe</code> takes a declaration and a list of calls as JSON, and answers each one. Use it in CI to check a declaration before it is merged, or from another system to ask what an agent would be allowed to do:</p>
+<pre><code>{
+  "manifest": {
+    "name": "support-bot", "kind": "retrieval",
+    "purpose": "Answer customers from published help pages",
+    "capabilities": ["read_page", "search_pages"],
+    "autonomy": "propose",
+    "budget": { "steps": 8, "tool_calls": 4, "duration": "2m" }
+  },
+  "calls": [
+    { "op": "read_page", "ref": "live", "page": "returns" },
+    { "op": "write_page", "ref": "draft", "page": "returns" },
+    { "op": "publish" }
+  ]
+}</code></pre>
+<pre><code>quilzo agent probe &lt; question.json</code></pre>
+<pre class="out"><code>{
+  "agent": "support-bot",
+  "answers": [
+    { "op": "read_page", "allowed": true },
+    { "op": "write_page", "allowed": false,
+      "reason": "support-bot: write_page refused \"write_page\" is not in this agent's capabilities (read_page, search_pages)" },
+    { "op": "publish", "allowed": false,
+      "reason": "support-bot: publish refused \"publish\" is not in this agent's capabilities (read_page, search_pages)" }
+  ],
+  "allowed": 1,
+  "refused": 2,
+  "tainted": true
+}</code></pre>
+
+<h2 id="watchdog">The watchdog, and the shield</h2>
+<p>Asking and accepting no is how an agent should behave. Reaching again and again for what it was never given is not. <code>quilzo agents</code> lists what each model and app has been doing and which are not accepting refusals. When one crosses the line, the watchdog flags it, the agent loses the autonomy its evaluations earned, and the <a href="/shield/">shield</a>'s <code>agent-misbehaving</code> playbook tells the security contact and whoever answers for the agent, and opens a case.</p>
+<p>An agent caught following a planted instruction is treated more firmly: the <code>agent-steered</code> playbook pauses it for 24 hours and tells people, so it does not run until somebody narrows what it may do. You can pause one by hand:</p>
+<pre><code>quilzo shield pause returns-editor --for 24h --reason "kept trying to publish"</code></pre>
+<p>Every protection the shield applies ends by itself, and <code>quilzo shield lift</code> ends one early.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/agent-identity/"><span class="card-icon"><icon name="badge"></icon></span><h3>Identity and receipts</h3><p>A person answers for every agent, and every run can be proved.</p></a></li>
+<li><a class="card" href="/programs/"><span class="card-icon"><icon name="deployed_code"></icon></span><h3>Programs in a box</h3><p>An agent's own code, confined by the kernel.</p></a></li>
+</ul>
+</section>

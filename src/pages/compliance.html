@@ -1,0 +1,36 @@
+<!--
+title: Evidence for an assessment: NIST 800-53, OSCAL and FedRAMP 20x
+short: Evidence for assessment
+seo: OSCAL SSP, NIST 800-53 controls, FedRAMP 20x KSIs and SBOM
+description: Show how Quilzo implements each NIST 800-53 control in OSCAL, draft an SSP, report FedRAMP 20x indicators, and give auditors one verifiable file.
+lead: What Quilzo does for each control, who does the rest, and evidence an auditor can check.
+icon: gavel
+updated: 2026-10-08
+-->
+
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>What a questionnaire asks</td><td><code>quilzo compliance summary</code></td></tr>
+<tr><td>How Quilzo implements a control</td><td><code>quilzo compliance implementation AC-7</code></td></tr>
+<tr><td>As an OSCAL component definition</td><td><code>quilzo compliance component -o component.json</code></td></tr>
+<tr><td>A draft OSCAL system security plan</td><td><code>quilzo compliance ssp --impact moderate</code></td></tr>
+<tr><td>FedRAMP 20x Key Security Indicators</td><td><code>quilzo compliance ksi</code></td></tr>
+<tr><td>Secure by Design pledge</td><td><code>quilzo compliance pledge</code></td></tr>
+<tr><td>A CycloneDX SBOM from the build</td><td><code>quilzo compliance sbom sbom.json</code></td></tr>
+<tr><td>Every algorithm and its post-quantum status</td><td><code>quilzo compliance crypto</code></td></tr>
+<tr><td>What the law asks of the published site</td><td><code>quilzo compliance site --statement</code></td></tr>
+<tr><td>An accessibility conformance report</td><td><code>quilzo compliance acr</code></td></tr>
+</tbody></table></div>
+<h2 id="policy">Organisation policy, as NIST parameters</h2><pre><code>quilzo policy show
+quilzo policy propose ac-12_odp="8 hours" --reason "..."
+quilzo policy approve ID     # a second administrator</code></pre>
+<h2 id="auditors">Evidence over time, and auditors</h2><div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>What the evidence shows over a period</td><td><code>quilzo assurance report</code></td></tr>
+<tr><td>Engage an auditor, scoped and ending</td><td><code>quilzo engagement open ID --firm ...</code></td></tr>
+<tr><td>One file of evidence, proofs and a signed head</td><td><code>quilzo engagement issue ID -o FILE</code></td></tr>
+<tr><td>Answer a questionnaire from your claims</td><td><code>quilzo attest fill FILE</code></td></tr>
+<tr><td>Controls across a group of companies</td><td><code>quilzo entity report</code></td></tr>
+</tbody></table></div>

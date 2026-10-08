@@ -1,0 +1,45 @@
+<!--
+title: Install and run Quilzo in production
+short: Install and run it
+seo: Install Quilzo: binary, container or source, run in production
+description: Install the Quilzo binary or container, verify its provenance, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
+lead: Get the program, check it came from this project, and run it the way it is meant to be run.
+icon: download
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>Quilzo is <strong>one static binary</strong> with no dependencies to install. It runs as two processes from the same store: <code>quilzo serve</code>, the admin, which belongs on loopback; and <code>quilzo site</code>, the public site, which has no editing surface at all.</p></div>
+<h2 id="get-it">Get the program</h2>
+<ol class="steps">
+<li><h3>A release binary</h3><p>Linux, macOS and Windows, on amd64 and arm64. Check the checksum, then check the build provenance, which proves this project's release workflow built the file from a tag:</p>
+<pre><code>curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/quilzo-linux-amd64
+curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/SHA256SUMS
+sha256sum -c --ignore-missing SHA256SUMS
+gh attestation verify quilzo-linux-amd64 --repo Quilzo/Quilzo
+sudo install -m 0755 quilzo-linux-amd64 /usr/local/bin/quilzo</code></pre></li>
+<li><h3>Or the container</h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager.</p>
+<pre><code>docker run --rm -v quilzo:/srv ghcr.io/quilzo/quilzo --root /srv/store init
+docker run -p 8081:8081 -v quilzo:/srv ghcr.io/quilzo/quilzo --root /srv/store site --addr 0.0.0.0:8081</code></pre></li>
+<li><h3>Or build it</h3><p>Go 1.27 and nothing else: <code>go.mod</code> requires no module.</p>
+<pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
+go build -o quilzo ./cmd/quilzo</code></pre><p>Released binaries trail <code>main</code>; build from source for everything in this manual.</p></li>
+</ol>
+<h2 id="production">Run it for real</h2>
+<ol class="steps">
+<li><h3>Keep the admin on loopback</h3><p><code>quilzo serve</code> listens on <code>127.0.0.1:8080</code> by default. Reach it through your own authenticating proxy or a VPN, and set its public address so sign-in flows and connected apps know where they are:</p><pre><code>quilzo config set admin.base_url https://quilzo.example.com</code></pre></li>
+<li><h3>Put the site on the internet, behind TLS</h3><pre><code>quilzo site --addr 0.0.0.0:8081 --base-url https://example.org</code></pre><p>Terminate TLS in front of both processes. <code>--base-url</code> is needed for the sitemap and feeds.</p></li>
+<li><h3>Write the audit log as its own account</h3><p><code>quilzo logd</code> runs the log writer as a separate user the content platform cannot impersonate; <code>quilzo logd status</code> says whether the separation is in force.</p></li>
+<li><h3>Encrypt what is stored</h3><pre><code>quilzo vault enable     # prints the key once
+quilzo vault rotate     # a new key from now on
+quilzo vault rewrap     # move existing objects onto it</code></pre><p>The key comes from <code>QUILZO_KEY</code>, <code>QUILZO_KEY_FILE</code> or <code>QUILZO_KEY_COMMAND</code>.</p></li>
+<li><h3>Read the posture scan</h3><p><span class="where">Assurance › Security</span> or <code>quilzo posture scan</code> reads this deployment and lists what is thin, with the reason and the fix (see <a href="/security/">Security posture</a>).</p></li>
+</ol>
+<h2 id="backups">Back up and upgrade</h2>
+<p>The store directory is the only state Quilzo has. Back it up and you have backed up content, history, policy, credentials, agents and the audit log; <code>quilzo verify</code> re-hashes every object after a restore. To upgrade, replace the binary and restart both processes. The full operations guide is <a href="https://github.com/Quilzo/Quilzo/blob/main/INSTALL">INSTALL</a>.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/settings/"><span class="card-icon"><icon name="settings"></icon></span><h3>Settings and the network</h3><p>Every setting, and what each connection is for.</p></a></li>
+<li><a class="card" href="/logging/"><span class="card-icon"><icon name="logs"></icon></span><h3>The audit log</h3><p>Signed, chained, and provable entry by entry.</p></a></li>
+</ul>
+</section>

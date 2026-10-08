@@ -1,0 +1,114 @@
+<!--
+title: Connect AI apps and agents to Quilzo over MCP, with OAuth and receipts
+short: Connect AI apps (MCP)
+seo: MCP server with OAuth 2.1: connect AI apps to your content
+description: Connect Claude, ChatGPT, coding agents or your own agents to Quilzo over MCP, locally or with OAuth 2.1, each acting as one person, with a receipt for every call.
+lead: Quilzo's operations for any agent or AI app, with each app acting for one person, with their access and no more.
+icon: apps
+screens: Connected apps
+updated: 2026-10-08
+-->
+
+<div class="definition"><p>The <strong>agent interface</strong> is Quilzo as an MCP server: the same operations, checks and audit log as the command line, for any client that speaks the Model Context Protocol. It runs over stdio for an app on the same machine, and over HTTP at <code>/mcp</code> (MCP revision 2026-07-28, stateless) for apps anywhere, which connect through OAuth 2.1 with a person's consent.</p></div>
+
+<h2 id="tools">What an app sees</h2>
+<p>Four tools, so an app's context is not filled with dozens of definitions:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Tool</th><th scope="col">Does</th></tr></thead>
+<tbody>
+<tr><td><code>quilzo_find</code></td><td>Finds the operation for a task and returns its exact arguments. Call it first.</td></tr>
+<tr><td><code>quilzo_read</code></td><td>Runs a read operation: <code>read_page</code>, <code>search_pages</code>, <code>list_findings</code>, <code>incident_status</code> and many more.</td></tr>
+<tr><td><code>quilzo_write</code></td><td>Changes a draft. Never publishes. What it writes is recorded as AI-generated.</td></tr>
+<tr><td><code>quilzo_check</code></td><td>Runs the checks that gate publishing: accessibility and content provenance.</td></tr>
+</tbody></table></div>
+<p><code>quilzo mcp --list</code> prints every operation, read or write, with what it does. An agent cannot change who may do what, what code runs, or what the keys are, because a planted instruction in a page an agent reads is a plausible route to anything that agent can call.</p>
+
+<h2 id="local">Connect an app on the same machine</h2>
+<p>An app that starts MCP servers itself, such as a desktop AI app or a coding agent, runs <code>quilzo mcp</code> over stdio. A typical client configuration:</p>
+<pre><code>{
+  "mcpServers": {
+    "quilzo": {
+      "command": "/usr/local/bin/quilzo",
+      "args": ["--root", "/srv/quilzo/.quilzo", "mcp"]
+    }
+  }
+}</code></pre>
+<p>It acts as whoever owns the token the command line finds: <code>--token</code>, then <code>~/.quilzo/token</code>, then <code>QUILZO_TOKEN</code>. Prefer the file, at mode 0600, because every program you start inherits your environment, including the agent you are connecting. Issue the app a token of its own with only the role it needs, such as <code>quilzo token issue desk-app --principal you --role author</code>.</p>
+
+<h2 id="remote">Connect apps over HTTP with OAuth</h2>
+<ol class="steps">
+<li>
+<h3>Turn on the endpoint</h3>
+<p>A door reached from outside is a decision, so it is off by default and turning it on needs a recorded reason. Apps sign in by themselves once the admin's public address is set.</p>
+<pre><code>quilzo config set mcp.remote true --accept-risk "AI apps on the help desk connect over MCP"
+quilzo config set admin.base_url https://quilzo.example.com</code></pre>
+<p>Quilzo then publishes its OAuth metadata at <code>/.well-known/oauth-protected-resource</code> and <code>/.well-known/oauth-authorization-server</code>, with PKCE (S256), refresh tokens, revocation and client ID metadata documents.</p>
+</li>
+<li>
+<h3>Decide which apps may ask</h3>
+<p>An app identifies itself by a document it publishes at an address of its own. Only apps published from hosts you allow can ask anybody here to connect, under <strong>Which apps may connect</strong> on <span class="where">Administration › Connected apps</span>:</p>
+<pre><code>quilzo apps allow claude.ai</code></pre>
+<p>An app that cannot publish its own metadata, such as one you wrote, is registered instead, and gets a public client ID (no secret, PKCE required):</p>
+<pre><code>quilzo apps register "Desk Assistant" --redirect http://127.0.0.1:18899/callback</code></pre>
+<pre class="out"><code>registered Desk Assistant
+  client_id qzc_aabd40e78497aec0
+  a public client: no secret; PKCE with S256</code></pre>
+</li>
+<li>
+<h3>A person agrees, for themselves</h3>
+<p>Give the app the address of <code>/mcp</code>. It sends the person to Quilzo, who sees who the app says it is, where it will send them back, what it will reach, and what it may do, and chooses which of those to allow.</p>
+<figure class="shot"><img src="/images/agent-interface/consent.webp" alt="Connect Desk Assistant? The consent screen: the app wants to use the agent interface as dana, may read pages and change drafts, with Allow and Decline"><figcaption>The consent screen. A warning appears when the app returns to a program on this computer.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Scope</th><th scope="col">The app may</th></tr></thead>
+<tbody>
+<tr><td><code>mcp:read</code></td><td>Read pages, records and reports. The default.</td></tr>
+<tr><td><code>mcp:write</code></td><td>Change drafts, never the live site.</td></tr>
+<tr><td><code>mcp:publish</code></td><td>Publish.</td></tr>
+<tr><td><code>mcp:admin</code></td><td>Everything an administrator can do through the interface.</td></tr>
+</tbody></table></div>
+<p>A scope never adds to what the person may do. Everything the app does is checked against the person's access at the moment it does it, and recorded under their name.</p>
+</li>
+<li>
+<h3>Watch, prove and disconnect</h3>
+<p><span class="where">Administration › Connected apps</span> lists every connection: the app, who it acts for, what it may do, when it was last used, and when the person will be asked again.</p>
+<figure class="shot"><img src="/images/agent-interface/apps.webp" alt="Connected apps: Desk Assistant for dana with mcp:read and mcp:write, with Receipt and Disconnect"><figcaption>One connection, with its receipt and a way to end it.</figcaption></figure>
+<pre><code>quilzo apps list
+quilzo apps receipt gr_783e6202940b7042 -o app-receipt.json
+quilzo apps disconnect gr_783e6202940b7042</code></pre>
+<pre class="out"><code>3 records of connection gr_783e6202940b7042, each with its proof, against a head of 179 signed by 0e667cb95d838091</code></pre>
+</li>
+</ol>
+
+<h2 id="could-it">Ask what an app could do</h2>
+<pre><code>quilzo apps could gr_783e6202940b7042 publish
+quilzo apps could gr_783e6202940b7042 write_page returns</code></pre>
+<pre class="out"><code>no  Desk Assistant, for dana, could publish
+  this app was given author access, and this needs publisher
+yes  Desk Assistant, for dana, could write_page returns
+  then: it is recorded as Desk Assistant acting for dana (mcp.call), and quilzo apps receipt gr_783e6202940b7042 proves every call</code></pre>
+<p>The app itself gets the same answer when it tries: a call outside its scope returns HTTP 403 with that reason, which an MCP client knows how to answer by asking the person for more.</p>
+
+<h2 id="requests">What a request looks like</h2>
+<p>Revision 2026-07-28 is stateless: there is no session and no handshake. Each request carries the protocol version in a header and in <code>_meta</code>, and repeats the method and tool name in headers so a gateway can decide without reading the body. Quilzo refuses a request whose headers and body disagree. Clients of the 2025 revisions, which open with <code>initialize</code>, are still answered.</p>
+<pre><code>POST /mcp
+Authorization: Bearer ACCESS_TOKEN
+MCP-Protocol-Version: 2026-07-28
+Mcp-Method: tools/call
+Mcp-Name: quilzo_read
+
+{"jsonrpc": "2.0", "id": 1, "method": "tools/call",
+ "params": {"name": "quilzo_read",
+            "arguments": {"operation": "read_page", "arguments": {"page": "delivery"}},
+            "_meta": {"io.modelcontextprotocol/protocolVersion": "2026-07-28"}}}</code></pre>
+<p>A token is accepted only in the <code>Authorization</code> header, never in the URL, because URLs end up in logs.</p>
+
+<h2 id="when-people-leave">When a person leaves</h2>
+<p>A connection acts for one person, so it ends with their access. Once somebody is suspended, for example by the identity provider through <a href="/provisioning/">SCIM</a>, their apps get no new tokens and every call is refused as theirs would be. Removing a host from the allowed list ends every connection from it, and the <a href="/shield/">shield</a> can suspend a single connection that misbehaves.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/integrations/"><span class="card-icon"><icon name="integrations"></icon></span><h3>The MCP gateway</h3><p>Your own MCP servers, offered to agents through Quilzo.</p></a></li>
+<li><a class="card" href="/a2a/"><span class="card-icon"><icon name="handshake"></icon></span><h3>A2A</h3><p>Agent cards, and tasks from other vendors' agents.</p></a></li>
+</ul>
+</section>

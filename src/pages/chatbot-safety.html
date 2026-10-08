@@ -1,0 +1,62 @@
+<!--
+title: Stop prompt injection in RAG: screening, guardrails and poisoned pages
+short: Prompt injection in RAG
+seo: Prevent indirect prompt injection in RAG chatbots
+description: Keep planted instructions out of what a RAG chatbot reads, add Lakera Guard or Google Model Armor as a second check, and catch a poisoned page early.
+lead: Four layers between a planted instruction and a visitor, each one working without the others.
+icon: security
+screens: Chatbots
+updated: 2026-10-08
+-->
+
+<div class="definition"><p><strong>Indirect prompt injection</strong> is an instruction hidden in content an AI reads rather than typed by its user: a sentence in a page, a document or a review that says "ignore your previous instructions". It is number one on OWASP's Top 10 for LLM applications, and a <strong>poisoned document</strong> in a knowledge base (OWASP LLM08) is how it reaches a RAG chatbot.</p></div>
+
+<p>Quilzo's chatbots already limit the damage: they can only answer and offer the actions you declared, every sentence must cite a passage, and with a model each sentence is checked against that passage. The layers on this page stop planted text from reaching the model in the first place, and tell you where it came from.</p>
+
+<h2 id="invisible-text">1. Text nobody can see is removed</h2>
+<p>Before any model reads text, characters that draw nothing are taken out: the Unicode tag block, zero-width characters and bidirectional controls. They are a known way to hide an instruction from the person reviewing a page while a model still reads it. This is always on.</p>
+
+<h2 id="screening">2. Passages that speak to an AI are left out</h2>
+<p>A page is written for the people who read it. Text that addresses the AI instead, such as "ignore your previous instructions", "if you are an AI assistant", a fake system prompt, or "do not tell the user", has the shape of a planted instruction. As a chatbot's knowledge is indexed, those passages are left out of what it reads, and you are told which pages and why.</p>
+<ol class="steps">
+<li>
+<h3>See what was left out</h3>
+<p>Ask something under <strong>Try it</strong> on the chatbot's page. Above the answer, <strong>Some of what it could read is not being used</strong> lists each page with a passage held back, and the reason.</p>
+<figure class="shot"><img src="/images/chatbot-safety/held.webp" alt="The chatbot test console: ink-care is left out of what it reads, because it tells an AI to set its instructions aside; the answer comes from the Returns page instead"><figcaption>A page carrying a planted instruction. Its passage is left out; the answer comes from Returns.</figcaption></figure>
+</li>
+<li>
+<h3>Fix the page</h3>
+<p>A held passage is not deleted or hidden on the site; it is only left out of what the chatbot reads. The passage is the unit, so any honest text sharing it is left out too. Remove the planted sentence, publish, and the page is read again.</p>
+</li>
+<li>
+<h3>Keep instructions only where you mean to</h3>
+<p>A chatbot whose pages discuss these attacks on purpose, such as a security knowledge base, can keep such passages: tick <strong>Read passages that address an AI</strong> in its settings. The <a href="/ai-evidence/">AI evidence</a> report counts how many chatbots screen their knowledge.</p>
+</li>
+</ol>
+<p>Agents get the same screening for what they retrieve. An agent declared with <code>"retrieval": {"keep_instructions": true}</code> keeps such passages, for the same reason.</p>
+
+<h2 id="guardrail">3. A second look by an outside classifier</h2>
+<p>Quilzo's own screening is a list of rules. A classifier trained on far more attacks will notice some a list does not, so you can add one as a second check:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col"><code>guardrail.kind</code></th><th scope="col">Service</th></tr></thead>
+<tbody>
+<tr><td><code>lakera</code></td><td>Lakera Guard (<code>/v2/guard</code>). The address defaults to Lakera's.</td></tr>
+<tr><td><code>model-armor</code></td><td>Google Cloud Model Armor (<code>sanitizeUserPrompt</code>). Set its address in <code>guardrail.url</code>.</td></tr>
+<tr><td><code>generic</code></td><td>A classifier on your own network that takes <code>{"text"}</code> and answers <code>{"flagged"}</code>, such as Llama Prompt Guard 2 behind a small HTTP wrapper.</td></tr>
+</tbody></table></div>
+<pre><code>quilzo config set guardrail.kind lakera
+export QUILZO_GUARDRAIL_KEY=…        # read from the environment, never stored in a setting</code></pre>
+<p>It is asked about a chatbot's knowledge as it is indexed, and about each visitor's question. What it flags in the knowledge is left out. A flagged question is counted as an injection attempt for the shield, and never refused on the classifier's word alone. The key is only sent over https; without one, the classifier must be on your own network.</p>
+<p>It fails open, and says so. If the classifier does not answer within three seconds, the text stays as Quilzo's own checks left it and the miss is counted, so an outage is a number somebody sees rather than an outage of the site.</p>
+
+<h2 id="poisoned-pages">4. A new page that answers everything</h2>
+<p>A poisoned page is written to be retrieved for every question. So Quilzo watches for its shape: a page that entered a chatbot's knowledge in the last seven days and becomes the source it cites first for ten different questions within an hour. When that happens, the shield's <code>knowledge-takeover</code> playbook tells the security contact and opens a case. A popular new page can look the same, so nothing is refused: somebody reads the page.</p>
+<p>Questions that look like injection attempts are counted too. The <code>chatbot-injection</code> playbook acts on repeated attempts from one source, and <code>chatbot-flood</code> watches for attempts arriving from everywhere at once. See <a href="/shield/">The shield</a>.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/evals/"><span class="card-icon"><icon name="labs"></icon></span><h3>Evaluate agents</h3><p>Planted instructions, measured on the model you run.</p></a></li>
+<li><a class="card" href="/agent-limits/"><span class="card-icon"><icon name="rule"></icon></span><h3>Limits that hold</h3><p>The exfiltration breaker and what a hijacked agent cannot do.</p></a></li>
+</ul>
+</section>

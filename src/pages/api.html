@@ -1,0 +1,27 @@
+<!--
+title: The content API and the command line
+short: API and command line
+seo: Headless CMS content API and command line for automation
+description: A read-only or writable JSON content API with If-Match, and a command line where every command speaks JSON and exit codes tell a refusal from a failure.
+lead: The content API for applications, and the command line for scripts, pipelines and agents.
+icon: playground
+screens: API
+updated: 2026-10-08
+-->
+
+<h2 id="content-api">Serve the content API</h2>
+<pre><code>quilzo site --api                 # read-only, at /api/v1
+quilzo site --api --api-writable  # PUT allowed; every write needs If-Match</code></pre><p>A write must carry the version it was based on, so two writers cannot silently overwrite each other. Try it against your own store in <span class="where">Reference › API</span>.</p>
+<figure class="shot"><img src="/images/api/playground.webp" alt="The API playground in the admin"><figcaption>The API playground.</figcaption></figure>
+<h2 id="cli">The command line</h2>
+<p>Everything the admin does, the command line does, through the same code. <code>quilzo help</code> lists every command. Each takes <code>--json</code> and then writes one JSON document to stdout, and <code>--root DIR</code> chooses the store.</p>
+<div class="table-wrap"><table><thead><tr><th scope="col">Exit code</th><th scope="col">Means</th></tr></thead><tbody>
+<tr><td><code>0</code></td><td>Success</td></tr><tr><td><code>1</code></td><td>Failed</td></tr><tr><td><code>2</code></td><td>Misused</td></tr><tr><td><code>3</code></td><td>Refused by a gate</td></tr><tr><td><code>4</code></td><td>Not found</td></tr><tr><td><code>5</code></td><td>A required dependency was missing</td></tr></tbody></table></div>
+<p>A gate refusing (3) is not the command failing (1). Branch on the code, not on the wording, which is free to improve. The command line finds its token in <code>--token</code>, then <code>~/.quilzo/token</code>, then <code>QUILZO_TOKEN</code>.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/agent-interface/"><span class="card-icon"><icon name="apps"></icon></span><h3>The agent interface</h3><p>The same operations over MCP.</p></a></li>
+<li><a class="card" href="/integrations/"><span class="card-icon"><icon name="integrations"></icon></span><h3>Webhooks</h3><p>Tell other systems what changed.</p></a></li>
+</ul>
+</section>

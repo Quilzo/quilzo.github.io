@@ -1,0 +1,22 @@
+<!--
+title: Privacy: what Quilzo keeps about people
+short: Privacy
+seo: Privacy by design: personal data, retention and erasure
+description: What Quilzo keeps about visitors, members, staff and customers, how long, and how each is erased: forms, chatbot questions, analytics, memory, prompts and notices.
+lead: What is kept about people, for how long, and how it goes.
+icon: privacy_tip
+updated: 2026-10-08
+-->
+
+<div class="table-wrap"><table><thead><tr><th scope="col">What</th><th scope="col">Kept</th><th scope="col">How it goes</th></tr></thead><tbody>
+<tr><td>Questions to a chatbot</td><td>Not stored</td><td>Nothing to erase</td></tr>
+<tr><td>A conversation handed to a person</td><td>30 days after it last moves by default, 90 at most</td><td><code>quilzo inbox close</code>; deleted on expiry</td></tr>
+<tr><td>Form submissions</td><td>As long as the form declares</td><td><code>quilzo form expire</code>, <code>quilzo form erase VALUE</code></td></tr>
+<tr><td>Analytics</td><td>Counts, with no cookie</td><td>Nothing identifies a visitor</td></tr>
+<tr><td>What agents remember</td><td>As declared, 90 days at most; held memories two weeks</td><td><a href="/memory/">Memory</a>: edit, delete, forget, with a receipt</td></tr>
+<tr><td>Prompts to models</td><td>Never recorded</td><td>Personal data is masked before it leaves (see <a href="/models/#privacy-guard">the privacy guard</a>)</td></tr>
+<tr><td>Member accounts</td><td>Until removed</td><td><code>quilzo member remove ID</code> erases the record, passkeys, recovery codes and sessions</td></tr>
+<tr><td>People notified about a breach</td><td>As the notice needs</td><td><code>quilzo notify erase ISSUER:VALUE</code>, and suppressed on re-import</td></tr>
+<tr><td>Identifiers in the audit log</td><td>Pseudonymised</td><td>The log cannot forget, so it records counts and ids, never what was said</td></tr>
+</tbody></table></div>
+<p>When the identity provider deletes somebody through <a href="/provisioning/">SCIM</a>, what agents remember about them goes too. The published site is checked for personal data before it publishes (<code>quilzo compliance site</code>).</p>

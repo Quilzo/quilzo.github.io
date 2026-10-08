@@ -1,0 +1,73 @@
+# The menu, in order. "## Group" starts a group; each line after it is a
+# page in src/pages, by slug. A page not listed here is built and linked to,
+# and not shown in the menu.
+
+## Get started
+start
+install
+concepts
+
+## AI agents
+agents
+agent-limits
+agent-identity
+evals
+programs
+memory
+
+## Models and chatbots
+models
+chatbots
+chatbot-safety
+assistant
+
+## Connect
+agent-interface
+integrations
+a2a
+fleet
+api
+
+## Content
+pages
+types
+structure
+forms
+media
+design
+languages
+members
+
+## Release
+publishing
+growth
+transfer
+
+## Security operations
+collect
+detection
+cases
+automations
+vulnerabilities
+workforce
+shield
+
+## Compliance and audit
+security
+ai-evidence
+compliance
+provenance
+logging
+privacy
+
+## Administration
+people
+sso
+provisioning
+passkeys
+settings
+isolated
+
+## More
+collaboration
+licence

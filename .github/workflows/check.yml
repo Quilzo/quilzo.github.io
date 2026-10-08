@@ -15,7 +15,10 @@ permissions:
   contents: read
 
 jobs:
-  build:
+  # Two jobs, named for the two promises branch protection asks for. Both run
+  # the generator's check, which builds every page in memory and fails on any
+  # difference from what is committed.
+  anchors:
     runs-on: ubuntu-latest
     steps:
       # Pinned by commit, not by tag: a tag is a mutable pointer in somebody
@@ -24,5 +27,15 @@ jobs:
       - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
         with:
           go-version-file: go.mod
-      - name: The site is what src/ builds, and every link and picture resolves
+      - name: Every guide the Quilzo admin links to is a page here
+        run: go run ./gen -check
+
+  links:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-go@b7ad1dad31e06c5925ef5d2fc7ad053ef454303e # v7.0.0
+        with:
+          go-version-file: go.mod
+      - name: No link lands nowhere, every picture exists, and the pages are what src/ builds
         run: go run ./gen -check

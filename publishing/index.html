@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/publishing/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-09">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Publishing workflow: review, environments, rollback">
 <meta name="twitter:description" content="Review what changed, let the accessibility and content gates run, publish by moving a pointer, promote through environments, and roll back at once.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Review what changed, let the accessibility and content gates run, publish by moving a pointer, promote through environments, and roll back at once.","headline":"Review, publish, schedule and roll back","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/publishing/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/publishing/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Publish","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-09","description":"Review what changed, let the accessibility and content gates run, publish by moving a pointer, promote through environments, and roll back at once.","headline":"Review, publish, schedule and roll back","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/publishing/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/publishing/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Publish","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -176,7 +176,7 @@ quilzo provenance check
 quilzo brand check
 quilzo scan</code></pre></li>
 <li><h3 id="publish">Publish<a class="anchor" href="#publish" aria-hidden="true" tabindex="-1">#</a></h3><pre><code>quilzo publish</code></pre><figure class="shot"><img src="/images/publishing/publishing.webp" alt="The Publishing screen: each environment, what it serves and what waits" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Environments and what is waiting.</figcaption></figure></li>
-<li><h3 id="roll-back-if-you-need-to">Roll back if you need to<a class="anchor" href="#roll-back-if-you-need-to" aria-hidden="true" tabindex="-1">#</a></h3><pre><code>quilzo rollback --steps 1</code></pre><figure class="shot"><img src="/images/publishing/history.webp" alt="The History screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Every version, still stored.</figcaption></figure></li>
+<li><h3 id="roll-back-if-you-need-to">Roll back if you need to<a class="anchor" href="#roll-back-if-you-need-to" aria-hidden="true" tabindex="-1">#</a></h3><p>Going back returns to a version that was live before, from <span class="where">Release › History</span> or the command line. A version that was saved and never published is not offered: it goes live through Review, where it is checked.</p><pre><code>quilzo rollback --steps 1</code></pre><figure class="shot"><img src="/images/publishing/history.webp" alt="The History screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Every version, still stored.</figcaption></figure></li>
 </ol>
 <h2 id="environments">Environments and scheduling<a class="anchor" href="#environments" aria-hidden="true" tabindex="-1">#</a></h2><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
@@ -189,7 +189,7 @@ quilzo scan</code></pre></li>
 </tbody></table></div>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/publishing.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-09 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/publishing.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/members/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Member accounts and boards</span></a>
       <a class="pager-next" href="/growth/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Analytics, A/B tests and personalisation</span></a>

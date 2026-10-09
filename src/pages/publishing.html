@@ -6,7 +6,7 @@ description: Review what changed, let the accessibility and content gates run, p
 lead: Publishing moves a pointer, so it cannot half-complete and rolling back is instant.
 icon: publishing
 screens: Review, Publishing, History, Notes
-updated: 2026-10-08
+updated: 2026-10-09
 -->
 
 <ol class="steps">
@@ -22,7 +22,7 @@ quilzo provenance check
 quilzo brand check
 quilzo scan</code></pre></li>
 <li><h3>Publish</h3><pre><code>quilzo publish</code></pre><figure class="shot"><img src="/images/publishing/publishing.webp" alt="The Publishing screen: each environment, what it serves and what waits"><figcaption>Environments and what is waiting.</figcaption></figure></li>
-<li><h3>Roll back if you need to</h3><pre><code>quilzo rollback --steps 1</code></pre><figure class="shot"><img src="/images/publishing/history.webp" alt="The History screen"><figcaption>Every version, still stored.</figcaption></figure></li>
+<li><h3>Roll back if you need to</h3><p>Going back returns to a version that was live before, from <span class="where">Release › History</span> or the command line. A version that was saved and never published is not offered: it goes live through Review, where it is checked.</p><pre><code>quilzo rollback --steps 1</code></pre><figure class="shot"><img src="/images/publishing/history.webp" alt="The History screen"><figcaption>Every version, still stored.</figcaption></figure></li>
 </ol>
 <h2 id="environments">Environments and scheduling</h2><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>

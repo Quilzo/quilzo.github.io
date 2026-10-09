@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/integrations/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-09">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MCP gateway: tool pinning, approvals and audit for AI agents">
 <meta name="twitter:description" content="Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.","headline":"MCP gateway: govern the tools AI agents call, with pinning and approvals","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/integrations/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/integrations/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Tools and the MCP gateway","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-09","description":"Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.","headline":"MCP gateway: govern the tools AI agents call, with pinning and approvals","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/integrations/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/integrations/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Tools and the MCP gateway","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -186,7 +186,8 @@
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Field</th><th scope="col">Means</th></tr></thead>
 <tbody>
-<tr><td><code>endpoint</code></td><td>Exactly one hostname: no scheme, no path, no wildcard. Quilzo always uses https.</td></tr>
+<tr><td><code>endpoint</code></td><td>Exactly one hostname, or an IPv4 address: no scheme, no wildcard. Quilzo always uses https.</td></tr>
+<tr><td><code>port</code>, <code>path</code></td><td>Where on that host the server answers, when it is not port 443 and <code>/</code>. Most MCP servers answer at <code>/mcp</code>.</td></tr>
 <tr><td><code>uses</code></td><td>The tools this install may call there. Never "everything the server offers": a server can add or redefine a tool after the day you trusted it.</td></tr>
 <tr><td><code>writes</code></td><td>The tools change something on the far side, so a reviewer does not have to guess from their names.</td></tr>
 <tr><td><code>secret</code></td><td>The name of the credential. Its value is read from <code>QUILZO_SECRET_TRACKER_TOKEN</code> (the name in capitals, with anything else turned into <code>_</code>), never from the store, because the store keeps history that cannot be deleted.</td></tr>
@@ -219,7 +220,26 @@ quilzo integrations pin tracker list_issues create_issue</code></pre>
 ],
 "ask_first": ["create_issue"]</code></pre>
 <p>A call is allowed only if the agent declares the tool, an enabled integration offers it, and it is pinned. Every call is recorded, and the exfiltration breaker stops a call when the run holds something private and has read somebody else's words (see <a href="/agent-limits/#exfiltration-breaker">Limits that hold</a>). Try a call by hand with <code>quilzo integrations call tracker list_issues</code>.</p>
-<div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>Public addresses only, for now.</strong> The client refuses loopback and private network addresses, as protection against a declaration being pointed at internal services. A tool server on your private network cannot be declared yet.</p></div></div>
+<h3 id="own-network">A tool server on your own network<a class="anchor" href="#own-network" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>Quilzo refuses private, loopback and link-local addresses unless you say otherwise, so a declaration cannot be pointed at whatever else is inside your network. To use an MCP server that runs inside it, name the range it is in with <code>reach</code>:</p>
+<pre><code>{
+  "name": "knowledge",
+  "kind": "mcp",
+  "enabled": true,
+  "purpose": "Search the internal knowledge base",
+  "endpoint": "kb.corp.example",
+  "port": 8443,
+  "path": "/mcp",
+  "reach": ["10.20.0.0/16"],
+  "uses": ["search"]
+}</code></pre>
+<ul>
+<li>Every address the name resolves to must be inside a declared range. Quilzo checks this when it connects, so changing a DNS answer later does not let the declaration reach anything else.</li>
+<li>Only private ranges (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>, <code>100.64.0.0/10</code>, <code>fc00::/7</code>) and loopback can be named. Link-local, where cloud metadata lives, never can. Up to 8 ranges, each written from where it starts.</li>
+<li>The server still needs https. If your organisation signs its own certificates, the machine running Quilzo has to trust that authority, through the system's certificate store or <code>SSL_CERT_FILE</code>.</li>
+<li>In an offline deployment (<code>network.mode</code> set to offline) only loopback is reached, whatever is declared.</li>
+</ul>
+<p>The Integrations screen and <code>quilzo integrations list</code> show the range next to the server, so a reviewer sees what was opened.</p>
 <h2 id="gateway">Offer your MCP servers to other agents<a class="anchor" href="#gateway" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Another vendor's agent, or one your teams built, can reach a declared server through Quilzo instead of directly. It gets only the pinned tools, at the role and daily limit you set, with Quilzo's credential injected and never its own. Every call is checked, counted and recorded with a digest of its arguments.</p>
 <ol class="steps">
@@ -274,7 +294,7 @@ quilzo siem verify audit.jsonl --envelope evidence.json</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/integrations.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-09 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/integrations.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/agent-interface/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Connect AI apps and agents to Quilzo over MCP, with OAuth and receipts</span></a>
       <a class="pager-next" href="/a2a/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">A2A: agent cards and tasks from other vendors&#39; agents</span></a>

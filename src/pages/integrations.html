@@ -6,7 +6,7 @@ description: Give AI agents tools on MCP servers you approve, refuse a tool whos
 lead: Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.
 icon: integrations
 screens: Integrations
-updated: 2026-10-08
+updated: 2026-10-09
 -->
 
 <div class="definition"><p>An <strong>MCP gateway</strong> sits between AI agents and MCP servers and decides each tool call: who may call which tool, how often, whether a person approves it first, and with which credential. Quilzo is one for its own agents, and offers the same to other vendors' agents at <code>/mcp/gateway/NAME</code>.</p></div>
@@ -33,7 +33,8 @@ updated: 2026-10-08
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Field</th><th scope="col">Means</th></tr></thead>
 <tbody>
-<tr><td><code>endpoint</code></td><td>Exactly one hostname: no scheme, no path, no wildcard. Quilzo always uses https.</td></tr>
+<tr><td><code>endpoint</code></td><td>Exactly one hostname, or an IPv4 address: no scheme, no wildcard. Quilzo always uses https.</td></tr>
+<tr><td><code>port</code>, <code>path</code></td><td>Where on that host the server answers, when it is not port 443 and <code>/</code>. Most MCP servers answer at <code>/mcp</code>.</td></tr>
 <tr><td><code>uses</code></td><td>The tools this install may call there. Never "everything the server offers": a server can add or redefine a tool after the day you trusted it.</td></tr>
 <tr><td><code>writes</code></td><td>The tools change something on the far side, so a reviewer does not have to guess from their names.</td></tr>
 <tr><td><code>secret</code></td><td>The name of the credential. Its value is read from <code>QUILZO_SECRET_TRACKER_TOKEN</code> (the name in capitals, with anything else turned into <code>_</code>), never from the store, because the store keeps history that cannot be deleted.</td></tr>
@@ -67,7 +68,27 @@ quilzo integrations pin tracker list_issues create_issue</code></pre>
 ],
 "ask_first": ["create_issue"]</code></pre>
 <p>A call is allowed only if the agent declares the tool, an enabled integration offers it, and it is pinned. Every call is recorded, and the exfiltration breaker stops a call when the run holds something private and has read somebody else's words (see <a href="/agent-limits/#exfiltration-breaker">Limits that hold</a>). Try a call by hand with <code>quilzo integrations call tracker list_issues</code>.</p>
-<div class="note"><icon name="info"></icon><div><p><strong>Public addresses only, for now.</strong> The client refuses loopback and private network addresses, as protection against a declaration being pointed at internal services. A tool server on your private network cannot be declared yet.</p></div></div>
+
+<h3 id="own-network">A tool server on your own network</h3>
+<p>Quilzo refuses private, loopback and link-local addresses unless you say otherwise, so a declaration cannot be pointed at whatever else is inside your network. To use an MCP server that runs inside it, name the range it is in with <code>reach</code>:</p>
+<pre><code>{
+  "name": "knowledge",
+  "kind": "mcp",
+  "enabled": true,
+  "purpose": "Search the internal knowledge base",
+  "endpoint": "kb.corp.example",
+  "port": 8443,
+  "path": "/mcp",
+  "reach": ["10.20.0.0/16"],
+  "uses": ["search"]
+}</code></pre>
+<ul>
+<li>Every address the name resolves to must be inside a declared range. Quilzo checks this when it connects, so changing a DNS answer later does not let the declaration reach anything else.</li>
+<li>Only private ranges (<code>10.0.0.0/8</code>, <code>172.16.0.0/12</code>, <code>192.168.0.0/16</code>, <code>100.64.0.0/10</code>, <code>fc00::/7</code>) and loopback can be named. Link-local, where cloud metadata lives, never can. Up to 8 ranges, each written from where it starts.</li>
+<li>The server still needs https. If your organisation signs its own certificates, the machine running Quilzo has to trust that authority, through the system's certificate store or <code>SSL_CERT_FILE</code>.</li>
+<li>In an offline deployment (<code>network.mode</code> set to offline) only loopback is reached, whatever is declared.</li>
+</ul>
+<p>The Integrations screen and <code>quilzo integrations list</code> show the range next to the server, so a reviewer sees what was opened.</p>
 
 <h2 id="gateway">Offer your MCP servers to other agents</h2>
 <p>Another vendor's agent, or one your teams built, can reach a declared server through Quilzo instead of directly. It gets only the pinned tools, at the role and daily limit you set, with Quilzo's credential injected and never its own. Every call is checked, counted and recorded with a digest of its arguments.</p>

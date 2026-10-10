@@ -17,6 +17,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed AGPL-3.0-or-l
 - [AI agent identity: sponsors, principals and signed receipts](https://quilzo.github.io/agent-identity/): Give every AI agent its own identity and a person who answers for it, stop it when they leave, and prove what any run did with a signed, checkable receipt.
 - [Evaluate AI agents against prompt injection, and let them earn autonomy](https://quilzo.github.io/evals/): Test an AI agent on real tasks, many times, with instructions planted in what it reads. It earns the right to draft or publish only by resisting them.
 - [Run an AI agent's own code in a sandbox](https://quilzo.github.io/programs/): Run a coding agent, script or agent runtime in a kernel sandbox where every action goes through its declaration and models are reached through Quilzo.
+- [Give an AI agent a browser it cannot misuse](https://quilzo.github.io/browser/): Let an AI agent read and act on websites in a sandboxed Chromium, with every request held to its declared hosts and every press that pays or sends approved.
 - [AI agent memory people can see, correct and erase](https://quilzo.github.io/memory/): Let AI agents remember between runs without a hidden profile: memory per person, held when it came from untrusted text, and erasable with a receipt.
 
 ## Models and chatbots

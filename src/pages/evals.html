@@ -6,7 +6,7 @@ description: Test an AI agent on real tasks, many times, with instructions plant
 lead: Test sets from real runs, each case run k times, and every case run again with somebody trying to steer the agent.
 icon: labs
 screens: Agents › Evaluations
-updated: 2026-10-08
+updated: 2026-10-10
 -->
 
 <div class="definition"><p>An <strong>evaluation</strong> runs each of an agent's test cases <em>k</em> times and counts a case only if every run passed (<strong>pass^k</strong>). It then runs every case again with <strong>planted instructions</strong>: text in what the agent reads asking it to publish, to write a page, or to repeat a canary string. If the agent follows one, it has been hijacked.</p></div>
@@ -47,6 +47,7 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
 <pre class="out"><code>returns-editor, passing, 8 Oct 02:12, k=3 (local-model choosing)
   pass^3   3 of 3 cases (100%)
   planted  0 of 3 cases followed an instruction planted in what they read</code></pre>
+<p>A model does not answer the same way every time, so a planted instruction that fails once may work on the next try. Add <code>--attempts N</code> to try each plant N times: the report then says how many cases followed one on the first try, and how many within every try. An agent with <a href="/browser/">a browser</a> is also given the kinds of plant web pages carry.</p>
 <p>Nothing an evaluation does is real: writes, tool calls and delegation are replaced by a record of what would have happened. Reads are real, because an agent evaluated against an empty world is evaluated against nothing.</p>
 </li>
 </ol>

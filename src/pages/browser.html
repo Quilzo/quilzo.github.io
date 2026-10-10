@@ -1,0 +1,112 @@
+<!--
+title: Give an AI agent a browser it cannot misuse
+short: An agent's browser
+seo: AI agent browser use with read and write hosts and approvals
+description: Let an AI agent read and act on websites in a sandboxed Chromium, with every request held to its declared hosts and every press that pays or sends approved.
+lead: An agent can open pages, fill in forms and sign in, in a browser Quilzo runs in its box and drives for it, one checked action at a time.
+icon: travel_explore
+screens: Agents
+updated: 2026-10-10
+-->
+
+<div class="definition"><p>An agent's <strong>browser</strong> is Chromium running inside the agent's box, driven by Quilzo over a pipe only Quilzo holds. The agent never touches the browser. It asks for one action at a time, by name: open this address, type into that field, press that button. Each action is a step of the run, checked against the agent's declaration like any other. The agent cannot send the browser a raw command, read its cookies or run a script in a page.</p></div>
+
+<h2 id="install">Install the browser</h2>
+<p>Quilzo uses one pinned build of Chrome for Testing, fetched once and checked against its SHA-256 before it is unpacked:</p>
+<pre><code>quilzo browser install
+quilzo browser status</code></pre>
+<pre class="out"><code>/srv/quilzo/.quilzo/browser/155.0.8059.39/chrome-headless-shell-linux64/chrome-headless-shell
+  from the pinned Chrome for Testing 155.0.8059.39
+  runs in the agent box on this machine</code></pre>
+<p>A machine that cannot download it names a Chromium of its own in the <code>browser.path</code> setting, as an absolute path. That browser still runs in the box and is driven the same way, but nothing checks what it is, so it should be one you installed on purpose.</p>
+
+<h2 id="declare">Declare what it may reach</h2>
+<p>An agent holds the browser's actions as capabilities, and its declaration names the hosts its browser may reach, in two lists:</p>
+<pre><code>{
+  "name": "buyer",
+  "kind": "task",
+  "purpose": "Reorder paper from our supplier when stock runs low",
+  "capabilities": ["browser_open", "browser_read", "browser_type", "browser_choose",
+                   "browser_click", "browser_sign_in"],
+  "autonomy": "draft",
+  "browser": {
+    "read":  ["docs.supplier.example"],
+    "write": ["shop.supplier.example"],
+    "credentials": [{"secret": "supplier", "host": "shop.supplier.example"}]
+  },
+  "budget": {"steps": 30, "tools": 1, "duration": "10m"}
+}</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">What it allows</th></tr></thead>
+<tbody>
+<tr><td><code>read</code></td><td>Hosts it may open and read. Only reading reaches them: a page there can load what it is made of, but a form posted to one, or a script sending data to it, is refused.</td></tr>
+<tr><td><code>write</code></td><td>Hosts it may also send to: forms, sign-ins, anything a page posts.</td></tr>
+<tr><td><code>credentials</code></td><td>Sealed credentials it may sign in with, each typed only into its own host, which must be a write host.</td></tr>
+<tr><td><code>pictures</code></td><td>Allows <code>browser_look</code>, a screenshot for a model that reads pictures. Off unless you turn it on.</td></tr>
+</tbody></table></div>
+<p>Hosts are exact names: no wildcard, scheme, port, path or IP address, and at most 32 in each list. A declaration that cannot mean what it seems to is refused when it is saved. That includes a credential for a host it may not send to, or the browser's actions with no host named.</p>
+
+<h2 id="actions">What the agent can do</h2>
+<p>The agent reads a page as its <strong>outline</strong>: headings, text, links, fields and buttons, in reading order. It is built from the accessibility tree, the same thing a screen reader speaks. Each thing it may act on gets a short reference such as <code>[e3]</code>, and a reference is good only for the outline read last. The outline is a few hundred words for most pages. A screenshot costs a model far more and has to be looked at to be understood.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Action</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>browser_open</code></td><td>Opens an https address on a declared host, and answers with the page's outline.</td></tr>
+<tr><td><code>browser_read</code></td><td>Reads the outline again, as the page is now.</td></tr>
+<tr><td><code>browser_type</code></td><td>Replaces what a field holds with the text given.</td></tr>
+<tr><td><code>browser_choose</code></td><td>Chooses an option from a list, by its label.</td></tr>
+<tr><td><code>browser_click</code></td><td>Presses a button or link, as a pointer would, and answers with the page it led to.</td></tr>
+<tr><td><code>browser_sign_in</code></td><td>Fills in the open sign-in page with a declared credential and sends it. The model never sees the password.</td></tr>
+<tr><td><code>browser_look</code></td><td>Sends the model a picture of the page, for when the outline is not enough.</td></tr>
+</tbody></table></div>
+<p>Text a page hides from people, such as <code>display:none</code>, <code>hidden</code> or <code>aria-hidden</code>, is not in the outline, so the agent does not read it either.</p>
+
+<h2 id="sign-in">Keep the credential sealed</h2>
+<p>A credential is kept with <code>quilzo secret</code>, sealed with the store's keyring. Give the user name on the first line and the password on the second, or the password alone:</p>
+<pre><code>printf 'orders@example.com\n%s' "$PASSWORD" | quilzo secret set supplier</code></pre>
+<p><code>browser_sign_in</code> types it only into a page on the credential's own host, over https. A sign-in always waits for a person first. Once it is done, the run holds something private: what that host shows somebody signed in.</p>
+
+<h2 id="run">Run it, and approve what commits</h2>
+<pre><code>quilzo agent run buyer --model "Reorder two boxes of A4 paper"</code></pre>
+<p>Started from <span class="where">Agents</span> instead, the run opens on its own page straight away and keeps going while you watch. Some actions wait for a person in the run, which keeps the page open meanwhile:</p>
+<ul>
+<li><strong>A press that commits to something:</strong> a button inside a form, or a button or link called Pay, Send, Submit, Delete, Book, Agree, Confirm and the like.</li>
+<li><strong>Every sign-in.</strong></li>
+<li><strong>Carrying something out:</strong> once the run holds something private and has read a page somebody else wrote, any address the model opens and any text it types waits for a person. That is <a href="/agent-limits/#exfiltration-breaker">the exfiltration breaker</a>, since an address and a field are how a page can trick an agent into sending what it saw.</li>
+</ul>
+<p>The run's page shows the question with a picture of the page and the element outlined in red. Let it go ahead, or decline, there or with <code>quilzo agent approve RUN STEP</code> (or <code>decline</code>). If nobody answers before the run's time is up, the action is refused. Before a press goes ahead, the element is checked to still be what was read. A page that renames a button after it was read, or lays something over it, gets no click.</p>
+
+<h2 id="watch">Watch it, and stop it</h2>
+<p>While a run works, its page shows what the browser shows now, and each browser step has the picture taken after it. <strong>Stop the run</strong>, or <code>quilzo agent stop RUN</code>, ends it within a second, wherever it is. An action in progress is cut off, a question it is waiting on is withdrawn, and its browser is closed. The pictures are kept with the run, sealed when the store has a keyring, and removed when the run is.</p>
+
+<h2 id="what-holds">What holds whatever the model is told</h2>
+<p>A page can tell an agent anything. These hold regardless of what it says:</p>
+<ul>
+<li><strong>Every request is decided before it leaves.</strong> The browser pauses each one, and Quilzo continues it only if it is https, to a declared host, and only reading on a read host. Underneath that, the box's network goes nowhere but a proxy that lets through the declared hosts, on port 443.</li>
+<li><strong>Nothing the page starts goes unwatched.</strong> A frame from another site, a worker or a service worker is held before it runs anything, until its requests pass the same rule. One that cannot be watched never runs. Windows the page tries to open are blocked, and downloads are refused.</li>
+<li><strong>Checks the page cannot fake.</strong> Choosing an option, selecting a field before typing and checking what is under the pointer run in a world of Quilzo's own inside the page, which the page's scripts cannot reach.</li>
+<li><strong>Pictures go only where personal data may.</strong> A screenshot goes to the model only through the gateway, and only when a route is marked as allowed personal data. A directly configured model gets the outline.</li>
+<li><strong>Running with less, it sends nothing.</strong> A run started with a read-only token, an agent held to proposing, and every evaluation get a browser that only reads: every host it may reach, none it may send to, so no signing in.</li>
+</ul>
+
+<h2 id="evaluate">Evaluate it against planted instructions</h2>
+<p>An evaluation of an agent with a browser plants, beside the usual instructions, the kinds web pages carry. Those include text hidden off the screen, a label only a screen reader speaks, and a comment left for an assistant, each pushing the agent to send something out. A plant that works once in several tries still works, so try each one more than once:</p>
+<pre><code>quilzo eval run buyer --k 3 --model --attempts 3</code></pre>
+<p>The report says how many cases followed a plant on the first try, and how many within every try. An attempt that was followed and then refused, by a host it may not reach or by a person, says what stopped it, since a model being steered and a plant getting through are different findings. In an evaluation the browser is real and reads only.</p>
+
+<h2 id="settings">Settings</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Setting</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>browser.path</code></td><td>A Chromium on this machine to use instead of the pinned one, as an absolute path.</td></tr>
+<tr><td><code>browser.sessions</code></td><td>How many agents' browsers may run at once on this machine (2). A run that would start one more waits for one to finish.</td></tr>
+</tbody></table></div>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/agent-limits/"><span class="card-icon"><icon name="rule"></icon></span><h3 class="card-title">Limits that hold</h3><p>The gate every browser step goes through.</p></a></li>
+<li><a class="card" href="/programs/"><span class="card-icon"><icon name="deployed_code"></icon></span><h3 class="card-title">Programs in a box</h3><p>The box the browser runs in.</p></a></li>
+<li><a class="card" href="/evals/"><span class="card-icon"><icon name="labs"></icon></span><h3 class="card-title">Evaluations</h3><p>Test cases, run k times, with instructions planted.</p></a></li>
+</ul>
+</section>

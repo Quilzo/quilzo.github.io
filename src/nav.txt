@@ -13,6 +13,7 @@ agent-limits
 agent-identity
 evals
 programs
+browser
 memory
 
 ## Models and chatbots

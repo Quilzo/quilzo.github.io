@@ -6,7 +6,7 @@ description: Route every model call through one gateway: local or hosted models 
 lead: One gateway for every model call: which model answers, what each caller may spend, and what may leave in a prompt.
 icon: models
 screens: Models
-updated: 2026-10-08
+updated: 2026-10-10
 -->
 
 <div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, analyst triage, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much.</p></div>
@@ -27,7 +27,7 @@ quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model lla
   --personal --price-in 0.05 --price-out 0.20 --first
 quilzo gateway route add hosted --url https://models.example.com/v1 --model example-large \
   --key-env EXAMPLE_API_KEY --price-in 2.50 --price-out 10.00</code></pre>
-<p>Mark a route <code>--personal</code> only if it may receive personal data: it runs on your own machines, or you have an agreement with the provider to process it.</p>
+<p>Mark a route <code>--personal</code> only if it may receive personal data: it runs on your own machines, or you have an agreement with the provider to process it. Text for any other route has personal data masked on the way out. A picture, such as a screenshot an agent takes, cannot be checked, so it goes only to a route marked <code>--personal</code>.</p>
 </li>
 <li>
 <h3>Check the order</h3>

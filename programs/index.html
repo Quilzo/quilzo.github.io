@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/programs/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-10">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Sandbox an AI agent&#39;s own code: Landlock, seccomp, OpenShell">
 <meta name="twitter:description" content="Run a coding agent, script or agent runtime in a kernel sandbox where every action goes through its declaration and models are reached through Quilzo.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Run a coding agent, script or agent runtime in a kernel sandbox where every action goes through its declaration and models are reached through Quilzo.","headline":"Run an AI agent's own code in a sandbox","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/programs/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/programs/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Programs in a box","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-10","description":"Run a coding agent, script or agent runtime in a kernel sandbox where every action goes through its declaration and models are reached through Quilzo.","headline":"Run an AI agent's own code in a sandbox","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/programs/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/programs/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Programs in a box","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -216,17 +216,17 @@ body: Thirty days, unused, and we pay the postage back. Ink is the exception: â€
 <tbody>
 <tr><td><code>QUILZO_MCP_URL</code></td><td>The agent interface for this run only, as MCP. Every operation is one step of the run, through the same gate, budget, approvals, audit records and receipt as any other.</td></tr>
 <tr><td><code>QUILZO_RUN_TOKEN</code></td><td>The credential for this run's services. It is worth nothing outside the box or after the run.</td></tr>
-<tr><td><code>OPENAI_BASE_URL</code>, <code>OPENAI_API_KEY</code></td><td>An OpenAI-compatible model endpoint through the model gateway. The run is charged, budgets hold, and no provider key is ever inside.</td></tr>
+<tr><td><code>OPENAI_BASE_URL</code>, <code>OPENAI_API_KEY</code></td><td>An OpenAI-compatible model endpoint through the model gateway. The run is charged, budgets hold, and no provider key is ever inside. Pictures and the tools a program offers pass through whole, and the tool the model chooses comes back. A picture goes only to a route allowed personal data, since it cannot be checked for any.</td></tr>
 <tr><td><code>HTTPS_PROXY</code>, <code>HTTP_PROXY</code></td><td>A proxy to the hosts the declaration names and nothing else. Each connection is recorded.</td></tr>
 <tr><td><code>QUILZO_RUN</code>, <code>QUILZO_AGENT</code>, <code>QUILZO_GOAL</code></td><td>The run, the agent and what it was asked to do.</td></tr>
 </tbody></table></div>
-<p>Nothing else is reachable. The program has a working directory of its own, reads the system's libraries and the directories you named, and nothing of the store. Because <code>OPENAI_BASE_URL</code> is the usual variable, most agent frameworks pick up the gateway without changes.</p>
+<p>Nothing else is reachable. The program has a working directory of its own, reads the system's libraries and the directories you named, and nothing of the store. Its <code>/proc</code> and <code>/sys</code> are its own: its own processes, and none of the machine's hardware. Because <code>OPENAI_BASE_URL</code> is the usual variable, most agent frameworks pick up the gateway without changes.</p>
 <h2 id="limits">Limits a program cannot get round<a class="anchor" href="#limits" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
-<li><strong>Time</strong> is the declaration's duration. CPU time, memory, file size, open files and processes are capped too; <code>--memory-mb</code> sets the memory cap.</li>
+<li><strong>Time</strong> is the declaration's duration. CPU time, memory, file size, open files and processes are capped too; <code>--memory-mb</code> sets the memory cap (2048 by default). It counts what the program writes, not the address space it reserves, so Node and a browser run in the box.</li>
 <li><strong>A connection to a host the declaration does not name</strong> is refused by the proxy, and the network namespace leaves no other way out.</li>
-<li><strong>The exfiltration breaker</strong> applies. A program cannot wait for a person, so once its run holds something private and has read somebody else's words, an outbound connection is refused, with the reason.</li>
-<li><strong>Ask-first capabilities</strong> wait for a person exactly as they do for a model.</li>
+<li><strong>Ask-first capabilities</strong> wait for a person, and the program waits on its call meanwhile. Answer on the run's page or with <code>quilzo agent approve RUN STEP</code> (or <code>decline</code>). If nobody answers before the run's time is up, the call is refused, with the reason.</li>
+<li><strong>The exfiltration breaker</strong> applies. Once the run holds something private and has read somebody else's words, a step that would send it out waits for a person in the same way, and a connection through the proxy is refused, with the reason.</li>
 </ul>
 <p>Ask in advance with <code>quilzo agent could --program NAME host:api.example.com</code>.</p>
 <h2 id="openshell">Run it in NVIDIA OpenShell<a class="anchor" href="#openshell" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -242,7 +242,7 @@ body: Thirty days, unused, and we pay the postage back. Ink is the exception: â€
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 Â· <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/programs.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-10 Â· <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/programs.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/evals/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Evaluate AI agents against prompt injection, and let them earn autonomy</span></a>
       <a class="pager-next" href="/memory/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">AI agent memory people can see, correct and erase</span></a>

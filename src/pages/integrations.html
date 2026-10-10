@@ -6,7 +6,7 @@ description: Give AI agents tools on MCP servers you approve, refuse a tool whos
 lead: Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.
 icon: integrations
 screens: Integrations
-updated: 2026-10-09
+updated: 2026-10-10
 -->
 
 <div class="definition"><p>An <strong>MCP gateway</strong> sits between AI agents and MCP servers and decides each tool call: who may call which tool, how often, whether a person approves it first, and with which credential. Quilzo is one for its own agents, and offers the same to other vendors' agents at <code>/mcp/gateway/NAME</code>.</p></div>
@@ -37,7 +37,7 @@ updated: 2026-10-09
 <tr><td><code>port</code>, <code>path</code></td><td>Where on that host the server answers, when it is not port 443 and <code>/</code>. Most MCP servers answer at <code>/mcp</code>.</td></tr>
 <tr><td><code>uses</code></td><td>The tools this install may call there. Never "everything the server offers": a server can add or redefine a tool after the day you trusted it.</td></tr>
 <tr><td><code>writes</code></td><td>The tools change something on the far side, so a reviewer does not have to guess from their names.</td></tr>
-<tr><td><code>secret</code></td><td>The name of the credential. Its value is read from <code>QUILZO_SECRET_TRACKER_TOKEN</code> (the name in capitals, with anything else turned into <code>_</code>), never from the store, because the store keeps history that cannot be deleted.</td></tr>
+<tr><td><code>secret</code></td><td>The name of the credential, never its value: the store keeps history that cannot be deleted. Keep the value sealed with <code>quilzo secret set tracker-token &lt; file</code>, or set <code>QUILZO_SECRET_TRACKER_TOKEN</code> (the name in capitals, with anything else turned into <code>_</code>), which wins when both are there.</td></tr>
 </tbody></table></div>
 <pre><code>quilzo integrations list</code></pre>
 <pre class="out"><code>tracker  mcp  enabled

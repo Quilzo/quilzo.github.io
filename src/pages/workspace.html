@@ -1,0 +1,94 @@
+<!--
+title: Let an AI agent run commands without a shell to misuse
+short: A workspace and commands
+seo: AI agent terminal: sandboxed commands, files and approvals
+description: Give an AI agent a folder of its own and the programs it may run, each command in a fresh sandbox, with deletes and network use approved by a person.
+lead: An agent can read and write files in a folder of its own and run the programs you name, one command at a time, each in a sandbox that ends when the command does.
+icon: terminal
+screens: Agents
+updated: 2026-10-11
+-->
+
+<div class="definition"><p>An agent's <strong>workspace</strong> is a folder of its own, kept between runs. The agent never holds a shell. It names a program it was given and the arguments, and Quilzo runs that one command in a fresh box against the workspace. Nothing it writes is ever handed to a shell to interpret, unless you name a shell as one of its programs. Its files are read and written by Quilzo itself, through a handle on the workspace that cannot be walked out of.</p></div>
+
+<h2 id="declare">Declare what it may run</h2>
+<pre><code>{
+  "name": "site-keeper",
+  "kind": "task",
+  "purpose": "Keep the site's repository tidy and its tests passing",
+  "capabilities": ["file_list", "file_read", "file_write", "shell_run"],
+  "autonomy": "draft",
+  "shell": {
+    "programs": ["git", "go", "make", "ls", "grep"],
+    "hosts": ["proxy.golang.org", "github.com"],
+    "ask": ["network"],
+    "timeout": "2m", "memory_mb": 2048, "quota_mb": 2048
+  },
+  "budget": {"steps": 40, "tools": 1, "duration": "20m"}
+}</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">What it allows</th></tr></thead>
+<tbody>
+<tr><td><code>programs</code></td><td>The only programs it may run, by name. Each is found on the box's own path and run with the arguments exactly as given: no shell, so nothing in an argument is ever a command.</td></tr>
+<tr><td><code>hosts</code></td><td>What a command that reaches the network may reach, through the run's proxy, on 443. None means no command reaches the network at all.</td></tr>
+<tr><td><code>ask</code></td><td>Which kinds of command wait for a person: <code>network</code> (the default) and <code>write</code>. A command that deletes or rewrites history always waits.</td></tr>
+<tr><td><code>workspace</code></td><td>The folder. Empty means one of its own beside the store's other folders. You may name another, as long as it is not the store, a folder holding the store, or a system folder.</td></tr>
+<tr><td><code>timeout</code>, <code>memory_mb</code>, <code>quota_mb</code></td><td>Each command's time and memory, and the workspace's size. A workspace over its quota takes no more writes until something is removed.</td></tr>
+</tbody></table></div>
+
+<h2 id="actions">What the agent can do</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Action</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>file_list</code></td><td>Lists a folder in the workspace: names, sizes and kinds.</td></tr>
+<tr><td><code>file_read</code></td><td>Reads a file's text, up to 256 KB. A binary file is described, not shown.</td></tr>
+<tr><td><code>file_write</code></td><td>Writes a file whole (up to 1 MB), making the folders it needs, and says what changed.</td></tr>
+<tr><td><code>shell_run</code></td><td>Runs one program with its arguments, and gives back the exit status, the start and end of what it printed, how long it took and which files it changed.</td></tr>
+</tbody></table></div>
+<p>Reading the workspace, or what a command printed, taints the run. A repository cloned or a file a page gave may hold somebody else's words, so the run is treated like one that read stored content.</p>
+
+<h2 id="kinds">What each command is</h2>
+<p>Every command is classed before it runs, from the program and its arguments, without guessing at intent. A program not known is taken as writing.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Kind</th><th scope="col">Examples</th><th scope="col">Waits for a person</th></tr></thead>
+<tbody>
+<tr><td>reads</td><td><code>ls</code>, <code>cat</code>, <code>grep</code>, <code>git status</code>, <code>git log</code>, <code>go vet</code></td><td>never</td></tr>
+<tr><td>writes</td><td><code>git commit</code>, <code>go build</code>, <code>go test</code>, <code>make</code>, <code>sed -i</code>, anything unknown</td><td>when <code>ask</code> has <code>write</code></td></tr>
+<tr><td>reaches the network</td><td><code>git fetch</code>, <code>git push</code>, <code>go mod download</code>, <code>npm install</code>, <code>curl</code></td><td>when <code>ask</code> has <code>network</code></td></tr>
+<tr><td>destroys</td><td><code>rm</code>, <code>git reset</code>, <code>git clean -f</code>, <code>git push --force</code>, <code>find -delete</code>, and any shell, which can do anything</td><td>always</td></tr>
+</tbody></table></div>
+<p>The kind is enforced as well as asked about. Only a command classed as reaching the network is given a way out, so <code>go test</code> runs with no network at all. If the run holds something private and has read somebody else's words, a command that reaches the network also carries <a href="/agent-limits/#exfiltration-breaker">the breaker's</a> reason when it asks.</p>
+
+<h2 id="box">How a command runs</h2>
+<ul>
+<li><strong>A fresh box for each command</strong>, the same one programs and the browser run in: its own namespaces, Landlock, the system call filter, no capabilities. It may write only the workspace and a scratch home kept beside it, where caches go. It reads the system's programs and libraries, and nothing of the store. A command starts in well under a tenth of a second.</li>
+<li><strong>No prompts.</strong> Its input is empty and its environment says <code>CI=1</code>, with no pager and no colour. A program that would ask a question gets nothing rather than waiting. Both of its output streams are captured together.</li>
+<li><strong>Nothing outlives it.</strong> When the command ends, everything it started ends with it. The time limit, <strong>Stop the run</strong> and the run's budget all end it the same way.</li>
+<li><strong>One run at a time</strong> works on a workspace; another waits its turn or is told which run has it.</li>
+</ul>
+
+<h2 id="kept">What is kept, and what a person sees</h2>
+<ul>
+<li><strong>Each step's record</strong> in the signed log names the command, and has the SHA-256 digest of everything it printed and its exit status. The output itself (up to 1 MB) is kept with the run, sealed when the store has a keyring, and pruned with the run.</li>
+<li><strong>The run's page</strong> shows each command with its result, a link to the whole output, and which files it changed. A held command shows exactly what would run and why it is held: <strong>Let it go ahead</strong> or <strong>Decline</strong>, there or with <code>quilzo agent approve RUN STEP</code>.</li>
+<li><strong>Running with less, it only reads.</strong> A read-only token, an agent held to proposing, and every evaluation get only the commands that read. Nothing is written.</li>
+</ul>
+<pre><code>quilzo agent workspace site-keeper
+quilzo agent workspace site-keeper --clear</code></pre>
+<p>The first says where the workspace is and how big. <code>--clear</code> empties it, and the log records who did.</p>
+
+<h2 id="not-yet">Not yet</h2>
+<ul>
+<li><strong>Credentials in commands.</strong> A secret handed into the box would be readable by whatever runs there, so a command that has to sign in to something is not offered one yet.</li>
+<li><strong>macOS and Windows hosts.</strong> The box is Linux's.</li>
+<li><strong>Long-running services and interactive programs.</strong> Commands run to the end with no terminal, which is what an agent needs; a terminal a person can take over comes later.</li>
+</ul>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/browser/"><span class="card-icon"><icon name="travel_explore"></icon></span><h3 class="card-title">An agent's browser</h3><p>The same shape, for websites.</p></a></li>
+<li><a class="card" href="/programs/"><span class="card-icon"><icon name="deployed_code"></icon></span><h3 class="card-title">Programs in a box</h3><p>The box each command runs in.</p></a></li>
+<li><a class="card" href="/agent-limits/"><span class="card-icon"><icon name="rule"></icon></span><h3 class="card-title">Limits that hold</h3><p>The gate every step goes through.</p></a></li>
+</ul>
+</section>

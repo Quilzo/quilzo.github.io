@@ -6,7 +6,7 @@ description: Declare an AI agent's capabilities, budget and autonomy, make it as
 lead: Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.
 icon: agents
 screens: Agents
-updated: 2026-10-08
+updated: 2026-10-11
 -->
 
 <div class="definition"><p>An <strong>agent</strong> in Quilzo is a declaration: what it is for, which capabilities it has, what it may read, how far it may go on its own, and how much one run may spend. A model or a program decides each step. The declaration decides what is allowed, and a hijacked agent still cannot do anything the declaration does not list.</p></div>
@@ -22,8 +22,8 @@ updated: 2026-10-08
 <li>
 <h3>Fill in the declaration, or describe it</h3>
 <p>The <strong>Declare an agent</strong> form has a section for each part of the declaration: what it is for, what it may read, what it may do, which other agents it may hand work to, what it remembers between runs, how far it may go on its own, and how much one run may spend. A banner at the top says, as you go, whether the declaration as it stands would be accepted.</p>
-<figure class="shot"><img src="/images/agents/declare.webp" alt="The Declare an agent form, starting from the retrieval template, with an Or describe it box"><figcaption>Starting from the retrieval template. The banner says what is still missing.</figcaption></figure>
-<p>If a model is connected, you can describe the agent in a sentence under <strong>Or describe it</strong> and press <strong>Draft it</strong>. The model drafts a declaration, Quilzo keeps only the fields a declaration has, and the checker shows what the draft could do before anything is saved. A draft never adds tools or the ability to publish: the screen lists what it left out, and only a person can add those.</p>
+<figure class="shot"><img src="/images/agents/declare.webp" alt="The Declare an agent form, starting from the retrieval template, with the folded Describe it instead section above it"><figcaption>Starting from the retrieval template. The banner says what is still missing.</figcaption></figure>
+<p>If a model is connected, you can open <strong>Describe it instead</strong>, describe the agent in a sentence, and press <strong>Draft it</strong>. The model drafts a declaration, Quilzo keeps only the fields a declaration has, and the checker shows what the draft could do before anything is saved. A draft never adds tools or the ability to publish: the screen lists what it left out, and only a person can add those.</p>
 <figure class="shot"><img src="/images/agents/draft.webp" alt="A drafted declaration: the checker says it may list, read, search, recall and remember pages, and that tools and publishing were left out"><figcaption>A drafted declaration. What the model asked for and the draft may not have is listed under it.</figcaption></figure>
 </li>
 <li>

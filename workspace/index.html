@@ -199,7 +199,7 @@
 <tr><td><code>file_write</code></td><td>Writes a file whole (up to 1 MB), making the folders it needs, and says what changed.</td></tr>
 <tr><td><code>shell_run</code></td><td>Runs one program with its arguments, and gives back the exit status, the start and end of what it printed, how long it took and which files it changed.</td></tr>
 </tbody></table></div>
-<p>Reading the workspace, or what a command printed, taints the run. A repository cloned or a file a page gave may hold somebody else's words, so the run is treated like one that read stored content.</p>
+<p>A file is written where its name says: never through a link, and never inside git's own folder, where a configured hook would be a program git runs later. Reading the workspace, listing it, or what a command printed, taints the run. A repository cloned or a file a page gave may hold somebody else's words, so the run is treated like one that read stored content.</p>
 <h2 id="kinds">What each command is<a class="anchor" href="#kinds" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Every command is classed before it runs, from the program and its arguments, without guessing at intent. A program not known is taken as writing.</p>
 <div class="table-wrap"><table>
@@ -211,13 +211,15 @@
 <tr><td>destroys</td><td><code>rm</code>, <code>git reset</code>, <code>git clean -f</code>, <code>git push --force</code>, <code>find -delete</code>, and any shell, which can do anything</td><td>always</td></tr>
 </tbody></table></div>
 <p>The kind is enforced as well as asked about. Only a command classed as reaching the network is given a way out, so <code>go test</code> runs with no network at all. A command classed as reading gets the workspace read-only, so whatever it runs in turn (a repository's configured hook, a search tool's preprocessor) cannot change it either.</p>
-<p>One limit to know: a program that runs other code, such as a build, a script or a test suite, is writing, and that code can delete what the command may write. "Destroys" catches the commands that say so. To approve every change, add <code>write</code> to <code>ask</code>, or keep the workspace in git, so nothing written is lost. If the run holds something private and has read somebody else's words, a command that reaches the network also carries <a href="/agent-limits/#exfiltration-breaker">the breaker's</a> reason when it asks.</p>
+<p>One limit to know: a program that runs other code, such as a build, a script or a test suite, is writing, and that code can delete what the command may write. "Destroys" catches the commands that say so. To approve every change, add <code>write</code> to <code>ask</code>, or keep the workspace in git, so nothing written is lost. If the run holds something private and has read somebody else's words, a command that reaches the network also carries <a href="/agent-limits/#exfiltration-breaker">the breaker's</a> reason when it asks. What a run writes into the workspace after reading something private stays private to the next run on it.</p>
 <h2 id="box">How a command runs<a class="anchor" href="#box" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
-<li><strong>A fresh box for each command</strong>, the same one programs and the browser run in: its own namespaces, Landlock, the system call filter, no capabilities. It may write only the workspace and a scratch home kept beside it, where caches go. It reads the system's programs and libraries, and nothing of the store. A command starts in well under a tenth of a second.</li>
+<li><strong>A fresh box for each command</strong>, the same one programs and the browser run in: its own namespaces, Landlock, the system call filter, no capabilities, and no way to reach a socket on the machine's filesystem. It may write only the workspace and the run's scratch home. It reads the system's programs and libraries, and nothing of the store. A command starts in well under a tenth of a second.</li>
+<li><strong>A home made fresh for each run</strong>, and removed when the run ends, so nothing a command leaves there (a configuration, a startup file) reaches the next run. The agent's caches (Go modules and builds, npm, pip) are kept between runs, and only a command that writes may write them. A command that only reads gets a home of its own, removed after it.</li>
 <li><strong>No prompts.</strong> Its input is empty and its environment says <code>CI=1</code>, with no pager and no colour. A program that would ask a question gets nothing rather than waiting. Both of its output streams are captured together.</li>
 <li><strong>Nothing outlives it.</strong> When the command ends, everything it started ends with it. The time limit, <strong>Stop the run</strong> and the run's budget all end it the same way.</li>
-<li><strong>One run at a time</strong> works on a workspace; another waits its turn or is told which run has it.</li>
+<li><strong>One run at a time</strong> works on a workspace; another is told which run has it.</li>
+<li><strong>The quota holds while a command runs.</strong> The workspace and the run's home are measured every few seconds, and a command that goes over is stopped. Memory is bounded per process, and each command may start at most 512, so one command can still use a good share of a small machine.</li>
 </ul>
 <h2 id="kept">What is kept, and what a person sees<a class="anchor" href="#kept" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
@@ -227,7 +229,7 @@
 </ul>
 <pre><code>quilzo agent workspace site-keeper
 quilzo agent workspace site-keeper --clear</code></pre>
-<p>The first says where the workspace is and how big. <code>--clear</code> empties it, and the log records who did.</p>
+<p>The first says where the workspace is and how big. <code>--clear</code> empties it, with its caches, and the log records who did.</p>
 <h2 id="not-yet">Not yet<a class="anchor" href="#not-yet" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
 <li><strong>Credentials in commands.</strong> A secret handed into the box would be readable by whatever runs there, so a command that has to sign in to something is not offered one yet.</li>

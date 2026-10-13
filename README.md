@@ -46,8 +46,7 @@ manual had pages lands on `/#anchor`; the home page sends it to the page in
 
 ## Licence
 
-The software is `AGPL-3.0-or-later OR LicenseRef-Quilzo-Commercial`, at the
-user's choice; see [LICENSING.md](https://github.com/Quilzo/Quilzo/blob/main/LICENSING.md).
-This manual describes it and carries the same terms. The interface font is
+The software and this manual are licensed under the Apache License 2.0; see
+[LICENSE](LICENSE). The interface font is
 derived from Google Sans Flex (SIL Open Font License 1.1, in `assets/fonts`), and
 the icons are Material Symbols (Apache-2.0, in `assets/icons`).

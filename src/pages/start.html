@@ -2,11 +2,11 @@
 title: Get started with Quilzo in ten minutes
 short: Get started
 seo: Get started: run an AI agent control plane in ten minutes
-description: Install Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.
+description: Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.
 lead: From nothing to a running admin, a published site and your first agent, in the order Quilzo needs them.
 icon: start
 screens: Get started, Find, You
-updated: 2026-10-08
+updated: 2026-10-13
 -->
 
 <div class="definition"><p><strong>Quilzo</strong> is a self-hosted control plane for AI agents. Each agent has a declaration saying what it may do, and one gate enforces it on every action. A person decides on the actions that matter, and every run is recorded in a signed log. It ships as a single program with no dependencies.</p></div>
@@ -18,15 +18,11 @@ updated: 2026-10-08
 <ol class="steps">
 <li>
 <h3>Get the program</h3>
-<p>Download a release for your platform and check it. Releases are built for Linux, macOS and Windows, on amd64 and arm64.</p>
-<pre><code>curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/quilzo-linux-amd64
-curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/SHA256SUMS
-sha256sum -c --ignore-missing SHA256SUMS
-sudo install -m 0755 quilzo-linux-amd64 /usr/local/bin/quilzo</code></pre>
-<p>Or build from source with Go 1.27. There are no third-party modules to download:</p>
+<p>Build it from source with Go 1.27. There are no third-party modules to download, and no release is published yet.</p>
 <pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
-go build -o quilzo ./cmd/quilzo</code></pre>
-<p>Released binaries trail <code>main</code>, so build from source if you want everything this manual describes. <a href="/install/">Install and run it for real</a> covers checking a release's provenance, the container image, and running it as a service.</p>
+go build -o quilzo ./cmd/quilzo
+sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre>
+<p><a href="/install/">Install and run it for real</a> covers the container image and running it as a service.</p>
 </li>
 <li>
 <h3>Create a store</h3>

@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Install Quilzo: binary, container or source, run in production | Quilzo</title>
-<meta name="description" content="Install the Quilzo binary or container, verify its provenance, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.">
+<title>Install Quilzo: build from source or a container, run it | Quilzo</title>
+<meta name="description" content="Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.">
 <link rel="canonical" href="https://quilzo.github.io/install/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131314" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
-<meta property="og:title" content="Install Quilzo: binary, container or source, run in production">
-<meta property="og:description" content="Install the Quilzo binary or container, verify its provenance, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.">
+<meta property="og:title" content="Install Quilzo: build from source or a container, run it">
+<meta property="og:description" content="Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.">
 <meta property="og:url" content="https://quilzo.github.io/install/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-13">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Install Quilzo: binary, container or source, run in production">
-<meta name="twitter:description" content="Install the Quilzo binary or container, verify its provenance, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.">
+<meta name="twitter:title" content="Install Quilzo: build from source or a container, run it">
+<meta name="twitter:description" content="Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Install the Quilzo binary or container, verify its provenance, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.","headline":"Install and run Quilzo in production","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/install/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/install/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#get-started","name":"Get started","position":2},{"@type":"ListItem","name":"Install and run it","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-13","description":"Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.","headline":"Install and run Quilzo in production","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/install/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/install/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#get-started","name":"Get started","position":2},{"@type":"ListItem","name":"Install and run it","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -166,20 +166,18 @@
   <div class="prose">
 <div class="definition"><p>Quilzo is <strong>one static binary</strong> with no dependencies to install. It runs as two processes from the same store: <code>quilzo serve</code>, the admin, which belongs on loopback; and <code>quilzo site</code>, the public site, which has no editing surface at all.</p></div>
 <h2 id="get-it">Get the program<a class="anchor" href="#get-it" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>No release is published yet. Build it from source, or build the container image from the source.</p>
 <ol class="steps">
-<li><h3 id="a-release-binary">A release binary<a class="anchor" href="#a-release-binary" aria-hidden="true" tabindex="-1">#</a></h3><p>Linux, macOS and Windows, on amd64 and arm64. Check the checksum, then check the build provenance, which proves this project's release workflow built the file from a tag:</p>
-<pre><code>curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/quilzo-linux-amd64
-curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/SHA256SUMS
-sha256sum -c --ignore-missing SHA256SUMS
-gh attestation verify quilzo-linux-amd64 --repo Quilzo/Quilzo
-sudo install -m 0755 quilzo-linux-amd64 /usr/local/bin/quilzo</code></pre></li>
-<li><h3 id="or-the-container">Or the container<a class="anchor" href="#or-the-container" aria-hidden="true" tabindex="-1">#</a></h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager.</p>
-<pre><code>docker run --rm -v quilzo:/srv ghcr.io/quilzo/quilzo --root /srv/store init
-docker run -p 8081:8081 -v quilzo:/srv ghcr.io/quilzo/quilzo --root /srv/store site --addr 0.0.0.0:8081</code></pre></li>
-<li><h3 id="or-build-it">Or build it<a class="anchor" href="#or-build-it" aria-hidden="true" tabindex="-1">#</a></h3><p>Go 1.27 and nothing else: <code>go.mod</code> requires no module.</p>
+<li><h3 id="build-it">Build it<a class="anchor" href="#build-it" aria-hidden="true" tabindex="-1">#</a></h3><p>Go 1.27 and nothing else: <code>go.mod</code> requires no module.</p>
 <pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
-go build -o quilzo ./cmd/quilzo</code></pre><p>Released binaries trail <code>main</code>; build from source for everything in this manual.</p></li>
+go build -o quilzo ./cmd/quilzo
+sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre></li>
+<li><h3 id="or-build-the-container">Or build the container<a class="anchor" href="#or-build-the-container" aria-hidden="true" tabindex="-1">#</a></h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager.</p>
+<pre><code>docker build -t quilzo .
+docker run --rm -v quilzo:/srv quilzo --root /srv/store init
+docker run -p 8081:8081 -v quilzo:/srv quilzo --root /srv/store site --addr 0.0.0.0:8081</code></pre></li>
 </ol>
+<p>Each release will publish signed binaries for Linux, macOS and Windows on amd64 and arm64, and a container image. <a href="https://github.com/Quilzo/Quilzo/blob/main/INSTALL">INSTALL</a> says how to check them: the checksum, and the build provenance that proves this project's release workflow built the file from a tag.</p>
 <h2 id="production">Run it for real<a class="anchor" href="#production" aria-hidden="true" tabindex="-1">#</a></h2>
 <ol class="steps">
 <li><h3 id="keep-the-admin-on-loopback">Keep the admin on loopback<a class="anchor" href="#keep-the-admin-on-loopback" aria-hidden="true" tabindex="-1">#</a></h3><p><code>quilzo serve</code> listens on <code>127.0.0.1:8080</code> by default. Reach it through your own authenticating proxy or a VPN, and set its public address so sign-in flows and connected apps know where they are:</p><pre><code>quilzo config set admin.base_url https://quilzo.example.com</code></pre></li>
@@ -201,7 +199,7 @@ quilzo vault rewrap     # move existing objects onto it</code></pre><p>The key c
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/install.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-13 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/install.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/start/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Get started with Quilzo in ten minutes</span></a>
       <a class="pager-next" href="/concepts/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Glossary: AI agents, MCP, A2A and the words Quilzo uses</span></a>
@@ -222,7 +220,7 @@ quilzo vault rewrap     # move existing objects onto it</code></pre><p>The key c
 <footer class="foot">
   <div class="foot-inner">
     <p><strong>Quilzo</strong> is the self-hosted control plane for an organisation's AI agents and the content they produce. One Go binary, no third-party dependencies.</p>
-    <p>Open source under the <a href="/licence/">Apache License 2.0</a>. This manual describes <code>main</code>; released binaries trail it. <a href="https://github.com/Quilzo/Quilzo">Source</a> · <a href="https://github.com/Quilzo/Quilzo/releases">Releases</a> · <a href="https://github.com/Quilzo/Quilzo/blob/main/SECURITY.md">Report a vulnerability</a> · <a href="/llms.txt">llms.txt</a></p>
+    <p>Open source under the <a href="/licence/">Apache License 2.0</a>. This manual describes <code>main</code>. <a href="https://github.com/Quilzo/Quilzo">Source</a> · <a href="https://github.com/Quilzo/Quilzo/releases">Releases</a> · <a href="https://github.com/Quilzo/Quilzo/blob/main/SECURITY.md">Report a vulnerability</a> · <a href="/llms.txt">llms.txt</a></p>
   </div>
 </footer>
 </body>

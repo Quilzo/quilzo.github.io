@@ -1,29 +1,27 @@
 <!--
 title: Install and run Quilzo in production
 short: Install and run it
-seo: Install Quilzo: binary, container or source, run in production
-description: Install the Quilzo binary or container, verify its provenance, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
+seo: Install Quilzo: build from source or a container, run it
+description: Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
 lead: Get the program, check it came from this project, and run it the way it is meant to be run.
 icon: download
-updated: 2026-10-08
+updated: 2026-10-13
 -->
 
 <div class="definition"><p>Quilzo is <strong>one static binary</strong> with no dependencies to install. It runs as two processes from the same store: <code>quilzo serve</code>, the admin, which belongs on loopback; and <code>quilzo site</code>, the public site, which has no editing surface at all.</p></div>
 <h2 id="get-it">Get the program</h2>
+<p>No release is published yet. Build it from source, or build the container image from the source.</p>
 <ol class="steps">
-<li><h3>A release binary</h3><p>Linux, macOS and Windows, on amd64 and arm64. Check the checksum, then check the build provenance, which proves this project's release workflow built the file from a tag:</p>
-<pre><code>curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/quilzo-linux-amd64
-curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/SHA256SUMS
-sha256sum -c --ignore-missing SHA256SUMS
-gh attestation verify quilzo-linux-amd64 --repo Quilzo/Quilzo
-sudo install -m 0755 quilzo-linux-amd64 /usr/local/bin/quilzo</code></pre></li>
-<li><h3>Or the container</h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager.</p>
-<pre><code>docker run --rm -v quilzo:/srv ghcr.io/quilzo/quilzo --root /srv/store init
-docker run -p 8081:8081 -v quilzo:/srv ghcr.io/quilzo/quilzo --root /srv/store site --addr 0.0.0.0:8081</code></pre></li>
-<li><h3>Or build it</h3><p>Go 1.27 and nothing else: <code>go.mod</code> requires no module.</p>
+<li><h3>Build it</h3><p>Go 1.27 and nothing else: <code>go.mod</code> requires no module.</p>
 <pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
-go build -o quilzo ./cmd/quilzo</code></pre><p>Released binaries trail <code>main</code>; build from source for everything in this manual.</p></li>
+go build -o quilzo ./cmd/quilzo
+sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre></li>
+<li><h3>Or build the container</h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager.</p>
+<pre><code>docker build -t quilzo .
+docker run --rm -v quilzo:/srv quilzo --root /srv/store init
+docker run -p 8081:8081 -v quilzo:/srv quilzo --root /srv/store site --addr 0.0.0.0:8081</code></pre></li>
 </ol>
+<p>Each release will publish signed binaries for Linux, macOS and Windows on amd64 and arm64, and a container image. <a href="https://github.com/Quilzo/Quilzo/blob/main/INSTALL">INSTALL</a> says how to check them: the checksum, and the build provenance that proves this project's release workflow built the file from a tag.</p>
 <h2 id="production">Run it for real</h2>
 <ol class="steps">
 <li><h3>Keep the admin on loopback</h3><p><code>quilzo serve</code> listens on <code>127.0.0.1:8080</code> by default. Reach it through your own authenticating proxy or a VPN, and set its public address so sign-in flows and connected apps know where they are:</p><pre><code>quilzo config set admin.base_url https://quilzo.example.com</code></pre></li>

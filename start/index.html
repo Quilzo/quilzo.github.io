@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Get started: run an AI agent control plane in ten minutes | Quilzo</title>
-<meta name="description" content="Install Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
+<meta name="description" content="Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
 <link rel="canonical" href="https://quilzo.github.io/start/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
 <meta property="og:title" content="Get started: run an AI agent control plane in ten minutes">
-<meta property="og:description" content="Install Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
+<meta property="og:description" content="Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
 <meta property="og:url" content="https://quilzo.github.io/start/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-13">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Get started: run an AI agent control plane in ten minutes">
-<meta name="twitter:description" content="Install Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
+<meta name="twitter:description" content="Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Install Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.","headline":"Get started with Quilzo in ten minutes","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/start/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/start/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#get-started","name":"Get started","position":2},{"@type":"ListItem","name":"Get started","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-13","description":"Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.","headline":"Get started with Quilzo in ten minutes","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/start/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/start/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#get-started","name":"Get started","position":2},{"@type":"ListItem","name":"Get started","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -171,15 +171,11 @@
 <ol class="steps">
 <li>
 <h3 id="get-the-program">Get the program<a class="anchor" href="#get-the-program" aria-hidden="true" tabindex="-1">#</a></h3>
-<p>Download a release for your platform and check it. Releases are built for Linux, macOS and Windows, on amd64 and arm64.</p>
-<pre><code>curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/quilzo-linux-amd64
-curl -LO https://github.com/Quilzo/Quilzo/releases/latest/download/SHA256SUMS
-sha256sum -c --ignore-missing SHA256SUMS
-sudo install -m 0755 quilzo-linux-amd64 /usr/local/bin/quilzo</code></pre>
-<p>Or build from source with Go 1.27. There are no third-party modules to download:</p>
+<p>Build it from source with Go 1.27. There are no third-party modules to download, and no release is published yet.</p>
 <pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
-go build -o quilzo ./cmd/quilzo</code></pre>
-<p>Released binaries trail <code>main</code>, so build from source if you want everything this manual describes. <a href="/install/">Install and run it for real</a> covers checking a release's provenance, the container image, and running it as a service.</p>
+go build -o quilzo ./cmd/quilzo
+sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre>
+<p><a href="/install/">Install and run it for real</a> covers the container image and running it as a service.</p>
 </li>
 <li>
 <h3 id="create-a-store">Create a store<a class="anchor" href="#create-a-store" aria-hidden="true" tabindex="-1">#</a></h3>
@@ -267,7 +263,7 @@ quilzo agent trace RUN</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/start.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-13 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/start.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-next" href="/install/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Install and run Quilzo in production</span></a>
     </nav>
@@ -289,7 +285,7 @@ quilzo agent trace RUN</code></pre>
 <footer class="foot">
   <div class="foot-inner">
     <p><strong>Quilzo</strong> is the self-hosted control plane for an organisation's AI agents and the content they produce. One Go binary, no third-party dependencies.</p>
-    <p>Open source under the <a href="/licence/">Apache License 2.0</a>. This manual describes <code>main</code>; released binaries trail it. <a href="https://github.com/Quilzo/Quilzo">Source</a> · <a href="https://github.com/Quilzo/Quilzo/releases">Releases</a> · <a href="https://github.com/Quilzo/Quilzo/blob/main/SECURITY.md">Report a vulnerability</a> · <a href="/llms.txt">llms.txt</a></p>
+    <p>Open source under the <a href="/licence/">Apache License 2.0</a>. This manual describes <code>main</code>. <a href="https://github.com/Quilzo/Quilzo">Source</a> · <a href="https://github.com/Quilzo/Quilzo/releases">Releases</a> · <a href="https://github.com/Quilzo/Quilzo/blob/main/SECURITY.md">Report a vulnerability</a> · <a href="/llms.txt">llms.txt</a></p>
   </div>
 </footer>
 </body>

@@ -2,7 +2,7 @@
 
 > Quilzo gives every AI agent an identity, a policy, a budget and a signed record, asks a person before the actions that matter, and runs as one self-hosted binary.
 
-Quilzo is one Go binary with no third-party dependencies, licensed AGPL-3.0-or-later or commercially. Source: https://github.com/Quilzo/Quilzo
+Quilzo is one Go binary with no third-party dependencies, licensed under Apache-2.0. Source: https://github.com/Quilzo/Quilzo
 
 ## Get started
 
@@ -83,4 +83,4 @@ Quilzo is one Go binary with no third-party dependencies, licensed AGPL-3.0-or-l
 ## More
 
 - [Rooms and calls (experimental)](https://quilzo.github.io/collaboration/): Experimental building blocks: rooms with a stated purpose, calls encrypted end to end with SFrame (RFC 9605), screen sharing and an AI note-taker.
-- [Licence: AGPL-3.0-or-later, or commercial](https://quilzo.github.io/licence/): Quilzo is free software under AGPL-3.0-or-later, or a commercial licence if you cannot take AGPL code. There is one Quilzo: no feature is held back.
+- [Licence: Apache-2.0](https://quilzo.github.io/licence/): Quilzo is open source under the Apache License 2.0. Use it, change it, embed it in your own product and sell it, with no licence key and nothing held back.

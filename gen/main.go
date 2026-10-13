@@ -658,7 +658,7 @@ func jsonLD(p, home *Page, g *Group) template.JS {
 func llms(groups []*Group, home *Page) []byte {
 	var b bytes.Buffer
 	fmt.Fprintf(&b, "# Quilzo\n\n> %s\n\n", home.Desc)
-	b.WriteString("Quilzo is one Go binary with no third-party dependencies, licensed AGPL-3.0-or-later or commercially. " +
+	b.WriteString("Quilzo is one Go binary with no third-party dependencies, licensed under Apache-2.0. " +
 		"Source: https://github.com/Quilzo/Quilzo\n")
 	for _, g := range groups {
 		fmt.Fprintf(&b, "\n## %s\n\n", g.Name)

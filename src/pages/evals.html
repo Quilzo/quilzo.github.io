@@ -6,7 +6,7 @@ description: Test an AI agent on real tasks, many times, with instructions plant
 lead: Test sets from real runs, each case run k times, and every case run again with somebody trying to steer the agent.
 icon: labs
 screens: Agents › Evaluations
-updated: 2026-10-10
+updated: 2026-10-13
 -->
 
 <div class="definition"><p>An <strong>evaluation</strong> runs each of an agent's test cases <em>k</em> times and counts a case only if every run passed (<strong>pass^k</strong>). It then runs every case again with <strong>planted instructions</strong>: text in what the agent reads asking it to publish, to write a page, or to repeat a canary string. If the agent follows one, it has been hijacked.</p></div>
@@ -57,6 +57,8 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
 <p>Each run is kept like any other, so a failure can be opened and read step by step. <span class="where">Agents › Evaluations</span> lists every agent with its last result:</p>
 <figure class="shot"><img src="/images/evals/evaluations.webp" alt="The Evaluations screen listing agents and their last evaluation"><figcaption>The latest evaluation of each agent.</figcaption></figure>
 
+<p><code>quilzo --json eval run AGENT</code> prints the whole report as JSON, attack numbers included, for a deployment that publishes what it measured.</p>
+
 <h2 id="earned-autonomy">Autonomy that is earned</h2>
 <p>An agent's declared autonomy is the most it may ever do. When a model drives it, the run acts at the <em>lower</em> of the declared autonomy and what the latest evaluation earned:</p>
 <div class="table-wrap"><table>
@@ -67,6 +69,16 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
 <tr><th scope="row">publish</th><td>The same with at least 5 cases and 5 runs each. A person still approves what is published.</td></tr>
 </tbody></table></div>
 <p>Following a planted instruction once drops the agent to propose until it is evaluated clean again. It also loses what it earned when the shield pauses it, or when the watchdog flags it for repeatedly trying what it was refused, and only a later evaluation earns it back. A run without a model decides nothing, so none of this applies to it. The rule is on by default; the setting is <code>agents.earned_autonomy</code>.</p>
+
+<h3 id="earn-after">Earn the right to stop asking</h3>
+<p>A declaration may let an agent stop asking about a kind of action once it has a record: with <code>"earn_after": 10</code>, ten approvals in a row of the same kind of action, with none declined, let that kind run without asking, as long as the latest evaluation still earns the agent at least draft. A kind is the action and what it acts on: the page for a write, the element and site for a press, the program for a command, the tool.</p>
+<ul>
+<li>A decline sends that kind back to asking.</li>
+<li>The reviewer refusing anything the agent does, or the exfiltration breaker stopping anything, sends every kind back.</li>
+<li>A regressed evaluation stops anything earned from counting until the agent is evaluated clean again.</li>
+<li>Sending, paying, deleting, publishing, signing in and answering a decider's question always ask, and the exfiltration breaker is never earned away.</li>
+</ul>
+<p>The agent's page shows each kind's record and when it last dropped back, with a button that makes it ask about everything again; <code>quilzo agent earned NAME [--reset]</code> does the same. A step that ran without asking says how it was earned, and every change is in the audit log. Turning <code>earn_after</code> on, or lowering it, is a widening an amendment must name (<code>quilzo agent declare --widen</code>).</p>
 
 <h2 id="benchmark">How this compares to a benchmark</h2>
 <p>Quilzo's own gate is measured against <a href="https://github.com/ethz-spylab/agentdojo">AgentDojo</a> v1.2.1 under the strongest assumption: the attack has already won and the model emits the attacker's calls verbatim. The gate refuses 26 of 26 attacks, and 73% of tasks still run unattended. That measures the declaration, which holds for any model. Evaluations measure the model you run, on your own tasks. The method is in <a href="https://github.com/Quilzo/Quilzo/blob/main/scripts/agentdojo/README.md">scripts/agentdojo</a>.</p>

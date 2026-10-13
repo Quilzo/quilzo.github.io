@@ -76,6 +76,9 @@ quilzo browser status</code></pre>
 </ul>
 <p>The run's page shows the question with a picture of the page and the element outlined in red. Let it go ahead, or decline, there or with <code>quilzo agent approve RUN STEP</code> (or <code>decline</code>). If nobody answers before the run's time is up, the action is refused. Before a press goes ahead, the element is checked to still be what was read, and what is under the pointer is checked once the pointer is there and again once the button is down. A page that renames a button after it was read, lays something over it, slides something under the pointer as it arrives, or hides another control inside it, gets no click. A control inside another one has a reference of its own, so the agent presses the one it means.</p>
 
+<h3 id="take-over">Take the page over</h3>
+<p>While a run waits on a question about its browser, <strong>Take the page over and do it yourself</strong> on the run's page puts your own hands on its page: click the live picture to press there, type, or press Enter, Tab, Esc or Backspace. What you do is recorded as yours, never as the agent's, and what you type is kept by length and digest, not by its words. The browser still reaches only what the agent declared. When you are done, let the question go ahead or decline it.</p>
+
 <h2 id="watch">Watch it, and stop it</h2>
 <p>While a run works, its page shows what the browser shows now, and each browser step has the picture taken after it. <strong>Stop the run</strong>, or <code>quilzo agent stop RUN</code>, ends it within a second, wherever it is. An action in progress is cut off, a question it is waiting on is withdrawn, and its browser is closed. The pictures are kept with the run, sealed when the store has a keyring, and removed when the run is.</p>
 
@@ -90,6 +93,17 @@ quilzo browser status</code></pre>
 <li><strong>Running with less, it sends nothing.</strong> A run started with a read-only token, an agent held to proposing, and every evaluation get a browser that only reads: every host it may reach, none it may send to, so no signing in.</li>
 </ul>
 
+<h2 id="other-agents">Let another vendor's agent use it</h2>
+<p>An agent you did not build, such as Claude Code, Codex or anything that speaks MCP, can drive a browser through Quilzo under a grant you declare, without ever holding the browser itself:</p>
+<pre><code>quilzo browser grant shop --read shop.example.com --write shop.example.com --daily 50</code></pre>
+<p>It is offered at <code>/mcp/browser/shop</code> on the admin, to any token that reaches that path: a reader's to read pages, an author's to act on them. It can also present an <a href="/agent-identity/#credentials">agent credential</a> instead of a token. Each call is a step of a kept run, under the same host rule and breaker as an agent's own browser. A press that commits to something is held until an administrator other than the caller approves it, once, within the hour. A grant never signs in; <code>--pictures</code> lets it look at the page, and <code>--off</code> withdraws it.</p>
+
+<h2 id="remember">Remember a flow that worked</h2>
+<p>With <code>browser.cache</code> on, a step that worked on a page is remembered, and the next run that sees the same page for the same goal, started by the same person, replays it without asking the model. Each remembered step passes every check a decided one does, and is confirmed by the page that follows it. When the page is not the one remembered, the model decides again and the memory is dropped. Signing in is never remembered. What is remembered is sealed with the store's keyring, and each replay is in the log.</p>
+
+<h2 id="dialects">Models that answer in their maker's words</h2>
+<p>Models trained for computer use answer in their maker's own shapes. Name the shape in the declaration and Quilzo translates it onto its own actions: <code>"dialect": "anthropic-computer"</code>, <code>"anthropic-browser"</code>, <code>"openai-computer"</code> or <code>"gemini-computer"</code>. A click by coordinate becomes a press of the element at that point, and is weighed as that element. Anything with no honest equivalent, such as a scroll, a drag or a right click, is refused rather than approximated, and a dialect never adds anything the declaration does not hold.</p>
+
 <h2 id="evaluate">Evaluate it against planted instructions</h2>
 <p>An evaluation of an agent with a browser plants, beside the usual instructions, the kinds web pages carry. Those include text hidden off the screen, a label only a screen reader speaks, and a comment left for an assistant, each pushing the agent to send something out. A plant that works once in several tries still works, so try each one more than once:</p>
 <pre><code>quilzo eval run buyer --k 3 --model --attempts 3</code></pre>
@@ -101,6 +115,7 @@ quilzo browser status</code></pre>
 <tbody>
 <tr><td><code>browser.path</code></td><td>A Chromium on this machine to use instead of the pinned one, as an absolute path.</td></tr>
 <tr><td><code>browser.sessions</code></td><td>How many agents' browsers may run at once on this machine (2). A run that would start one more waits for one to finish.</td></tr>
+<tr><td><code>browser.cache</code></td><td>Whether a flow that worked is replayed without a model call (off).</td></tr>
 </tbody></table></div>
 
 <section class="see-also">

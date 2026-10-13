@@ -6,7 +6,7 @@ description: Declare an AI agent's capabilities, budget and autonomy, make it as
 lead: Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.
 icon: agents
 screens: Agents
-updated: 2026-10-11
+updated: 2026-10-13
 -->
 
 <div class="definition"><p>An <strong>agent</strong> in Quilzo is a declaration: what it is for, which capabilities it has, what it may read, how far it may go on its own, and how much one run may spend. A model or a program decides each step. The declaration decides what is allowed, and a hijacked agent still cannot do anything the declaration does not list.</p></div>
@@ -69,6 +69,15 @@ quilzo agent check                           # does every declaration still vali
 quilzo agent decline RUN 3</code></pre>
 <p>A model cannot approve its own work, declare an agent, or widen one. What an agent writes is a draft: it goes live only when somebody publishes (see <a href="/publishing/">Review, publish and roll back</a>).</p>
 
+<h3 id="approvals">Everything waiting, in one place</h3>
+<p><span class="where">Approvals</span> lists everything waiting for you to decide: what agent runs are asking, questions they need answered, actions the reviewer stopped, tool calls held for a second person, acts a case is waiting to have approved, a change waiting for your review, and memories held until somebody confirms them. Each says what deciding commits to: reads, acts, writes, sends, pays, deletes, publishes or answers. <code>quilzo approvals</code> lists the same, with the command that decides each.</p>
+<p>When several runs wait on the same action, with the same input and the same reason, and the action only reads or acts, <strong>Let all go ahead</strong> approves them together. Anything that writes, sends, pays, deletes or publishes, and every question, is decided on its own page.</p>
+
+<h3 id="questions">Questions it cannot answer alone</h3>
+<p>An agent that asks a <a href="/assistant/">decider</a> a question, and gets an answer less sure than the decider requires, stops and asks a person instead. The run's page shows the question in its own shape, a list of options, yes or no, or a number from 0 to 1, with the model's guess and how sure it was. The run continues with your answer and never with the unsure one.</p>
+<pre><code>quilzo agent answer RUN STEP eligible=no</code></pre>
+<p>When the store names a <a href="/agent-limits/#reviewer">reviewer</a> and it refuses an action, the run stops on that action. <strong>Let it go ahead</strong> performs exactly that action without asking either model again.</p>
+
 <h2 id="read-runs">Read what it did</h2>
 <p>Every run is kept, step by step, as it happens: what it tried, whether that was allowed, how long it took, and what came back. If it read content somebody else could have written, the run says so, names what it read, and its output needs a person before anybody relies on it.</p>
 <figure class="shot"><img src="/images/agents/trace.webp" alt="A completed run: did 3, refused 0, failed 0, a warning that it read stored content, and the steps search_pages, read_page and write_page"><figcaption>A finished run. Each step can be run again from that point.</figcaption></figure>
@@ -80,9 +89,11 @@ quilzo agent decline RUN 3</code></pre>
 <tr><td>Continue a run that was cut off</td><td><strong>Continue from there</strong></td><td><code>quilzo agent resume RUN</code></td></tr>
 <tr><td>Run again from after a step, as a new run</td><td><strong>Run again from here</strong></td><td><code>quilzo agent replay RUN STEP</code></td></tr>
 <tr><td>Keep a run as an evaluation case</td><td><strong>Keep it</strong></td><td><code>quilzo eval keep RUN</code></td></tr>
-<tr><td>Prove what a run did</td><td>&nbsp;</td><td><code>quilzo agent receipt RUN -o receipt.json</code></td></tr>
+<tr><td>Prove what a run did</td><td><strong>Save the replay bundle</strong></td><td><code>quilzo agent receipt RUN -o receipt.json</code></td></tr>
+<tr><td>See what runs cost</td><td><span class="where">Agents › Runs › What they cost</span></td><td><code>quilzo agent cost --by agent|person|goal|day</code></td></tr>
 </tbody></table></div>
 <figure class="shot"><img src="/images/agents/runs.webp" alt="The list of kept runs with each one's goal, outcome and counts"><figcaption>Every run, kept.</figcaption></figure>
+<p id="cost">Each step records the tokens and money of the model's choice and of whatever the action charged, at the model gateway's prices, so a run's cost is the sum of its steps. The run's page shows it beside each step. <span class="where">What they cost</span> groups the kept runs by agent, by who started them, by kind of goal or by day; numbers, addresses and quoted words are taken out of goals, so "Refund order 1234" and "Refund order 98" count as one kind of goal. A run a model decided with no price is shown as not priced rather than as free.</p>
 
 <h2 id="templates">The eight templates</h2>
 <p><code>quilzo agent templates</code> lists them with when to use each. Their defaults:</p>

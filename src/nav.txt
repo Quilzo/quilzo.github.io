@@ -26,6 +26,7 @@ assistant
 ## Connect
 agent-interface
 integrations
+frameworks
 a2a
 fleet
 api

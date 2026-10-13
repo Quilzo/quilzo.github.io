@@ -250,7 +250,7 @@ with MCPServerAdapter(tracker) as tools:
         tools=tools,
     )
     task = Task(description="Is the checkout timeout already reported?", expected_output="Yes or no, with the issue", agent=agent)
-    print(Crew(agents=[agent], tasks=[task]).kickoff())  # RUN</code></pre>
+    print(Crew(agents=[agent], tasks=[task]).kickoff())</code></pre>
 <h2 id="openai-agents">OpenAI Agents SDK<a class="anchor" href="#openai-agents" aria-hidden="true" tabindex="-1">#</a></h2>
 <pre><code>pip install openai-agents</code></pre>
 <pre><code>import asyncio

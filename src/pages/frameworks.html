@@ -1,0 +1,161 @@
+<!--
+title: Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK
+short: Agent frameworks
+seo: MCP gateway for ADK, LangChain, CrewAI and OpenAI agents
+description: Give agents built with Google ADK, Microsoft Agent Framework, LangChain, CrewAI or the OpenAI Agents SDK their tools through Quilzo: pinned, approved and recorded.
+lead: Agents built in any framework reach your tools through Quilzo, and only as your declarations allow.
+icon: integrations
+screens: Integrations
+updated: 2026-10-13
+-->
+
+<div class="definition"><p>Every major agent framework speaks MCP. Point its MCP client at Quilzo's <strong>governed gateway</strong> instead of at your tool server, and the agent gets only the tools a person pinned, at the role and daily limit you set, with Quilzo's credential injected, calls you chose held for a person, and every call recorded in the signed log. Nothing changes in the agent's code except the address and a token.</p></div>
+<h2 id="gateway">Offer a tool server through the gateway</h2>
+<p>Declare the server, pin the tools you agreed to, and offer it (see <a href="/integrations/">Tools and the MCP gateway</a> for every field):</p>
+<pre><code>quilzo integrations tools tracker
+quilzo integrations pin tracker list_issues create_issue
+quilzo integrations gateway tracker --role author --daily 200 --ask create_issue
+quilzo token issue support-agent --principal dana --role author</code></pre>
+<p>The agent then connects to <code>https://YOUR-ADMIN/mcp/gateway/tracker</code> with the token as a bearer credential, or through OAuth 2.1 (see <a href="/agent-interface/">Connect AI apps</a>). The token acts for the person it was issued to, with their access and no more. Each example below reads it from <code>QUILZO_TOKEN</code>.</p>
+<p>The same clients reach Quilzo's own operations at <code>/mcp</code>, or over stdio with <code>quilzo mcp</code>.</p>
+<h2 id="adk">Google ADK</h2>
+<pre><code>pip install "google-adk[mcp]"</code></pre>
+<pre><code>import os
+
+from google.adk.agents import Agent
+from google.adk.tools.mcp_tool import McpToolset
+from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
+
+root_agent = Agent(
+    model="gemini-flash-latest",
+    name="support_agent",
+    instruction="Help the support team find and file issues in the tracker.",
+    tools=[
+        McpToolset(
+            connection_params=StreamableHTTPConnectionParams(
+                url="https://quilzo.example.com/mcp/gateway/tracker",
+                headers={"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
+            ),
+        )
+    ],
+)</code></pre>
+<h2 id="agent-framework">Microsoft Agent Framework</h2>
+<pre><code>pip install agent-framework</code></pre>
+<pre><code>import asyncio
+import os
+
+from agent_framework import Agent, MCPStreamableHTTPTool
+from agent_framework.openai import OpenAIChatClient
+
+
+async def main():
+    async with MCPStreamableHTTPTool(
+        name="tracker",
+        url="https://quilzo.example.com/mcp/gateway/tracker",
+        static_headers={"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
+    ) as tracker:
+        agent = Agent(
+            client=OpenAIChatClient(model="gpt-5"),
+            instructions="Help the support team find and file issues in the tracker.",
+            tools=tracker,
+        )
+        print(await agent.run("Is the checkout timeout already reported?"))
+
+
+asyncio.run(main())</code></pre>
+<p>The header is passed as <code>static_headers</code>.</p>
+<h2 id="langchain">LangChain and LangGraph</h2>
+<pre><code>pip install langchain langchain-mcp-adapters langchain-openai</code></pre>
+<pre><code>import asyncio
+import os
+
+from langchain.agents import create_agent
+from langchain_mcp_adapters.client import MultiServerMCPClient
+
+
+async def main():
+    client = MultiServerMCPClient({
+        "tracker": {
+            "transport": "streamable_http",
+            "url": "https://quilzo.example.com/mcp/gateway/tracker",
+            "headers": {"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
+        }
+    })
+    tools = await client.get_tools()
+    agent = create_agent("openai:gpt-5", tools)
+    print(await agent.ainvoke({"messages": "Is the checkout timeout already reported?"}))
+
+
+asyncio.run(main())</code></pre>
+<h2 id="crewai">CrewAI</h2>
+<pre><code>pip install crewai "crewai-tools[mcp]"</code></pre>
+<pre><code>import os
+
+from crewai import Agent, Crew, Task
+from crewai_tools import MCPServerAdapter
+
+tracker = {
+    "url": "https://quilzo.example.com/mcp/gateway/tracker",
+    "transport": "streamable-http",
+    "headers": {"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
+}
+
+with MCPServerAdapter(tracker) as tools:
+    agent = Agent(
+        role="Support agent",
+        goal="Find and file issues in the tracker",
+        backstory="You keep the support tracker accurate.",
+        tools=tools,
+    )
+    task = Task(description="Is the checkout timeout already reported?", expected_output="Yes or no, with the issue", agent=agent)
+    print(Crew(agents=[agent], tasks=[task]).kickoff())  # RUN</code></pre>
+<h2 id="openai-agents">OpenAI Agents SDK</h2>
+<pre><code>pip install openai-agents</code></pre>
+<pre><code>import asyncio
+import os
+
+from agents import Agent, Runner
+from agents.mcp import MCPServerStreamableHttp
+
+
+async def main():
+    async with MCPServerStreamableHttp(
+        name="tracker",
+        params={
+            "url": "https://quilzo.example.com/mcp/gateway/tracker",
+            "headers": {"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
+        },
+    ) as tracker:
+        agent = Agent(
+            name="Support agent",
+            instructions="Help the support team find and file issues in the tracker.",
+            mcp_servers=[tracker],
+        )
+        result = await Runner.run(agent, "Is the checkout timeout already reported?")
+        print(result.final_output)
+
+
+asyncio.run(main())</code></pre>
+<h2 id="held">When a call waits for a person</h2>
+<p>A call to a tool offered with <code>--ask</code> does not run. The framework receives an MCP error naming the held call, which a model reads as any other tool error:</p>
+<pre><code>a person approves each call of create_issue on tracker. This one is held as gq_a807fa3c488d: call again with the same arguments once they have decided</code></pre>
+<p>Somebody other than the person the call acts for decides it under <a href="/agents/#approvals">Approvals</a> or with <code>quilzo integrations approve gq_a807fa3c488d</code>. Approved, the same call with the same arguments goes through once, within the hour.</p>
+<h2 id="a2a">Agents that speak A2A</h2>
+<p>A framework with an A2A client can send work to your Quilzo agents instead of calling tools. Each task runs as one of your agents, under its declaration narrowed by the sender's token (see <a href="/a2a/">A2A</a>):</p>
+<pre><code>curl https://YOUR-ADMIN/a2a \
+  -H "Authorization: Bearer $QUILZO_TOKEN" -H "A2A-Version: 1.0" -H "Content-Type: application/json" \
+  -d '{"jsonrpc": "2.0", "id": 1, "method": "SendMessage", "params": {"message": {"messageId": "m1",
+       "role": "ROLE_USER", "parts": [{"text": "Which page explains returns?"}], "metadata": {"agent": "helper"}}}}'</code></pre>
+<h2 id="openjiuwen">openJiuwen agent-studio</h2>
+<p>agent-studio connects to MCP services as plugins. Add the gateway's address as an MCP service with an <code>Authorization: Bearer</code> header carrying a Quilzo token, and the workflows and agents built there reach the tool server only through Quilzo. Its headers are the same for every session today, so every call acts for the one person the token was issued to; give that token only the role the workflows need.</p>
+<h2 id="openshell">NVIDIA OpenShell</h2>
+<p>Quilzo runs an agent's own program in OpenShell as one of its two sandbox backends, with the declaration compiled to OpenShell's policy and the same services handed in: the agent interface for the run, a model endpoint through Quilzo's gateway, and a proxy to the declared hosts. See <a href="/programs/#openshell">Programs in a box</a>.</p>
+<h2 id="tested">Tested with</h2>
+<p>Each example above was run against Quilzo's gateway in front of an MCP server, listing its pinned tools and calling one: google-adk 2.12.0, agent-framework 1.21.0, langchain-mcp-adapters 0.3.2 with langchain 1, crewai and crewai-tools 1.15.27, and openai-agents 0.23.1.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/integrations/"><span class="card-icon"><icon name="integrations"></icon></span><h3 class="card-title">Tools and the MCP gateway</h3><p>Declare, pin and offer your MCP servers.</p></a></li>
+<li><a class="card" href="/agent-interface/"><span class="card-icon"><icon name="apps"></icon></span><h3 class="card-title">Connect AI apps</h3><p>Tokens, OAuth 2.1 and receipts for every call.</p></a></li>
+</ul>
+</section>

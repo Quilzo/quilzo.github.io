@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/agent-identity/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-13">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI agent identity, accountability and signed audit receipts">
 <meta name="twitter:description" content="Give every AI agent its own identity and a person who answers for it, stop it when they leave, and prove what any run did with a signed, checkable receipt.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Give every AI agent its own identity and a person who answers for it, stop it when they leave, and prove what any run did with a signed, checkable receipt.","headline":"AI agent identity: sponsors, principals and signed receipts","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/agent-identity/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/agent-identity/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Identity and receipts","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-13","description":"Give every AI agent its own identity and a person who answers for it, stop it when they leave, and prove what any run did with a signed, checkable receipt.","headline":"AI agent identity: sponsors, principals and signed receipts","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/agent-identity/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/agent-identity/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Identity and receipts","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -217,6 +217,22 @@
 </ol>
 <p>A receipt includes what the run was asked, what it did, what it was refused, what it cost, whether it finished, and the memory it recalled and kept. Refusals are part of the outcome: a run that tried to publish four times and was stopped is a different product from one that did the work, and somebody paying per outcome is entitled to know which they got.</p>
 <p>The same kind of receipt exists for an app's calls through one connection (<code>quilzo apps receipt</code>) and for what was forgotten about a person (<code>quilzo memory receipt</code>).</p>
+<h2 id="credentials">Give another vendor's agent a credential<a class="anchor" href="#credentials" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An agent built elsewhere, such as Claude Code, Codex or a team's own program, can use one of your <a href="/browser/">browser grants</a> with a signed credential in place of a person's token. The credential is a W3C Verifiable Credential, signed with your store's own issuer key, naming the agent, its sponsor, the one grant, whether it may act or only read, and the agent's own public key. Without that key, a copy of the credential is worthless.</p>
+<ol class="steps">
+<li><h3 id="issue-it">Issue it<a class="anchor" href="#issue-it" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>The agent must be declared here and have a sponsor who can still act. Give its public key as a <code>did:key</code>, or let Quilzo make one and hand the key to the agent:</p>
+<pre><code>quilzo agent credential issue buyer --grant browser:shop --act --holder did:key:z6Mk… --for 24h</code></pre>
+<p>A credential lasts at most 30 days and never beyond the agent's next renewal.</p></li>
+<li><h3 id="present-it">Present it<a class="anchor" href="#present-it" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>The agent sends the credential as <code>Authorization: Bearer …</code> to <code>/mcp/browser/NAME</code>, with an <code>Agent-Proof</code> header on every request: a JWS signed by its key that names the method, the address, the time, a one-time identifier and the credential. Each proof is accepted once, within a minute.</p></li>
+<li><h3 id="check-or-withdraw-it">Check or withdraw it<a class="anchor" href="#check-or-withdraw-it" aria-hidden="true" tabindex="-1">#</a></h3>
+<pre><code>quilzo agent credential list
+quilzo agent credential verify buyer.cred
+quilzo agent credential revoke urn:uuid:…</code></pre>
+<p>The issuer's public keys are published at <code>/.well-known/agent-credentials.json</code> on the admin, so anyone can check a credential with their own tools.</p></li>
+</ol>
+<p>The agent acts within its sponsor's authority, on the one grant it carries. Everything it does is recorded under the agent's name on the sponsor's behalf, and a press that commits to something waits for a person, exactly as with a token.</p>
 <h2 id="principals">Grant an agent a role<a class="anchor" href="#principals" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Because an agent is a principal, the access policy can bound it whoever starts it:</p>
 <pre><code>quilzo auth grant agent/returns-editor author --on /help</code></pre>
@@ -230,7 +246,7 @@
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/agent-identity.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-13 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/agent-identity.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/agent-limits/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Limits that hold: what a hijacked AI agent still cannot do</span></a>
       <a class="pager-next" href="/evals/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Evaluate AI agents against prompt injection, and let them earn autonomy</span></a>
@@ -244,6 +260,7 @@
     <li><a href="#sponsor">Give each agent a sponsor</a></li>
     <li><a href="#when-it-stops">When an agent stops</a></li>
     <li><a href="#receipts">Prove what a run did</a></li>
+    <li><a href="#credentials">Give another vendor&#39;s agent a credential</a></li>
     <li><a href="#principals">Grant an agent a role</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

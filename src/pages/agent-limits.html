@@ -6,7 +6,7 @@ description: Scope what an AI agent reads and calls, cap what it spends in money
 lead: The declaration is enforced by code outside the model, so it holds however the model is persuaded.
 icon: rule
 screens: Agents
-updated: 2026-10-08
+updated: 2026-10-13
 -->
 
 <div class="definition"><p><strong>Prompt injection</strong> is text an agent reads that tells it to do something its user did not ask for. No classifier reliably tells those words from honest content. Quilzo does not try to: it limits what a run <em>can</em> do, records what it read, and stops for a person when private material and somebody else's words meet an outbound call.</p></div>
@@ -83,6 +83,15 @@ updated: 2026-10-08
   "refused": 2,
   "tainted": true
 }</code></pre>
+
+<h2 id="reviewer">A second model that reviews each action</h2>
+<p>Name a model route as the reviewer, and every action an agent's model chooses is shown to it before it runs:</p>
+<pre><code>quilzo config set agent.reviewer ROUTE</code></pre>
+<p>The reviewer sees the goal a person set and the action chosen, and nothing of what the agent read, so nothing a page planted can reach it. It can let the action through or stop it; a stopped action waits for a person on the run's page, and <strong>Let it go ahead</strong> performs exactly that action. A reviewer that cannot be reached stops the run. It costs one more model call per action, and it is the last defence, not the only one: the declaration, the breaker and asking first come before it.</p>
+
+<h2 id="desktop">Desktop apps, and your own desktop (experimental)</h2>
+<p>An agent can work a desktop app in a <strong>desktop cell</strong>: a Firecracker or Cloud Hypervisor microVM, restored from a warm snapshot you build with the app inside, worked through its accessibility tree the way the browser is worked through a page. Presses that commit to something wait for a person, Enter always does, and typing into a cell is under the exfiltration breaker. One cell runs at a time. The image, with its apps and the helper inside it, is yours to build, and the microVM runs as Quilzo's user without Firecracker's jailer, which is why cells are experimental. <code>quilzo cell status</code> says whether this machine can run one; the settings are <code>cell.backend</code>, <code>cell.binary</code>, <code>cell.snapshot</code>, <code>cell.memory</code> and <code>cell.vsock</code>.</p>
+<p><code>quilzo desktop consent</code> asks your desktop's own dialog for your keyboard and pointer and gives the session straight back. No run may use your desktop.</p>
 
 <h2 id="watchdog">The watchdog, and the shield</h2>
 <p>Asking and accepting no is how an agent should behave. Reaching again and again for what it was never given is not. <code>quilzo agents</code> lists what each model and app has been doing and which are not accepting refusals. When one crosses the line, the watchdog flags it, the agent loses the autonomy its evaluations earned, and the <a href="/shield/">shield</a>'s <code>agent-misbehaving</code> playbook tells the security contact and whoever answers for the agent, and opens a case.</p>

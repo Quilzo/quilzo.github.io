@@ -6,7 +6,7 @@ description: Give every AI agent its own identity and a person who answers for i
 lead: Every agent is a principal of its own, a person answers for it, and every run can be proved to somebody who does not trust you.
 icon: badge
 screens: Agents
-updated: 2026-10-08
+updated: 2026-10-13
 -->
 
 <div class="definition"><p>Each agent is a <strong>principal</strong>, <code>agent/NAME</code>. What it writes is authored by that name, the audit log records it as the actor, and the access policy can grant it a role like anybody else. A <strong>sponsor</strong> is the person who answers for it: told when it misbehaves, and without whom it stops.</p></div>
@@ -64,6 +64,23 @@ updated: 2026-10-08
 </ol>
 <p>A receipt includes what the run was asked, what it did, what it was refused, what it cost, whether it finished, and the memory it recalled and kept. Refusals are part of the outcome: a run that tried to publish four times and was stopped is a different product from one that did the work, and somebody paying per outcome is entitled to know which they got.</p>
 <p>The same kind of receipt exists for an app's calls through one connection (<code>quilzo apps receipt</code>) and for what was forgotten about a person (<code>quilzo memory receipt</code>).</p>
+
+<h2 id="credentials">Give another vendor's agent a credential</h2>
+<p>An agent built elsewhere, such as Claude Code, Codex or a team's own program, can use one of your <a href="/browser/">browser grants</a> with a signed credential in place of a person's token. The credential is a W3C Verifiable Credential, signed with your store's own issuer key, naming the agent, its sponsor, the one grant, whether it may act or only read, and the agent's own public key. Without that key, a copy of the credential is worthless.</p>
+<ol class="steps">
+<li><h3>Issue it</h3>
+<p>The agent must be declared here and have a sponsor who can still act. Give its public key as a <code>did:key</code>, or let Quilzo make one and hand the key to the agent:</p>
+<pre><code>quilzo agent credential issue buyer --grant browser:shop --act --holder did:key:z6Mk… --for 24h</code></pre>
+<p>A credential lasts at most 30 days and never beyond the agent's next renewal.</p></li>
+<li><h3>Present it</h3>
+<p>The agent sends the credential as <code>Authorization: Bearer …</code> to <code>/mcp/browser/NAME</code>, with an <code>Agent-Proof</code> header on every request: a JWS signed by its key that names the method, the address, the time, a one-time identifier and the credential. Each proof is accepted once, within a minute.</p></li>
+<li><h3>Check or withdraw it</h3>
+<pre><code>quilzo agent credential list
+quilzo agent credential verify buyer.cred
+quilzo agent credential revoke urn:uuid:…</code></pre>
+<p>The issuer's public keys are published at <code>/.well-known/agent-credentials.json</code> on the admin, so anyone can check a credential with their own tools.</p></li>
+</ol>
+<p>The agent acts within its sponsor's authority, on the one grant it carries. Everything it does is recorded under the agent's name on the sponsor's behalf, and a press that commits to something waits for a person, exactly as with a token.</p>
 
 <h2 id="principals">Grant an agent a role</h2>
 <p>Because an agent is a principal, the access policy can bound it whoever starts it:</p>

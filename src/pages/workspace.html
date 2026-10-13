@@ -6,7 +6,7 @@ description: Give an AI agent a folder of its own and the programs it may run, e
 lead: An agent can read and write files in a folder of its own and run the programs you name, one command at a time, each in a sandbox that ends when the command does.
 icon: terminal
 screens: Agents
-updated: 2026-10-11
+updated: 2026-10-13
 -->
 
 <div class="definition"><p>An agent's <strong>workspace</strong> is a folder of its own, kept between runs. The agent never holds a shell. It names a program it was given and the arguments, and Quilzo runs that one command in a fresh box against the workspace. Nothing it writes is ever handed to a shell to interpret, unless you name a shell as one of its programs. Its files are read and written by Quilzo itself, through a handle on the workspace that cannot be walked out of.</p></div>
@@ -24,7 +24,7 @@ updated: 2026-10-11
     "ask": ["network"],
     "timeout": "2m", "memory_mb": 2048, "quota_mb": 2048
   },
-  "budget": {"steps": 40, "tools": 1, "duration": "20m"}
+  "budget": {"steps": 40, "tool_calls": 1, "duration": "20m"}
 }</code></pre>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Field</th><th scope="col">What it allows</th></tr></thead>

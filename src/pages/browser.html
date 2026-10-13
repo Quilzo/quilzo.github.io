@@ -6,7 +6,7 @@ description: Let an AI agent read and act on websites in a sandboxed Chromium, w
 lead: An agent can open pages, fill in forms and sign in, in a browser Quilzo runs in its box and drives for it, one checked action at a time.
 icon: travel_explore
 screens: Agents
-updated: 2026-10-10
+updated: 2026-10-13
 -->
 
 <div class="definition"><p>An agent's <strong>browser</strong> is Chromium running inside the agent's box, driven by Quilzo over a pipe only Quilzo holds. The agent never touches the browser. It asks for one action at a time, by name: open this address, type into that field, press that button. Each action is a step of the run, checked against the agent's declaration like any other. The agent cannot send the browser a raw command, read its cookies or run a script in a page.</p></div>
@@ -34,7 +34,7 @@ quilzo browser status</code></pre>
     "write": ["shop.supplier.example"],
     "credentials": [{"secret": "supplier", "host": "shop.supplier.example"}]
   },
-  "budget": {"steps": 30, "tools": 1, "duration": "10m"}
+  "budget": {"steps": 30, "tool_calls": 1, "duration": "10m"}
 }</code></pre>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Field</th><th scope="col">What it allows</th></tr></thead>

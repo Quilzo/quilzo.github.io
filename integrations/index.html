@@ -216,6 +216,25 @@ quilzo integrations pin tracker list_issues create_issue</code></pre>
 <figure class="shot"><img src="/images/integrations/integrations.webp" alt="The Integrations screen: tracker reaches tracker.example.com, may call list_issues and create_issue, is enabled and offered through the gateway to authors" width="1280" height="860" loading="lazy" decoding="async"><figcaption>A declared tool server, offered through the gateway. The waiting call shown is sample data in the program's own format.</figcaption></figure>
 </li>
 </ol>
+<h2 id="rest">A REST API, from its OpenAPI description<a class="anchor" href="#rest" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An API with no MCP server is declared from its OpenAPI 3 document (JSON). Each operation becomes a tool by its name, with the same allow-list, pins, gateway and approvals as an MCP server's tools. Import once to see what is on offer, then again naming what this install may call:</p>
+<pre><code>quilzo integrations import billing-openapi.json
+quilzo integrations import billing-openapi.json --uses getInvoice,listInvoices --secret billing-key</code></pre>
+<p>The declaration arrives switched off, with only the named operations, as kind <code>http</code>: each one's method, its path under the endpoint, and its path and query parameters. A bearer token, or an API key in a header the document names, comes from the secret, never from the agent.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A call</th><th scope="col">Is</th></tr></thead>
+<tbody>
+<tr><td>Built</td><td>Only from what its operation declares. An argument it does not declare is refused rather than passed on, and path values are escaped.</td></tr>
+<tr><td>Sent</td><td>Over https, to the declared host and nothing else, with no redirects followed.</td></tr>
+<tr><td>Answered</td><td>Up to 32 KiB of the response, or the status and the start of the error.</td></tr>
+<tr><td>Changed</td><td>An operation edited after it was pinned is refused until somebody pins it again.</td></tr>
+</tbody></table></div>
+<p>An import never fetches what a document refers to: a reference outside the document is named and left out. Header and cookie parameters, and an API key in a query string, are not imported. A REST API can be offered to other vendors' agents through the gateway like an MCP server.</p>
+<h2 id="registry">An MCP server from the registry<a class="anchor" href="#registry" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A server's <code>server.json</code> from the MCP registry becomes a declaration of its Streamable HTTP address. Without <code>--uses</code> the server is asked what it offers and nothing is declared:</p>
+<pre><code>quilzo integrations import server.json
+quilzo integrations import server.json --uses list_issues,create_issue --secret tracker-token</code></pre>
+<p>A server published only as a package runs on your side first; give its address with <code>--endpoint</code>.</p>
 <h2 id="agents-use-tools">Let an agent use a tool<a class="anchor" href="#agents-use-tools" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>An agent names each tool it needs, on its host, with a purpose, in its declaration. Tools that change something can ask first:</p>
 <pre><code>"tools": [
@@ -310,6 +329,8 @@ quilzo siem verify audit.jsonl --envelope evidence.json</code></pre>
   <h2>On this page</h2>
   <ul>
     <li><a href="#declare">Declare a tool server</a></li>
+    <li><a href="#rest">A REST API, from its OpenAPI description</a></li>
+    <li><a href="#registry">An MCP server from the registry</a></li>
     <li><a href="#agents-use-tools">Let an agent use a tool</a></li>
     <li><a href="#gateway">Offer your MCP servers to other agents</a></li>
     <li><a href="#webhooks">Tell other systems when something happens</a></li>

@@ -32,6 +32,7 @@ fleet
 api
 
 ## Content
+make
 pages
 types
 structure

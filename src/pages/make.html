@@ -1,0 +1,69 @@
+<!--
+title: Make features as packages
+short: Make
+seo: Build features as packages with two-person installs
+description: Declare a feature as one package of types, records, pages, forms, agents and webhooks, read what it can do, and install it or take it back as one decision.
+lead: A feature is one package: read what it can do, install it as one decision, and take it back as one.
+icon: make
+screens: Make
+updated: 2026-10-13
+-->
+
+<div class="definition"><p>A <strong>feature</strong> is one file that declares the blocks a piece of work needs: content types, collections of records, listings, forms, pages, menus, chatbots, agents and webhooks. Quilzo checks every block by the same rules it holds that block to anywhere else, shows what the whole can do in plain words, and installs it as one decision.</p></div>
+<h2 id="package">What a package declares</h2>
+<p>Start from a complete example, a lab sample tracker, and edit it:</p>
+<pre><code>quilzo feature example &gt; lab.json
+quilzo feature check lab.json      # what it would store, show, send and change; installs nothing</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Block</th><th scope="col">Becomes</th></tr></thead>
+<tbody>
+<tr><td><code>types</code></td><td>Content types, flat lists of fields (see <a href="/types/">Types</a>)</td></tr>
+<tr><td><code>collections</code></td><td>Collections of records bound to one of the package's types</td></tr>
+<tr><td><code>listings</code></td><td>Declared queries over those records that a page can show (see <a href="/structure/">Structure</a>)</td></tr>
+<tr><td><code>forms</code></td><td>Forms with their purpose, lawful basis, notice and retention (see <a href="/forms/">Forms</a>)</td></tr>
+<tr><td><code>pages</code></td><td>Pages, added to the draft and never published by the install</td></tr>
+<tr><td><code>menus</code></td><td>Menus whose entries point at pages that exist</td></tr>
+<tr><td><code>chatbots</code></td><td>Chatbots answering from published pages (see <a href="/chatbots/">Chatbots</a>)</td></tr>
+<tr><td><code>agents</code></td><td>Agent declarations, answered for by the person who installs them (see <a href="/agents/">Agents</a>)</td></tr>
+<tr><td><code>webhooks</code></td><td>Endpoints told about events; each gets its signing secret at install, shown once</td></tr>
+</tbody></table></div>
+<p>A package has a name, a version, a title and a purpose, and a key it does not know is refused rather than ignored. It carries no code, no secrets and no access grants.</p>
+<h2 id="card">The permission card</h2>
+<p>The card is worked out from the package, never from its author's description: which records it keeps and whether their fields are about people, what its forms collect and for how long, which pages show what and to whom, what it sends and where, and what each agent may do, where it reaches and whether it asks first.</p>
+<p>One administrator installs a feature that stores and shows ordinary content. Two different administrators must agree when it:</p>
+<ul>
+<li>stores personal data, such as an email address, a name or a phone number;</li>
+<li>stores what looks like health, belief or other special-category data;</li>
+<li>collects what visitors type into a form;</li>
+<li>lists records about people on a public page;</li>
+<li>sends events or calls to another server;</li>
+<li>adds an agent that acts without asking first.</li>
+</ul>
+<p>A model may draft a package. Only a person installs or approves one.</p>
+<h2 id="install">Install, approve, roll back, remove</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Install, or ask for a second person</td><td><code>quilzo feature install lab.json</code></td></tr>
+<tr><td>See what is waiting</td><td><code>quilzo feature pending</code>, or <a href="/agents/#approvals">Approvals</a></td></tr>
+<tr><td>Approve or decline, as somebody else</td><td><code>quilzo feature approve ID</code>, <code>quilzo feature decline ID</code></td></tr>
+<tr><td>List and read what is installed</td><td><code>quilzo feature list</code>, <code>quilzo feature show NAME</code></td></tr>
+<tr><td>Go back to the previous version</td><td><code>quilzo feature rollback NAME</code></td></tr>
+<tr><td>Take everything it made back</td><td><code>quilzo feature remove NAME</code></td></tr>
+</tbody></table></div>
+<p>In the admin, <strong>Make</strong> takes a package file or pasted text, shows its card and every change it would make, and installs exactly what you read: the bytes are checked against the digest you were shown.</p>
+<p>A feature owns what it made and nothing else. A block somebody made by hand, or another feature made, with a name the package also uses is a conflict, and nothing is installed. An upgrade changes what changed and removes what the new version no longer declares. Removing a feature stages the removal of its pages in the draft and keeps the records people entered.</p>
+<h2 id="share">Share a feature</h2>
+<p>Export an installed feature signed with your installation's log keys, Ed25519 and ML-DSA, and whoever installs it checks the signature against your published keys:</p>
+<pre><code>quilzo feature export lab-samples --sign -o lab.json
+quilzo feature install lab.json --keys head.pub.json</code></pre>
+<p>A signed package is refused unless its signature is checked. To package something already built by hand, name its blocks:</p>
+<pre><code>quilzo feature capture inventory --title "Inventory" --purpose "What the lab holds" \
+  --type sample --collection samples --listing available_samples --page samples -o inventory.json</code></pre>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/types/"><span class="card-icon"><icon name="types"></icon></span><h3 class="card-title">Content types and records</h3><p>The fields a feature's records must have.</p></a></li>
+<li><a class="card" href="/agents/"><span class="card-icon"><icon name="agents"></icon></span><h3 class="card-title">Agents</h3><p>What an agent a feature adds may do.</p></a></li>
+</ul>
+</section>

@@ -6,7 +6,7 @@ description: Define content types every surface enforces, bind pages to them, an
 lead: A type says which fields a page must have, and every surface checks it.
 icon: types
 screens: Types, Data
-updated: 2026-10-08
+updated: 2026-10-14
 -->
 
 <div class="definition"><p>A <strong>type</strong> is a flat list of fields. Bind a page or a collection to it and every write must satisfy it, from the admin, the command line, the API and the agent interface, with no way to write around it.</p></div>
@@ -26,7 +26,10 @@ quilzo type check                     # validate every bound page</code></pre>
 <tr><td>Add one</td><td><code>quilzo records add products field=value</code></td></tr>
 <tr><td>Import many in one commit</td><td><code>quilzo records import products rows.json</code></td></tr>
 <tr><td>Require a type</td><td><code>quilzo type bind-collection products product</code></td></tr>
+<tr><td>Let somebody work on one collection</td><td><code>quilzo auth grant tech author --on /@data/samples</code></td></tr>
 </tbody></table></div>
+<h3 id="collection-access">Who may read and write a collection</h3>
+<p>Each collection is checked as itself, at <code>/@data/NAME</code>; <code>/@data</code> is every collection. A role on the whole site covers them all. A role on a section of pages covers none, even a section with the same name as a collection: <code>author on /samples</code> writes pages under /samples, and <code>author on /@data/samples</code> writes the samples. The Data screen, <code>quilzo records</code>, the agent interface and the content API all ask the same question, so somebody granted one collection sees that one and is not told the others exist.</p>
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">

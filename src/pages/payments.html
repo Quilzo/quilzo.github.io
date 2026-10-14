@@ -1,0 +1,42 @@
+<!--
+title: Agents that pay, within limits a person sets
+short: Agents that pay
+seo: Agent payments with mandates, limits and receipts
+description: Let an agent pay suppliers, top up credit or buy within a mandate a person grants: payees, a limit per payment, a budget and an end date, with a receipt each time.
+lead: An agent pays only who a person named, only as much as they allowed, and every payment leaves a receipt.
+icon: agents
+screens: Approvals
+updated: 2026-10-14
+-->
+
+<div class="definition"><p>A <strong>mandate</strong> is what one agent may pay without a person deciding each payment: in one currency, to named payees, at most so much a payment and so much in all, until a date. It is the open mandate of AP2, the agent payments protocol, kept and checked by Quilzo.</p></div>
+<h2 id="declare">A tool that pays</h2>
+<p>A REST operation that spends money says where in its arguments the amount, the currency and the payee are, so a payment is read from the call itself and never from a model's description of it:</p>
+<pre><code>{"name": "pay_invoice", "method": "POST", "path": "/payments",
+ "body": {"type": "object"},
+ "pays": {"amount": "body.amount", "minor": true,
+          "currency": "body.currency", "payee": "body.payee"}}</code></pre>
+<p>Each of <code>amount</code>, <code>currency</code> and <code>payee</code> names a parameter, a field of the JSON body as <code>body.FIELD</code>, or a fixed value as <code>=VALUE</code>, such as <code>"currency": "=USD"</code>. <code>minor</code> says the amount is in cents, as most payment APIs take it; without it, an amount is read as written, such as 12.50. Without a payee, the payee is the integration's host. Amounts are read exactly in each currency's own decimal places, from ISO 4217, and one with more places than its currency has is refused rather than rounded.</p>
+<h2 id="mandate">Grant a mandate</h2>
+<pre><code>quilzo spend grant buyer --currency USD --per 50 --budget 500 \
+  --payee acct_supplies --purpose "office supplies" --until 2026-12-31 --without-asking</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A payment</th><th scope="col">What happens</th></tr></thead>
+<tbody>
+<tr><td>Within a mandate granted <code>--without-asking</code></td><td>It goes ahead and is debited from the mandate</td></tr>
+<tr><td>Within a mandate that asks</td><td>It waits for a person in Approvals, shown as within the mandate</td></tr>
+<tr><td>Beyond every mandate: another payee, too much, the budget spent, the mandate ended or revoked</td><td>It waits for a person, who may approve that one payment on its own</td></tr>
+</tbody></table></div>
+<p>A mandate is granted by a person who may approve the agent's actions (the <code>approve</code> permission on the agent), never by a model. A paying call is never earned away from asking. What an agent reads can steer it, so a mandate is the most its holder accepts being spent however a run went: keep the payees exact and the amounts small. A payment that fails still counts against the mandate, because a call that timed out may have been paid; grant a new mandate once you know it was not.</p>
+<h2 id="receipts">Receipts</h2>
+<pre><code>quilzo spend list buyer
+quilzo spend receipts buyer
+quilzo spend revoke md_…</code></pre>
+<p>Every payment leaves a receipt naming the agent, the run, the tool, the payee, the amount, and the mandate it was paid within or that a person approved it on its own, with what the far side answered. The audit log records each payment as it is made and settled.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/integrations/"><span class="card-icon"><icon name="integrations"></icon></span><h3 class="card-title">Integrations</h3><p>Declaring the REST API an agent pays through.</p></a></li>
+<li><a class="card" href="/agents/"><span class="card-icon"><icon name="agents"></icon></span><h3 class="card-title">Agents</h3><p>Approvals, and what an agent waits for.</p></a></li>
+</ul>
+</section>

@@ -65,6 +65,7 @@ quilzo integrations pin tracker list_issues create_issue</code></pre>
 <pre><code>quilzo integrations import billing-openapi.json
 quilzo integrations import billing-openapi.json --uses getInvoice,listInvoices --secret billing-key</code></pre>
 <p>The declaration arrives switched off, with only the named operations, as kind <code>http</code>: each one's method, its path under the endpoint, and its path and query parameters. A bearer token, or an API key in a header the document names, comes from the secret, never from the agent.</p>
+<p>An operation that spends money declares <code>pays</code>: where its amount, currency and payee are, so each payment is checked against the agent's mandates (see <a href="/payments/">agents that pay</a>).</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">A call</th><th scope="col">Is</th></tr></thead>
 <tbody>

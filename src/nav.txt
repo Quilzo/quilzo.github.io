@@ -11,6 +11,7 @@ concepts
 ## AI agents
 agents
 agent-limits
+payments
 agent-identity
 evals
 programs

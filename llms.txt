@@ -7,7 +7,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 ## Get started
 
 - [Get started with Quilzo in ten minutes](https://quilzo.github.io/start/): Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.
-- [Today, the first screen after signing in](https://quilzo.github.io/today/): The first screen after signing in: what waits for you to decide, in priority order, and counts from your parts of the store, each linked to its records.
+- [Today, the first screen after signing in](https://quilzo.github.io/today/): The first screen after signing in: what waits for you to decide, a brief whose every figure is a link, and counts from your parts of the store.
 - [Install and run Quilzo in production](https://quilzo.github.io/install/): Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
 - [Glossary: AI agents, MCP, A2A and the words Quilzo uses](https://quilzo.github.io/concepts/): What an AI agent control plane, an MCP gateway, A2A, prompt injection, human in the loop, earned autonomy and the other terms in this manual mean, in one place.
 

@@ -39,7 +39,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 ## Content
 
-- [Make features as packages](https://quilzo.github.io/make/): Declare a feature as one package of types, records, pages, forms, agents and webhooks, read what it can do, and install it or take it back as one decision.
+- [Make features as packages](https://quilzo.github.io/make/): Declare a feature as one package of types, records, pages, forms, agents, webhooks and roles, read what it can do, and install it or take it back as one decision.
 - [Research projects with claims you can check: numbers linked to code, real citations](https://quilzo.github.io/research/): Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.
 - [Pages, sections and the editor](https://quilzo.github.io/pages/): Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.
 - [Content types and records](https://quilzo.github.io/types/): Define content types every surface enforces, bind pages to them, and keep structured records in collections, from the admin, the command line, the API or an agent.

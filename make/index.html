@@ -240,6 +240,26 @@ quilzo feature install samples.json --rows samples.rows.json</code></pre>
 </tbody></table></div>
 <p>In the admin, <strong>Make</strong> takes a package file or pasted text, shows its card and every change it would make, and installs exactly what you read: the bytes are checked against the digest you were shown.</p>
 <p>A feature owns what it made and nothing else. A block somebody made by hand, or another feature made, with a name the package also uses is a conflict, and nothing is installed. An upgrade changes what changed and removes what the new version no longer declares. Removing a feature stages the removal of its pages in the draft and keeps the records people entered.</p>
+<h2 id="repository">Features from a repository<a class="anchor" href="#repository" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Keep a feature's package in a repository, review it in a pull request, and install it when the pull request merges. The CI job holds no secret: it exchanges the identity token its platform gives it for a short Quilzo token (see <a href="/credentials/#ci">CI jobs without a stored secret</a>), then posts the package:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Request</th><th scope="col">Needs</th><th scope="col">Answers</th></tr></thead>
+<tbody>
+<tr><td><code>POST /features/check</code></td><td>A token that may read</td><td>The card, the plan, and both as Markdown for a pull request comment. Changes nothing.</td></tr>
+<tr><td><code>POST /features/install</code></td><td>A token that may install features, short or bound to a key</td><td>Installed, or waiting for a second person in Approvals with the job as the one who asked, with the same card, plan and rules as the Make screen.</td></tr>
+</tbody></table></div>
+<pre><code>quilzo trust add lab-pr --github octo/lab --as ci:lab-review --role reader
+quilzo trust add lab-main --github octo/lab --ref refs/heads/main --as ci:lab --role author
+quilzo auth grant ci:lab-review reader
+quilzo auth grant ci:lab author
+quilzo auth grant ci:lab install-features</code></pre>
+<p>In the workflow, with <code>TOKEN</code> exchanged as in <a href="/credentials/#ci">the credentials guide</a>:</p>
+<pre><code># on a pull request: show what it would do
+curl -s https://admin.example/features/check -H "Authorization: Bearer $TOKEN"   --data-binary @lab.json | jq -r .markdown &gt; plan.md
+gh pr comment "$PR" --body-file plan.md
+# on main: install, or ask for a second person
+curl -s https://admin.example/features/install -H "Authorization: Bearer $TOKEN"   --data-binary @lab.json | jq -r .markdown</code></pre>
+<p>A job's token lasts minutes, which is what lets it install from another machine; a long-lived token needs to be bound to a key first. A package with personal data, a public form, anything sent outside or an agent acting on its own still waits for a person: merging a pull request is not the second approval.</p>
 <h2 id="share">Share a feature<a class="anchor" href="#share" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Export an installed feature signed with your installation's log keys, Ed25519 and ML-DSA, and whoever installs it checks the signature against your published keys:</p>
 <pre><code>quilzo feature export lab-samples --sign -o lab.json
@@ -272,6 +292,7 @@ quilzo feature install lab.json --keys head.pub.json</code></pre>
     <li><a href="#card">The permission card</a></li>
     <li><a href="#roles">Roles for the people who work in it</a></li>
     <li><a href="#install">Install, approve, roll back, remove</a></li>
+    <li><a href="#repository">Features from a repository</a></li>
     <li><a href="#share">Share a feature</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

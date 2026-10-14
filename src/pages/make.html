@@ -28,6 +28,13 @@ quilzo feature check lab.json      # what it would store, show, send and change;
 <tr><td><code>webhooks</code></td><td>Endpoints told about events; each gets its signing secret at install, shown once</td></tr>
 </tbody></table></div>
 <p>A package has a name, a version, a title and a purpose, and a key it does not know is refused rather than ignored. It carries no code, no secrets and no access grants.</p>
+<h2 id="describe">Describe it, or start from a spreadsheet</h2>
+<p>Have a model draft a package from a sentence. The draft holds content blocks only: types, collections, listings, forms, pages, menus and chatbots. Anything that would reach another server, such as an agent, a webhook or a menu entry pointing at another site, is left out and named. A draft that fails the checks is shown its failures once, and nothing is installed until you install it.</p>
+<pre><code>quilzo feature draft "Track the lab's samples and show members which are available" -o lab.json</code></pre>
+<p>Or turn a CSV file or a JSON list of records into a feature. Each column's kind comes from its values: a number, a date, an email address, a link, yes or no, a choice among a few repeated values, or text. A column about people never becomes a choice, so their values stay out of the package. The rows are written beside the package and imported with it:</p>
+<pre><code>quilzo feature from samples.csv
+quilzo feature install samples.json --rows samples.rows.json</code></pre>
+<p>A package carries definitions, never data. The rows are checked against the package's type before anything is installed, and when the feature waits for a second person, its rows wait with it. In the admin, <strong>Make</strong> offers both: <strong>Describe it</strong> and <strong>From a spreadsheet</strong>.</p>
 <h2 id="card">The permission card</h2>
 <p>The card is worked out from the package, never from its author's description: which records it keeps and whether their fields are about people, what its forms collect and for how long, which pages show what and to whom, what it sends and where, and what each agent may do, where it reaches and whether it asks first.</p>
 <p>One administrator installs a feature that stores and shows ordinary content. Two different administrators must agree when it:</p>

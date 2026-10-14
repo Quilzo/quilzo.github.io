@@ -214,6 +214,8 @@ quilzo memory confirm m_f7df1fd760ab</code></pre>
 <p>A fact learnt after reading somebody else's words is held, and replaces nothing until a person confirms it. A planted instruction cannot retire a true fact by getting itself remembered.</p>
 <h2 id="recall">How recall chooses<a class="anchor" href="#recall" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Recall ranks what is remembered by the words it shares with the question and by vector similarity, fused by reciprocal rank, with how recent each is as a lighter third signal. It returns only what matches, at most 20 entries and 6,000 characters. It works over the text itself, so it behaves the same whichever model an agent uses, and changing the model loses nothing that was learnt.</p>
+<h2 id="anywhere">Memory for agents built elsewhere<a class="anchor" href="#anywhere" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An AI agent built in another framework gets the same memory by naming an agent here as its model, <code>agent/NAME</code>, at Quilzo's model gateway. What the agent remembers about the person is recalled into its conversation, and its model is offered a tool to remember more. What it learns is kept as unreviewed, and held until a person confirms it when the conversation carried a tool's results (see <a href="/models/#door-memory">Memory at the gateway</a>).</p>
 <h2 id="poisoning">Why held memory matters<a class="anchor" href="#poisoning" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Memory poisoning (OWASP's agentic risk ASI06) works like this: an instruction planted in a page makes an agent write a memory, and the memory steers every later run long after the page is fixed. Here, a memory learnt after reading untrusted content waits for a person instead.</p>
 <p>Each memory also records how far it can be trusted, from what the run had read when it learnt it:</p>
@@ -251,7 +253,7 @@ quilzo memory confirm m_f7df1fd760ab</code></pre>
     <p class="updated">Updated 2026-10-14 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/memory.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/workspace/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Let an AI agent run commands without a shell to misuse</span></a>
-      <a class="pager-next" href="/models/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">LLM gateway: model routes, budgets in money and a privacy guard</span></a>
+      <a class="pager-next" href="/models/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent</span></a>
     </nav>
   </footer>
 </article>
@@ -262,6 +264,7 @@ quilzo memory confirm m_f7df1fd760ab</code></pre>
     <li><a href="#turn-it-on">Give an agent memory</a></li>
     <li><a href="#facts">Facts that change</a></li>
     <li><a href="#recall">How recall chooses</a></li>
+    <li><a href="#anywhere">Memory for agents built elsewhere</a></li>
     <li><a href="#poisoning">Why held memory matters</a></li>
     <li><a href="#see-correct-forget">See it, correct it, forget it</a></li>
     <li><a href="#next">Next</a></li>

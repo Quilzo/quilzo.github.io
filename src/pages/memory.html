@@ -6,7 +6,7 @@ description: Let AI agents remember between runs without a hidden profile: memor
 lead: What an agent learns about a person is theirs to see, correct and remove, and what it learnt from somebody else's words waits for a person.
 icon: memory
 screens: Memory
-updated: 2026-10-08
+updated: 2026-10-14
 -->
 
 <div class="definition"><p><strong>Governed memory</strong> is what an agent keeps between runs, held so that the person it is about can see it and so that what somebody else wrote cannot quietly become what the agent believes. Memory is off by default. Each kind an agent keeps, and how long it keeps it, is part of its declaration.</p></div>
@@ -49,6 +49,15 @@ quilzo memory confirm m_f7df1fd760ab</code></pre>
 </li>
 </ol>
 
+<h2 id="facts">Facts that change</h2>
+<p>An agent remembers a fact with a <strong>key</strong> that names what it is about. A newer fact with the same key, about the same person, replaces the older one. The older one is kept, with when it stopped being true and what replaced it, and is no longer recalled:</p>
+<pre><code>{"op": "remember", "input": {"text": "Dana now ships to Porto", "kind": "semantic", "key": "shipping_city"}}</code></pre>
+<pre><code>quilzo memory history helper shipping_city --about dana
+1 Oct 2026 09:00 → 3 Oct 2026 09:00  Dana ships to Lisbon
+3 Oct 2026 09:00 → now               Dana now ships to Porto</code></pre>
+<p>A fact learnt after reading somebody else's words is held, and replaces nothing until a person confirms it. A planted instruction cannot retire a true fact by getting itself remembered.</p>
+<h2 id="recall">How recall chooses</h2>
+<p>Recall ranks what is remembered by the words it shares with the question and by vector similarity, fused by reciprocal rank, with how recent each is as a lighter third signal. It returns only what matches, at most 20 entries and 6,000 characters. It works over the text itself, so it behaves the same whichever model an agent uses, and changing the model loses nothing that was learnt.</p>
 <h2 id="poisoning">Why held memory matters</h2>
 <p>Memory poisoning (OWASP's agentic risk ASI06) works like this: an instruction planted in a page makes an agent write a memory, and the memory steers every later run long after the page is fixed. Here, a memory learnt after reading untrusted content waits for a person instead.</p>
 <p>Each memory also records how far it can be trusted, from what the run had read when it learnt it:</p>

@@ -2,7 +2,7 @@
 title: Today, the first screen after signing in
 short: Today
 seo: Today: what waits for you and what is happening, at sign-in
-description: The first screen after signing in: what waits for you to decide, a brief whose every figure is a link, and counts from your parts of the store.
+description: The first screen after signing in: what waits for you, a brief whose every figure is a link, counts, and questions answered as views you keep.
 lead: What is waiting for you, then what is happening in the parts of the store you work in.
 icon: today
 screens: Today
@@ -40,6 +40,20 @@ updated: 2026-10-14
 <tr><td>Cases open</td><td>Cases</td></tr>
 </tbody></table></div>
 <p>The same grant check that decides the menu decides each count, so an analyst sees findings and cases and no pages, and a count is never shown for a screen you cannot open.</p>
+<h2 id="ask">Ask, and keep the answer</h2>
+<p>Somebody who may use the store's models (the <code>use-models</code> permission, which comes with author) can ask Today a question in their own words. The answer is cards Quilzo draws:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Card</th><th scope="col">Shows</th></tr></thead>
+<tbody>
+<tr><td>Figure</td><td>How many records match, or the total, least or most of a number field</td></tr>
+<tr><td>Table</td><td>The records that match, up to five fields and twenty-five rows</td></tr>
+<tr><td>Bars</td><td>How many matching records have each value of a field</td></tr>
+<tr><td>Waiting</td><td>Decisions waiting for you, optionally of one kind</td></tr>
+<tr><td>Runs</td><td>Agent runs in the last days, by agent and outcome, for whoever manages agents</td></tr>
+</tbody></table></div>
+<figure class="shot"><img src="/images/today/answer.webp" alt="An answer to a question about products: a count, bars by range and a table"><figcaption>An answer: each card says what it counted.</figcaption></figure>
+<p>The model is told the collections you may read, by their fields and choices, and the agents you manage, and it chooses the cards and what each counts. It never sees a record. Each card is checked as a <a href="/structure/">listing</a> is, filled in from what you may read, and says in words what it counted, so you can check the question that was asked of your data as well as the answer. A card naming a collection you may not read, a field its type does not have, or anything outside the cards is left out, and the answer says so.</p>
+<p><strong>Keep on Today</strong> pins the answer as one of <em>Your views</em>, drawn again on every visit from what you may read then; Today keeps twelve. Asking is charged to your own budget through the <a href="/models/">model gateway</a>. Turn it off for everybody with <code>quilzo config set today.ask false</code>.</p>
 <h2 id="start">Where you start</h2>
 <p>Choose <strong>Start on Pages after signing in instead</strong> at the foot of Today to land on Pages, as before; Today stays in the menu, and <strong>Start here after signing in</strong> changes it back. The choice is kept in your browser, like the order of your menu.</p>
 <section class="see-also">

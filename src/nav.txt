@@ -33,6 +33,7 @@ api
 
 ## Content
 make
+research
 pages
 types
 structure

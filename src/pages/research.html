@@ -1,0 +1,100 @@
+<!--
+title: Research projects with claims you can check: numbers linked to code, real citations
+short: Research
+seo: AI for research: claims linked to code, real citations
+description: Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.
+lead: A report whose every number is linked to the code that produced it, and whose every citation is a work that exists and says what the sentence claims.
+icon: research
+screens: Research
+updated: 2026-10-14
+-->
+
+<div class="definition"><p>A <strong>research project</strong> is a question, a plan registered before the data is analysed, computations run in a box with no network, and a report. Every number the report states is a <strong>claim</strong> pinned to the computation that produced it, by the digests of its code, its inputs and its environment. Every citation is a work an open index returned, and the sentence citing it must be supported by what the work says. People and AI agents work on a project the same way, and only people register or amend its plan.</p></div>
+
+<figure class="shot"><img src="/images/research/report.webp" alt="A research project's page: two problems flagged in the report, the rendered report with each number linked to its computation and a numbered citation, and the reference list"><figcaption>Every number links to its computation; the two numbers nobody can trace are marked where they sit. The data here is an invented example; the cited trial is real.</figcaption></figure>
+
+<h2 id="start">Start a project</h2>
+<ol class="steps">
+<li>
+<h3>Ask the question and add the code and data</h3>
+<pre><code>quilzo research new fever-children --question "Do children's fevers clear for longer with ibuprofen than with paracetamol?"
+quilzo research add fever-children analysis.py
+quilzo research add fever-children fever.csv --to data</code></pre>
+<p>Each file is kept in the project's folder and recorded by its SHA-256.</p>
+</li>
+<li>
+<h3>Write the plan, and register it before analysing anything</h3>
+<pre><code>quilzo research plan fever-children plan.md
+quilzo research register fever-children</code></pre>
+<p>Registering seals the plan: its SHA-256 is signed with the audit log's keys, so anybody holding the published keys can check that this plan existed then. A plan registered after the first computation says so. From then on, a change is an amendment with a reason, and the report shows each one and whether the data had been analysed when it was made:</p>
+<pre><code>quilzo research plan fever-children plan-v2.md --why "the outcome is skewed, so compare medians"</code></pre>
+</li>
+</ol>
+
+<h2 id="compute">Compute in a box</h2>
+<p>A script runs in a box with no network, on copies of the code and the inputs named, writing only its own folder:</p>
+<pre><code>quilzo research run fever-children analysis.py --input data/fever.csv</code></pre>
+<p>Python (<code>.py</code>), R (<code>.R</code>) and Julia (<code>.jl</code>) run with the interpreter installed on the machine. The script writes the numbers it found to <code>values.json</code>, and those are the only numbers a report may state:</p>
+<pre><code>{"difference": {"value": 0.33, "unit": "hours"}, "children": {"value": 60, "unit": "children"}}</code></pre>
+<p>The record keeps the code, the inputs and every file it wrote, each by digest, with the interpreter's version, the box, how long it took and the start and end of what it printed.</p>
+<h3 id="rerun">Run it again</h3>
+<pre><code>quilzo research rerun fever-children r-20261014-c40b032d</code></pre>
+<p>A re-run uses the code the computation kept and refuses inputs that changed since. It reports whether every number and every file came out the same. A claim resting on a computation that did not reproduce is a problem in the report.</p>
+<figure class="shot"><img src="/images/research/plan-and-computations.webp" alt="The registered plan with its SHA-256 and signature, the claims table, and the computations: a re-run marked reproduced, with its code, inputs, environment and values"><figcaption>The plan as registered, the claims, and a re-run that reproduced.</figcaption></figure>
+
+<h2 id="claims">Pin numbers as claims</h2>
+<pre><code>quilzo research claim fever-children --run r-20261014-c40b032d
+quilzo research claim fever-children difference ci_low ci_high --run r-20261014-c40b032d</code></pre>
+<p>A claim is a value a computation that finished cleanly wrote down. Pinning a value of the same name again moves the claim to the newer computation.</p>
+
+<h2 id="literature">Cite only works that exist</h2>
+<p>Search the open indexes, then cite a work by its identifier, never by a title somebody remembers:</p>
+<pre><code>quilzo research search "paracetamol ibuprofen fever children randomised trial"
+quilzo research cite fever-children doi:10.1136/bmj.a1302</code></pre>
+<p>A DOI is looked up in OpenAlex, then Crossref; a PubMed ID (<code>pmid:</code>) and an OpenAlex ID in OpenAlex; an arXiv ID (<code>arxiv:</code>) in arXiv. An identifier no index has is refused, so a citation cannot be invented. The work's title, authors, year, venue and abstract are kept, and it is cited as <code>[@hay2008]</code>, or the key given with <code>--key</code>.</p>
+<p>A sentence citing a work must be supported by what Quilzo holds of it: every figure in the sentence must appear there, and most of its informative words, the test chatbot answers pass (see <a href="/chatbot-safety/">Chatbot safety</a>). When the index holds no abstract, or the support is in the full text, quote the passage the sentence rests on:</p>
+<pre><code>quilzo research quote fever-children hay2008 "Combined therapy cleared fever 23 minutes faster than paracetamol alone"</code></pre>
+
+<h2 id="report">Write and check the report</h2>
+<p>The report is Markdown with three marks:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Write</th><th scope="col">For</th></tr></thead>
+<tbody>
+<tr><td><code>{{difference}}</code></td><td>a claim's number, filled in from the computation it is pinned to</td></tr>
+<tr><td><code>{{= 95}}</code></td><td>a number from the design rather than a result: a year, a dose, a confidence level; shown as stated</td></tr>
+<tr><td><code>[@hay2008]</code>, <code>[@a; @b]</code></td><td>a citation, numbered in the order it first appears</td></tr>
+</tbody></table></div>
+<pre><code>quilzo research write fever-children report.md
+quilzo research check fever-children</code></pre>
+<p>The check fails on every number written in the prose instead of linked, every claim or citation that does not exist, every cited sentence its source does not support, and every claim whose re-run did not reproduce. It also notes a plan that was never registered, one registered after the data, and each amendment. A section, figure, table or list number is not a claim, and neither is a number inside a name (p53, COVID-19), an ordinal or an address.</p>
+<pre><code>quilzo research report fever-children -o report.md</code></pre>
+<p>The report as a document: the text with every number and citation filled in, the references, and a provenance table giving, for each number, its computation, the digests of its code and inputs, and its environment.</p>
+
+<h2 id="agents">Research agents</h2>
+<p>An agent holding the <code>research_*</code> operations, through a declaration here or an app at the <a href="/agent-interface/">agent interface</a>, works on a project as a person does:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Operation</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>research_projects</code>, <code>research_project</code></td><td>Read the projects, and one project with its rendered report and what the check found</td></tr>
+<tr><td><code>research_search</code></td><td>Find works in OpenAlex; adds nothing</td></tr>
+<tr><td><code>research_cite</code></td><td>Add a work only if an index has it</td></tr>
+<tr><td><code>research_run</code>, <code>research_claim</code></td><td>Run a script in the box and pin the numbers it wrote</td></tr>
+<tr><td><code>research_write</code></td><td>Write the report; the answer is what the check found</td></tr>
+</tbody></table></div>
+<p>An agent cannot register or amend a plan: that is the researchers' commitment. It cannot put a number in a report except by naming a claim, because any number it writes in the prose is flagged.</p>
+
+<h2 id="limits">Limits and records</h2>
+<ul>
+<li>A computation runs for at most 30 minutes with 4 GiB of memory, with no network, and sees only the files named.</li>
+<li>Looking up and searching works reaches OpenAlex, Crossref and arXiv under the <code>research</code> purpose of the outbound network rules; with the network off, nothing new is cited and everything else works.</li>
+<li>Each act is in the audit log: <code>research.created</code>, <code>.planned</code>, <code>.registered</code>, <code>.amended</code>, <code>.added</code>, <code>.ran</code>, <code>.reran</code>, <code>.claimed</code>, <code>.cited</code>, <code>.quoted</code> and <code>.written</code>, each with the digests involved.</li>
+<li>Reading a project takes a reader's role; changing one takes an author's.</li>
+</ul>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/agents/"><span class="card-icon"><icon name="agents"></icon></span><h3 class="card-title">Agents</h3><p>Declare a research agent and what it may do.</p></a></li>
+<li><a class="card" href="/frameworks/"><span class="card-icon"><icon name="integrations"></icon></span><h3 class="card-title">Agent frameworks</h3><p>Agents built elsewhere, on the same operations.</p></a></li>
+</ul>
+</section>

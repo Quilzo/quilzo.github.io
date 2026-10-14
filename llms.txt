@@ -82,6 +82,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 - [Single sign-on with OIDC and SAML](https://quilzo.github.io/sso/): Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.
 - [SCIM provisioning from Okta and Entra](https://quilzo.github.io/provisioning/): Let Okta, Microsoft Entra or another identity provider create, update, suspend and delete people through SCIM, with their groups mapped to Quilzo roles and jobs.
 - [Passkeys, tokens and sessions](https://quilzo.github.io/passkeys/): Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.
+- [Credentials for programs and CI jobs](https://quilzo.github.io/credentials/): Let CI jobs exchange their platform's identity token for a short Quilzo token, narrow any token with RFC 8693, and bind tokens to a key with DPoP.
 - [Settings and outbound network control](https://quilzo.github.io/settings/): Every setting with what it is for and what it costs, a recorded reason for any weakening, and every outbound connection named, with an offline mode.
 - [Run Quilzo on an isolated or air-gapped network](https://quilzo.github.io/isolated/): Run Quilzo on an isolated network with no outbound connections, a local model, classification markings, encrypted storage and recorded transfers across the gap.
 

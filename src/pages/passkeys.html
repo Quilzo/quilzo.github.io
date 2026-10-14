@@ -6,13 +6,15 @@ description: Sign in with passkeys and no password, issue API tokens scoped belo
 lead: Passkeys for people, scoped tokens for programs, and sessions that end.
 icon: passkeys
 screens: Passkeys
-updated: 2026-10-08
+updated: 2026-10-14
 -->
 
 <figure class="shot"><img src="/images/passkeys/passkeys.webp" alt="The Passkeys screen"><figcaption>Your passkeys, and adding one.</figcaption></figure><p>Everybody manages their own passkeys under <span class="where">Administration › Passkeys</span>. There is no password: no password storage, no reset flow and nothing to stuff.</p><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
-<tr><td>Issue a token</td><td><code>quilzo token issue ci --principal deploy --role publisher --ttl 720h</code></td></tr>
+<tr><td>Issue a token, a week by default</td><td><code>quilzo token issue nightly --principal deploy --role publisher</code></td></tr>
+<tr><td>Let a CI job work with no stored token</td><td><code>quilzo trust add NAME --github OWNER/REPO --as deploy --role publisher</code> (see <a href="/credentials/">program credentials</a>)</td></tr>
+<tr><td>Bind a token to a program's key</td><td><code>quilzo token issue ... --key program.key.pub</code></td></tr>
 <tr><td>Short-lived and read-only, for an integration</td><td><code>quilzo token issue ... --api</code></td></tr>
 <tr><td>Trade a stored token for a short session</td><td><code>quilzo token exchange</code></td></tr>
 <tr><td>List, revoke, find stale ones</td><td><code>quilzo token list / quilzo token revoke ID / quilzo token stale</code></td></tr>

@@ -23,6 +23,7 @@ integrations
 languages
 logging
 make
+research
 media
 members
 memory

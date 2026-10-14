@@ -1,12 +1,12 @@
 <!--
-title: People, roles and access control
+title: People, roles and permissions for working with agents
 short: People and access
-seo: Role-based access control with denies, jobs and expiry
-description: Grant reader, author, publisher or admin on any part of the site, give time-limited jobs, deny where it must win, and explain why anybody can act.
+seo: Roles and agent permissions with denies, jobs and expiry
+description: Grant roles on any part of the site, give jobs and agent permissions such as approve on one agent, deny where it must win, and explain why anybody can act.
 lead: Who may do what, where, and until when.
 icon: people
 screens: People, Access
-updated: 2026-10-08
+updated: 2026-10-14
 -->
 
 <figure class="shot"><img src="/images/people/people.webp" alt="The People screen"><figcaption>People and their access.</figcaption></figure><div class="table-wrap"><table>
@@ -18,5 +18,35 @@ updated: 2026-10-08
 <tr><td>A deny wins wherever it sits</td><td><code>quilzo auth deny sam publisher --on /legal</code></td></tr>
 <tr><td>Why somebody can or cannot</td><td><code>quilzo auth explain sam publish</code></td></tr>
 <tr><td>Take a grant back</td><td><code>quilzo auth revoke sam author --on /help</code></td></tr>
+<tr><td>Let somebody decide one agent's runs</td><td><code>quilzo auth grant mo approve --on /@agents/newsletter</code></td></tr>
 <tr><td>Break-glass when every admin token is lost</td><td><code>quilzo auth recover</code></td></tr>
-</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p><figure class="shot"><img src="/images/people/access.webp" alt="The Access screen"><figcaption>Every binding.</figcaption></figure>
+</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p>
+
+<h2 id="agent-permissions">Permissions for working with agents</h2>
+<p>Roles decide what somebody may do to content. Working with agents brings decisions that are not about content, and each has a permission of its own:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Permission</th><th scope="col">Lets somebody</th><th scope="col">Comes with the role</th></tr></thead>
+<tbody>
+<tr><td><code>run-agents</code></td><td>Start an agent's run</td><td>author</td></tr>
+<tr><td><code>approve</code></td><td>Decide what an agent waits for a person to decide, and calls held through the MCP gateway</td><td>admin</td></tr>
+<tr><td><code>manage-agents</code></td><td>Declare and change agents: what they may do, their credentials, evaluations and lessons</td><td>admin</td></tr>
+<tr><td><code>use-models</code></td><td>Use the store's models: the writing assistant, drafting, and the model gateway</td><td>author</td></tr>
+<tr><td><code>install-features</code></td><td>Install, remove and roll back features</td><td>admin</td></tr>
+</tbody></table></div>
+<p>A store that grants none works as before: each permission comes with the role in the last column. Any of them can also be granted on its own, on part of the store. <code>/@agents</code> is every agent and <code>/@agents/NAME</code> one of them:</p>
+<pre><code>quilzo auth grant mo approve --on /@agents/newsletter
+quilzo auth grant kai manage-agents --on /@agents/newsletter
+quilzo auth grant lee use-models</code></pre>
+<p>On the <span class="where">People</span> screen, a permission is one of the choices beside the roles and jobs. A permission is a binding like any other: it can end by itself, it can be denied (<code>quilzo auth deny ed approve --on /@agents/payroll</code>), and <code>quilzo auth explain</code> names it. Identity provider groups named after a permission grant it over the store, as groups named after a role do.</p>
+
+<h3 id="who-approves">Who approves an agent's actions</h3>
+<p>What an agent waits for is decided by whoever answers for it, not only by administrators:</p>
+<ul>
+<li>the agent's sponsor (see <a href="/agent-identity/">agent identity</a>);</li>
+<li>whoever holds <code>approve</code> on the agent, or on all agents;</li>
+<li>whoever holds <code>approve</code> on the page the action would change.</li>
+</ul>
+<p><span class="where">Approvals</span> shows each person what they may decide, and they open and decide those runs without the rest of the agents studio. A model never decides. Naming an agent's sponsor stays an administrator's decision, because whoever could name the sponsor could name themselves and approve what they changed.</p>
+
+<h3 id="tokens-and-permissions">Tokens and permissions</h3>
+<p>A token caps what its session may do. A permission granted on its own is capped by the token's path and its limits, so a reader's own token can use the approve permission they were given. A read-only token never uses a permission, and a permission that comes from a role is capped by the token's role, as everything else is.</p><figure class="shot"><img src="/images/people/access.webp" alt="The Access screen"><figcaption>Every binding.</figcaption></figure>

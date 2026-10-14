@@ -6,7 +6,7 @@ description: Declare an AI agent's capabilities, budget and autonomy, make it as
 lead: Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.
 icon: agents
 screens: Agents
-updated: 2026-10-13
+updated: 2026-10-14
 -->
 
 <div class="definition"><p>An <strong>agent</strong> in Quilzo is a declaration: what it is for, which capabilities it has, what it may read, how far it may go on its own, and how much one run may spend. A model or a program decides each step. The declaration decides what is allowed, and a hijacked agent still cannot do anything the declaration does not list.</p></div>
@@ -67,7 +67,7 @@ quilzo agent check                           # does every declaration still vali
 </ul>
 <pre><code>quilzo agent approve RUN 3
 quilzo agent decline RUN 3</code></pre>
-<p>A model cannot approve its own work, declare an agent, or widen one. What an agent writes is a draft: it goes live only when somebody publishes (see <a href="/publishing/">Review, publish and roll back</a>).</p>
+<p>The agent's sponsor decides, as does whoever holds the approve permission on the agent or on the page it would change (see <a href="/people/#who-approves">who approves an agent's actions</a>). A model cannot approve its own work, declare an agent, or widen one. What an agent writes is a draft: it goes live only when somebody publishes (see <a href="/publishing/">Review, publish and roll back</a>).</p>
 
 <h3 id="approvals">Everything waiting, in one place</h3>
 <p><span class="where">Approvals</span> lists everything waiting for you to decide: what agent runs are asking, questions they need answered, actions the reviewer stopped, tool calls held for a second person, acts a case is waiting to have approved, a change waiting for your review, and memories held until somebody confirms them. Each says what deciding commits to: reads, acts, writes, sends, pays, deletes, publishes or answers. <code>quilzo approvals</code> lists the same, with the command that decides each.</p>

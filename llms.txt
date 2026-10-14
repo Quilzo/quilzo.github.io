@@ -77,7 +77,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 ## Administration
 
-- [People, roles and access control](https://quilzo.github.io/people/): Grant reader, author, publisher or admin on any part of the site, give time-limited jobs, deny where it must win, and explain why anybody can act.
+- [People, roles and permissions for working with agents](https://quilzo.github.io/people/): Grant roles on any part of the site, give jobs and agent permissions such as approve on one agent, deny where it must win, and explain why anybody can act.
 - [Single sign-on with OIDC and SAML](https://quilzo.github.io/sso/): Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.
 - [SCIM provisioning from Okta and Entra](https://quilzo.github.io/provisioning/): Let Okta, Microsoft Entra or another identity provider create, update, suspend and delete people through SCIM, with their groups mapped to Quilzo roles and jobs.
 - [Passkeys, tokens and sessions](https://quilzo.github.io/passkeys/): Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.

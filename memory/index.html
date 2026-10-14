@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/memory/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-14">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI agent memory: per person, poisoning-resistant, erasable">
 <meta name="twitter:description" content="Let AI agents remember between runs without a hidden profile: memory per person, held when it came from untrusted text, and erasable with a receipt.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Let AI agents remember between runs without a hidden profile: memory per person, held when it came from untrusted text, and erasable with a receipt.","headline":"AI agent memory people can see, correct and erase","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/memory/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/memory/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Memory","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-14","description":"Let AI agents remember between runs without a hidden profile: memory per person, held when it came from untrusted text, and erasable with a receipt.","headline":"AI agent memory people can see, correct and erase","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/memory/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/memory/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Memory","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -205,6 +205,15 @@ quilzo agent run --model concierge "Read the delivery page and remember what it 
 quilzo memory confirm m_f7df1fd760ab</code></pre>
 </li>
 </ol>
+<h2 id="facts">Facts that change<a class="anchor" href="#facts" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An agent remembers a fact with a <strong>key</strong> that names what it is about. A newer fact with the same key, about the same person, replaces the older one. The older one is kept, with when it stopped being true and what replaced it, and is no longer recalled:</p>
+<pre><code>{"op": "remember", "input": {"text": "Dana now ships to Porto", "kind": "semantic", "key": "shipping_city"}}</code></pre>
+<pre><code>quilzo memory history helper shipping_city --about dana
+1 Oct 2026 09:00 → 3 Oct 2026 09:00  Dana ships to Lisbon
+3 Oct 2026 09:00 → now               Dana now ships to Porto</code></pre>
+<p>A fact learnt after reading somebody else's words is held, and replaces nothing until a person confirms it. A planted instruction cannot retire a true fact by getting itself remembered.</p>
+<h2 id="recall">How recall chooses<a class="anchor" href="#recall" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Recall ranks what is remembered by the words it shares with the question and by vector similarity, fused by reciprocal rank, with how recent each is as a lighter third signal. It returns only what matches, at most 20 entries and 6,000 characters. It works over the text itself, so it behaves the same whichever model an agent uses, and changing the model loses nothing that was learnt.</p>
 <h2 id="poisoning">Why held memory matters<a class="anchor" href="#poisoning" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Memory poisoning (OWASP's agentic risk ASI06) works like this: an instruction planted in a page makes an agent write a memory, and the memory steers every later run long after the page is fixed. Here, a memory learnt after reading untrusted content waits for a person instead.</p>
 <p>Each memory also records how far it can be trusted, from what the run had read when it learnt it:</p>
@@ -239,7 +248,7 @@ quilzo memory confirm m_f7df1fd760ab</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/memory.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-14 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/memory.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/workspace/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Let an AI agent run commands without a shell to misuse</span></a>
       <a class="pager-next" href="/models/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">LLM gateway: model routes, budgets in money and a privacy guard</span></a>
@@ -251,6 +260,8 @@ quilzo memory confirm m_f7df1fd760ab</code></pre>
   <h2>On this page</h2>
   <ul>
     <li><a href="#turn-it-on">Give an agent memory</a></li>
+    <li><a href="#facts">Facts that change</a></li>
+    <li><a href="#recall">How recall chooses</a></li>
     <li><a href="#poisoning">Why held memory matters</a></li>
     <li><a href="#see-correct-forget">See it, correct it, forget it</a></li>
     <li><a href="#next">Next</a></li>

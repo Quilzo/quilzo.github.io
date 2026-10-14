@@ -71,6 +71,7 @@ people
 sso
 provisioning
 passkeys
+credentials
 settings
 isolated
 

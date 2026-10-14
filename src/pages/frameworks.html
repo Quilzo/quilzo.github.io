@@ -2,14 +2,14 @@
 title: Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK
 short: Agent frameworks
 seo: MCP gateway for ADK, LangChain, CrewAI and OpenAI agents
-description: Give agents built with Google ADK, Microsoft Agent Framework, LangChain, CrewAI or the OpenAI Agents SDK their tools through Quilzo: pinned, approved and recorded.
-lead: Agents built in any framework reach your tools through Quilzo, and only as your declarations allow.
+description: AI agents built with ADK, Agent Framework, LangChain, CrewAI or OpenAI's Agents SDK get their tools and models through Quilzo, governed and with memory.
+lead: AI agents built in any framework reach your tools and your models through Quilzo, and only as your declarations allow.
 icon: integrations
 screens: Integrations
-updated: 2026-10-13
+updated: 2026-10-14
 -->
 
-<div class="definition"><p>Every major agent framework speaks MCP. Point its MCP client at Quilzo's <strong>governed gateway</strong> instead of at your tool server, and the agent gets only the tools a person pinned, at the role and daily limit you set, with Quilzo's credential injected, calls you chose held for a person, and every call recorded in the signed log. Nothing changes in the agent's code except the address and a token.</p></div>
+<div class="definition"><p>Every major agent framework speaks MCP. Point its MCP client at Quilzo's <strong>governed gateway</strong> instead of at your tool server, and the agent gets only the tools a person pinned, at the role and daily limit you set, with Quilzo's credential injected, calls you chose held for a person, and every call recorded in the signed log. Their models can go through Quilzo too: point the framework's model client at Quilzo's <a href="#models">model gateway</a>, and each call is budgeted, masked and recorded, with the agent's memory. Nothing changes in the agent's code except the address and a token.</p></div>
 <h2 id="gateway">Offer a tool server through the gateway</h2>
 <p>Declare the server, pin the tools you agreed to, and offer it (see <a href="/integrations/">Tools and the MCP gateway</a> for every field):</p>
 <pre><code>quilzo integrations tools tracker
@@ -133,6 +133,46 @@ async def main():
         )
         result = await Runner.run(agent, "Is the checkout timeout already reported?")
         print(result.final_output)
+
+
+asyncio.run(main())</code></pre>
+<h2 id="models">Their models, through the gateway</h2>
+<p>Once an administrator turns on <code>models.remote</code>, each framework's model client takes Quilzo's address and a Quilzo token as its key (see <a href="/models/#agents-anywhere">Agents built anywhere</a>). The model is <code>quilzo</code>, or <code>agent/NAME</code> to bring that agent's memory. The tools above work alongside: a framework calls its own tools as before.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Framework</th><th scope="col">Its model, on Quilzo</th></tr></thead>
+<tbody>
+<tr><td>Google ADK</td><td><code>LiteLlm(model="openai/agent/concierge", api_base="https://quilzo.example.com/v1", api_key=token)</code>, with <code>pip install litellm</code></td></tr>
+<tr><td>Microsoft Agent Framework</td><td><code>OpenAIChatCompletionClient("agent/concierge", base_url="https://quilzo.example.com/v1", api_key=token)</code>, or <code>AnthropicClient(model="agent/concierge", base_url="https://quilzo.example.com", api_key=token)</code></td></tr>
+<tr><td>LangChain and LangGraph</td><td><code>ChatOpenAI(model="agent/concierge", base_url="https://quilzo.example.com/v1", api_key=token)</code></td></tr>
+<tr><td>CrewAI</td><td><code>LLM(model="openai/agent/concierge", base_url="https://quilzo.example.com/v1", api_key=token)</code></td></tr>
+<tr><td>OpenAI Agents SDK</td><td><code>OpenAIResponsesModel(model="agent/concierge", openai_client=AsyncOpenAI(base_url="https://quilzo.example.com/v1", api_key=token))</code></td></tr>
+<tr><td>Anthropic's SDK</td><td><code>Anthropic(base_url="https://quilzo.example.com", api_key=token)</code></td></tr>
+</tbody></table></div>
+<p>Agent Framework's <code>OpenAIChatClient</code> continues conversations it expects the provider to keep, and nothing here keeps conversations, so it is refused with that reason. Use its chat completions or Anthropic client instead.</p>
+<p>For example, an agent built with the OpenAI Agents SDK, with a tool of its own and the memory of the <code>concierge</code> agent:</p>
+<pre><code>import asyncio
+import os
+
+from agents import Agent, OpenAIResponsesModel, Runner, function_tool
+from openai import AsyncOpenAI
+
+
+@function_tool
+def get_weather(city: str) -> str:
+    """The weather for a city."""
+    return "18C and clear in " + city
+
+
+async def main():
+    quilzo = AsyncOpenAI(base_url="https://quilzo.example.com/v1", api_key=os.environ["QUILZO_TOKEN"])
+    agent = Agent(
+        name="Concierge",
+        instructions="Help the person you work for.",
+        tools=[get_weather],
+        model=OpenAIResponsesModel(model="agent/concierge", openai_client=quilzo),
+    )
+    result = await Runner.run(agent, "What is the weather where my team meets on Thursday?")
+    print(result.final_output)
 
 
 asyncio.run(main())</code></pre>

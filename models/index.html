@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>LLM gateway: routes, cost budgets and PII masking | Quilzo</title>
-<meta name="description" content="Route every model call through one gateway: local or hosted models in fallback order, budgets in money, and personal data masked before a prompt leaves.">
+<title>LLM gateway for AI agents: budgets, PII masking, memory | Quilzo</title>
+<meta name="description" content="One gateway for every AI agent&#39;s model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.">
 <link rel="canonical" href="https://quilzo.github.io/models/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131314" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
-<meta property="og:title" content="LLM gateway: routes, cost budgets and PII masking">
-<meta property="og:description" content="Route every model call through one gateway: local or hosted models in fallback order, budgets in money, and personal data masked before a prompt leaves.">
+<meta property="og:title" content="LLM gateway for AI agents: budgets, PII masking, memory">
+<meta property="og:description" content="One gateway for every AI agent&#39;s model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.">
 <meta property="og:url" content="https://quilzo.github.io/models/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-10">
+<meta property="article:modified_time" content="2026-10-14">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="LLM gateway: routes, cost budgets and PII masking">
-<meta name="twitter:description" content="Route every model call through one gateway: local or hosted models in fallback order, budgets in money, and personal data masked before a prompt leaves.">
+<meta name="twitter:title" content="LLM gateway for AI agents: budgets, PII masking, memory">
+<meta name="twitter:description" content="One gateway for every AI agent&#39;s model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-10","description":"Route every model call through one gateway: local or hosted models in fallback order, budgets in money, and personal data masked before a prompt leaves.","headline":"LLM gateway: model routes, budgets in money and a privacy guard","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/models/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/models/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#models-and-chatbots","name":"Models and chatbots","position":2},{"@type":"ListItem","name":"Models and the gateway","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-14","description":"One gateway for every AI agent's model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.","headline":"LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/models/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/models/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#models-and-chatbots","name":"Models and chatbots","position":2},{"@type":"ListItem","name":"Models and the gateway","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -162,12 +162,12 @@
 <article class="guide">
   <header class="guide-head">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Manual</a><span aria-hidden="true">›</span><a href="/#models-and-chatbots">Models and chatbots</a></nav>
-    <h1>LLM gateway: model routes, budgets in money and a privacy guard</h1>
+    <h1>LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent</h1>
     <p class="lead">One gateway for every model call: which model answers, what each caller may spend, and what may leave in a prompt.</p>
     <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Models</span></p>
   </header>
   <div class="prose">
-<div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, analyst triage, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much.</p></div>
+<div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, analyst triage, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much. AI agents built in any framework can use it too, with their memory (see <a href="#agents-anywhere">Agents built anywhere</a>).</p></div>
 <h2 id="one-model">The quickest start: one model<a class="anchor" href="#one-model" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>With no routes declared, every call goes to the model in two environment variables. Any OpenAI-compatible endpoint works: Ollama, vLLM, LM Studio, llama.cpp, or a hosted provider.</p>
 <pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1
@@ -192,7 +192,7 @@ quilzo gateway route add hosted --url https://models.example.com/v1 --model exam
 </li>
 <li>
 <h3 id="set-budgets">Set budgets<a class="anchor" href="#set-budgets" aria-hidden="true" tabindex="-1">#</a></h3>
-<p>Under <strong>Budgets</strong>, give a caller limits per minute, per day and per month: calls, characters, tokens and money. A caller is <code>agent:NAME</code>, <code>person:NAME</code>, <code>chatbot:NAME</code>, or <code>*</code> for everybody without a budget of their own.</p>
+<p>Under <strong>Budgets</strong>, give a caller limits per minute, per day and per month: calls, characters, tokens and money. A caller is <code>agent:NAME</code>, <code>person:NAME</code>, <code>chatbot:NAME</code>, <code>door:NAME</code> for a person's agents built elsewhere, or <code>*</code> for everybody without a budget of their own.</p>
 <pre><code>quilzo gateway budget agent:returns-editor --money-per-day 5.00 --money-per-month 60.00
 quilzo gateway budget agent:concierge --per-minute 20 --tokens-per-day 200000
 quilzo gateway budget '*' --money-per-day 20.00</code></pre>
@@ -223,6 +223,54 @@ today
 <p>A credential caught in a prompt is also a sign that a key was pasted somewhere it should not have been, so the shield's <code>secret-in-prompt</code> playbook opens a case for somebody to look at it and rotate it (see <a href="/shield/">The shield</a>). A hosted route allowed to receive personal data is a posture finding until an agreement is on record.</p>
 <h2 id="invisible-text">Invisible text never reaches a model<a class="anchor" href="#invisible-text" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Characters that draw nothing, such as the Unicode tag block, zero-width characters and bidirectional controls, are taken out of every text before any model reads it. They are a known way to hide an instruction from the person reviewing a page while a model still reads it.</p>
+<h2 id="agents-anywhere">Agents built anywhere<a class="anchor" href="#agents-anywhere" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An AI agent made with any framework talks to its model in OpenAI's shape or Anthropic's. Quilzo answers both at <code>/v1</code> on the admin, through this gateway: the provider's key stays in Quilzo, and each call is charged to the person whose Quilzo token the agent carries, against their budget, with personal data masked and invisible text taken out, and recorded in the signed log. The agent changes its base address and its key, nothing else.</p>
+<ol class="steps">
+<li>
+<h3 id="turn-it-on">Turn it on<a class="anchor" href="#turn-it-on" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>It is off until an administrator turns it on, with a reason the log keeps:</p>
+<pre><code>quilzo config set models.remote true --accept-risk "support agents built in LangGraph use our models"</code></pre>
+<p>It answers only in a store with an access policy, and only for a token whose person may draft (author or above).</p>
+</li>
+<li>
+<h3 id="give-the-agent-a-token-as-its-key">Give the agent a token as its key<a class="anchor" href="#give-the-agent-a-token-as-its-key" aria-hidden="true" tabindex="-1">#</a></h3>
+<pre><code>quilzo token issue support-agent --principal dana --role author</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Client</th><th scope="col">Base address</th><th scope="col">Endpoint</th></tr></thead>
+<tbody>
+<tr><td>OpenAI's chat completions</td><td><code>https://YOUR-ADMIN/v1</code></td><td><code>POST /v1/chat/completions</code></td></tr>
+<tr><td>OpenAI's responses</td><td><code>https://YOUR-ADMIN/v1</code></td><td><code>POST /v1/responses</code></td></tr>
+<tr><td>Anthropic's messages</td><td><code>https://YOUR-ADMIN</code></td><td><code>POST /v1/messages</code></td></tr>
+</tbody></table></div>
+<p>The key goes where each client puts it: <code>Authorization: Bearer</code> or <code>x-api-key</code>. A token an app was given through OAuth for <code>/mcp</code> does not work here, and neither does a browser session.</p>
+</li>
+<li>
+<h3 id="name-a-model">Name a model<a class="anchor" href="#name-a-model" aria-hidden="true" tabindex="-1">#</a></h3>
+<p><code>quilzo</code> is the gateway, which picks the route. <code>agent/NAME</code> names one of this store's agents and brings its memory. <code>GET /v1/models</code> lists what the token may name.</p>
+</li>
+</ol>
+<pre><code>import os
+from openai import OpenAI
+client = OpenAI(base_url="https://quilzo.example.com/v1", api_key=os.environ["QUILZO_TOKEN"])
+reply = client.chat.completions.create(model="agent/concierge",
+    messages=[{"role": "user", "content": "When does my team ship?"}])</code></pre>
+<p>Each framework's own lines are on <a href="/frameworks/#models">Agent frameworks</a>.</p>
+<h3 id="door-memory">Memory at the gateway<a class="anchor" href="#door-memory" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>Naming an agent that declares memory (see <a href="/memory/">Agent memory</a>) works as a run of that agent does, under its declaration as bounded for the token's person:</p>
+<ul>
+<li>With <code>recall</code>, what it remembers about the person is put into the conversation before the model reads it, marked as information and not instructions: what matches what the person said, then its most recent facts about them.</li>
+<li>With <code>remember</code>, the model is offered one tool, <code>quilzo_remember</code>. Quilzo performs it and asks the model again, so the agent gets an answer and never sees the tool. A fact with a key replaces the older one.</li>
+<li>Quilzo cannot see what an agent built elsewhere read, so what it remembers is kept as unreviewed, at most 30 days. When the conversation carried a tool's results or a picture, it is held until a person confirms it, the same rule as a run here.</li>
+</ul>
+<p>The person sees and forgets all of it on the <span class="where">Memory</span> screen, as with any agent.</p>
+<h3 id="door-limits">What it charges, records and refuses<a class="anchor" href="#door-limits" aria-hidden="true" tabindex="-1">#</a></h3>
+<ul>
+<li>A call is charged twice, each against its own budget: to <code>door:PERSON</code>, or to <code>agent:NAME</code> when an agent was named, and to <code>person:PERSON</code>. Set a budget for either as for any caller (see <a href="#routes">Add routes, in fallback order</a>).</li>
+<li>Every call, refusals included, is a <code>model.door</code> record: who it acted for, which agent, the tokens, and the ids of what was recalled and remembered. Never the conversation.</li>
+<li>Refused, with the reason: a picture given as a web address (the provider would fetch it), a tool the provider runs itself, and a responses request continuing a conversation kept elsewhere (<code>previous_response_id</code>). Nothing here keeps conversations, so an agent sends the whole of it each time, as every SDK can.</li>
+<li>A request that asks for a stream gets the whole answer as one stream, in the events its client expects.</li>
+<li>The shield can turn it off for a while (<code>models</code>), as it can the agent interface.</li>
+</ul>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
@@ -232,7 +280,7 @@ today
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-10 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/models.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-14 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/models.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/memory/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">AI agent memory people can see, correct and erase</span></a>
       <a class="pager-next" href="/chatbots/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">A RAG chatbot that answers from your pages and cites its sources</span></a>
@@ -247,6 +295,7 @@ today
     <li><a href="#routes">Add routes, in fallback order</a></li>
     <li><a href="#privacy-guard">The privacy guard</a></li>
     <li><a href="#invisible-text">Invisible text never reaches a model</a></li>
+    <li><a href="#agents-anywhere">Agents built anywhere</a></li>
     <li><a href="#next">Next</a></li>
   </ul>
 </aside>

@@ -23,7 +23,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 ## Models and chatbots
 
-- [LLM gateway: model routes, budgets in money and a privacy guard](https://quilzo.github.io/models/): Route every model call through one gateway: local or hosted models in fallback order, budgets in money, and personal data masked before a prompt leaves.
+- [LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent](https://quilzo.github.io/models/): One gateway for every AI agent's model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.
 - [A RAG chatbot that answers from your pages and cites its sources](https://quilzo.github.io/chatbots/): Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and stores nothing a visitor asks.
 - [Stop prompt injection in RAG: screening, guardrails and poisoned pages](https://quilzo.github.io/chatbot-safety/): Keep planted instructions out of what a RAG chatbot reads, add Lakera Guard or Google Model Armor as a second check, and catch a poisoned page early.
 - [The writing assistant, and typed AI decisions with a confidence gate](https://quilzo.github.io/assistant/): Ask a model to draft pages that every publishing check still applies to, and let it answer typed questions with a confidence threshold below which a person decides.
@@ -32,7 +32,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 - [Connect AI apps and agents to Quilzo over MCP, with OAuth and receipts](https://quilzo.github.io/agent-interface/): Connect Claude, ChatGPT, coding agents or your own agents to Quilzo over MCP, locally or with OAuth 2.1, each acting as one person, with a receipt for every call.
 - [MCP gateway: govern the tools AI agents call, with pinning and approvals](https://quilzo.github.io/integrations/): Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.
-- [Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK](https://quilzo.github.io/frameworks/): Give agents built with Google ADK, Microsoft Agent Framework, LangChain, CrewAI or the OpenAI Agents SDK their tools through Quilzo: pinned, approved and recorded.
+- [Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK](https://quilzo.github.io/frameworks/): AI agents built with ADK, Agent Framework, LangChain, CrewAI or OpenAI's Agents SDK get their tools and models through Quilzo, governed and with memory.
 - [A2A: agent cards and tasks from other vendors' agents](https://quilzo.github.io/a2a/): Publish an A2A agent card that states each agent's capabilities, budget and oversight, and accept A2A 1.0 tasks from other agents, run under your declarations.
 - [AI agent inventory and shadow AI detection](https://quilzo.github.io/fleet/): One inventory of every AI agent, app, tool server and model route, who answers for each, who called what from the signed log, and shadow AI.
 - [The content API and the command line](https://quilzo.github.io/api/): A read-only or writable JSON content API with If-Match, and a command line where every command speaks JSON and exit codes tell a refusal from a failure.

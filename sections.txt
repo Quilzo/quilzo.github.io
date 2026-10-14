@@ -40,6 +40,7 @@ shield
 sso
 start
 structure
+today
 transfer
 types
 vulnerabilities

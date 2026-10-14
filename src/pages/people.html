@@ -19,6 +19,7 @@ updated: 2026-10-14
 <tr><td>Why somebody can or cannot</td><td><code>quilzo auth explain sam publish</code></td></tr>
 <tr><td>Take a grant back</td><td><code>quilzo auth revoke sam author --on /help</code></td></tr>
 <tr><td>Let somebody decide one agent's runs</td><td><code>quilzo auth grant mo approve --on /@agents/newsletter</code></td></tr>
+<tr><td>Give somebody a role an app declares</td><td><code>quilzo auth grant tess lab-samples/technician</code></td></tr>
 <tr><td>Let somebody work on one collection of records</td><td><code>quilzo auth grant tech author --on /@data/samples</code></td></tr>
 <tr><td>Break-glass when every admin token is lost</td><td><code>quilzo auth recover</code></td></tr>
 </tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p>
@@ -50,4 +51,11 @@ quilzo auth grant lee use-models</code></pre>
 <p><span class="where">Approvals</span> shows each person what they may decide, and they open and decide those runs without the rest of the agents studio. A model never decides. Naming an agent's sponsor stays an administrator's decision, because whoever could name the sponsor could name themselves and approve what they changed.</p>
 
 <h3 id="tokens-and-permissions">Tokens and permissions</h3>
-<p>A token caps what its session may do. A permission granted on its own is capped by the token's path and its limits, so a reader's own token can use the approve permission they were given. A read-only token never uses a permission, and a permission that comes from a role is capped by the token's role, as everything else is.</p><figure class="shot"><img src="/images/people/access.webp" alt="The Access screen"><figcaption>Every binding.</figcaption></figure>
+<p>A token caps what its session may do. Signing in with an identity provider or a passkey gives a session the highest role the person holds anywhere, so an analyst, administrator of <code>/@security</code>, signs in as an administrator, and the policy still keeps them to security. A permission granted on its own is capped by the token's path and its limits, so a reader's own token can use the approve permission they were given. A read-only token never uses a permission, and a permission that comes from a role is capped by the token's role, as everything else is.</p>
+<h2 id="app-roles">Roles in an app</h2>
+<p>An app built from a feature has people of its own: a lab has technicians who record samples and a manager who publishes the samples page. The feature declares those roles over its own records, pages and agents (see <a href="/make/#roles">roles a feature declares</a>), and you give them to people:</p>
+<pre><code>quilzo auth roles                              # every role the installed features declare
+quilzo auth grant tess lab-samples/technician --for 90d
+quilzo auth revoke tess lab-samples/technician</code></pre>
+<p>On the <span class="where">People</span> screen, a role in an app is one of the choices, and somebody who holds one sees it as one row with what it grants. A role is the bindings it stands for, each marked with the role, so <code>quilzo auth explain</code> names it, and it is removed whole: revoking one of its bindings by hand changes nothing. An identity provider group can be mapped to one (see <a href="/provisioning/">Provisioning</a>).</p>
+<figure class="shot"><img src="/images/people/access.webp" alt="The Access screen"><figcaption>Every binding.</figcaption></figure>

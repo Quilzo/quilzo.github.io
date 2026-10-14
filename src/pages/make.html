@@ -2,14 +2,14 @@
 title: Make features as packages
 short: Make
 seo: Build features as packages with two-person installs
-description: Declare a feature as one package of types, records, pages, forms, agents and webhooks, read what it can do, and install it or take it back as one decision.
+description: Declare a feature as one package of types, records, pages, forms, agents, webhooks and roles, read what it can do, and install it or take it back as one decision.
 lead: A feature is one package: read what it can do, install it as one decision, and take it back as one.
 icon: make
 screens: Make
-updated: 2026-10-13
+updated: 2026-10-14
 -->
 
-<div class="definition"><p>A <strong>feature</strong> is one file that declares the blocks a piece of work needs: content types, collections of records, listings, forms, pages, menus, chatbots, agents and webhooks. Quilzo checks every block by the same rules it holds that block to anywhere else, shows what the whole can do in plain words, and installs it as one decision.</p></div>
+<div class="definition"><p>A <strong>feature</strong> is one file that declares the blocks a piece of work needs: content types, collections of records, listings, forms, pages, menus, chatbots, agents, webhooks, and roles for the people who work in it. Quilzo checks every block by the same rules it holds that block to anywhere else, shows what the whole can do in plain words, and installs it as one decision.</p></div>
 <h2 id="package">What a package declares</h2>
 <p>Start from a complete example, a lab sample tracker, and edit it:</p>
 <pre><code>quilzo feature example &gt; lab.json
@@ -26,17 +26,18 @@ quilzo feature check lab.json      # what it would store, show, send and change;
 <tr><td><code>chatbots</code></td><td>Chatbots answering from published pages (see <a href="/chatbots/">Chatbots</a>)</td></tr>
 <tr><td><code>agents</code></td><td>Agent declarations, answered for by the person who installs them (see <a href="/agents/">Agents</a>)</td></tr>
 <tr><td><code>webhooks</code></td><td>Endpoints told about events; each gets its signing secret at install, shown once</td></tr>
+<tr><td><code>roles</code></td><td>Roles for the people who work in the feature, over its own records, pages and agents (see <a href="#roles">Roles</a>)</td></tr>
 </tbody></table></div>
-<p>A package has a name, a version, a title and a purpose, and a key it does not know is refused rather than ignored. It carries no code, no secrets and no access grants.</p>
+<p>A package has a name, a version, a title and a purpose, and a key it does not know is refused rather than ignored. It carries no code and no secrets, and grants nobody anything: a role it declares is held by nobody until somebody gives it to them.</p>
 <h2 id="describe">Describe it, or start from a spreadsheet</h2>
-<p>Have a model draft a package from a sentence. The draft holds content blocks only: types, collections, listings, forms, pages, menus and chatbots. Anything that would reach another server, such as an agent, a webhook or a menu entry pointing at another site, is left out and named. A draft that fails the checks is shown its failures once, and nothing is installed until you install it.</p>
+<p>Have a model draft a package from a sentence. The draft holds content blocks only: types, collections, listings, forms, pages, menus and chatbots. Anything that would reach another server, such as an agent, a webhook or a menu entry pointing at another site, is left out and named, and so are roles. A draft that fails the checks is shown its failures once, and nothing is installed until you install it.</p>
 <pre><code>quilzo feature draft "Track the lab's samples and show members which are available" -o lab.json</code></pre>
 <p>Or turn a CSV file or a JSON list of records into a feature. Each column's kind comes from its values: a number, a date, an email address, a link, yes or no, a choice among a few repeated values, or text. A column about people never becomes a choice, so their values stay out of the package. The rows are written beside the package and imported with it:</p>
 <pre><code>quilzo feature from samples.csv
 quilzo feature install samples.json --rows samples.rows.json</code></pre>
 <p>A package carries definitions, never data. The rows are checked against the package's type before anything is installed, and when the feature waits for a second person, its rows wait with it. In the admin, <strong>Make</strong> offers both: <strong>Describe it</strong> and <strong>From a spreadsheet</strong>.</p>
 <h2 id="card">The permission card</h2>
-<p>The card is worked out from the package, never from its author's description: which records it keeps and whether their fields are about people, what its forms collect and for how long, which pages show what and to whom, what it sends and where, and what each agent may do, where it reaches and whether it asks first.</p>
+<p>The card is worked out from the package, never from its author's description: which records it keeps and whether their fields are about people, what its forms collect and for how long, which pages show what and to whom, what it sends and where, what each agent may do, where it reaches and whether it asks first, and what each role it declares lets somebody do.</p>
 <p>One administrator installs a feature that stores and shows ordinary content. Two different administrators must agree when it:</p>
 <ul>
 <li>stores personal data, such as an email address, a name or a phone number;</li>
@@ -47,6 +48,24 @@ quilzo feature install samples.json --rows samples.rows.json</code></pre>
 <li>adds an agent that acts without asking first.</li>
 </ul>
 <p>A model may draft a package. Only a person installs or approves one.</p>
+<h2 id="roles">Roles for the people who work in it</h2>
+<p>A feature can declare roles for the people who work in it, over its own blocks and nothing else. The lab sample example declares two:</p>
+<pre><code>"roles": [
+  {"name": "technician", "title": "Lab technician",
+   "summary": "Records samples as they arrive, are checked out and are used up.",
+   "grants": [{"collection": "samples", "may": "write"}, {"page": "samples", "may": "read"}]},
+  {"name": "manager", "title": "Lab manager",
+   "summary": "Keeps the sample records and publishes the samples page.",
+   "grants": [{"collection": "samples", "may": "write"}, {"page": "samples", "may": "publish"}]}
+]</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A grant names</th><th scope="col">And may</th><th scope="col">Becomes</th></tr></thead>
+<tbody>
+<tr><td>a <code>collection</code> the package declares</td><td><code>read</code> or <code>write</code></td><td>reader or author on <code>/@data/NAME</code></td></tr>
+<tr><td>a <code>page</code> the package declares</td><td><code>read</code>, <code>write</code> or <code>publish</code></td><td>reader, author or publisher on the page and those under it</td></tr>
+<tr><td>an <code>agent</code> the package declares</td><td><code>run</code> or <code>approve</code></td><td>the run-agents or approve permission on <code>/@agents/NAME</code></td></tr>
+</tbody></table></div>
+<p>A role cannot name anything the package did not declare, or administer anything. Its name is the feature's and its own, such as <code>lab-samples/technician</code>, and somebody who may grant access gives it to people (see <a href="/people/#app-roles">roles in an app</a>). An upgrade that changes a role changes what its holders may do, and needs somebody who may grant access when anybody holds it. A version that no longer declares a role, or removing the feature, takes it from everybody. <code>quilzo feature show NAME</code> says who holds each role.</p>
 <h2 id="install">Install, approve, roll back, remove</h2>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>

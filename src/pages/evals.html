@@ -6,7 +6,7 @@ description: Test an AI agent on real tasks, many times, with instructions plant
 lead: Test sets from real runs, each case run k times, and every case run again with somebody trying to steer the agent.
 icon: labs
 screens: Agents › Evaluations
-updated: 2026-10-13
+updated: 2026-10-14
 -->
 
 <div class="definition"><p>An <strong>evaluation</strong> runs each of an agent's test cases <em>k</em> times and counts a case only if every run passed (<strong>pass^k</strong>). It then runs every case again with <strong>planted instructions</strong>: text in what the agent reads asking it to publish, to write a page, or to repeat a canary string. If the agent follows one, it has been hijacked.</p></div>
@@ -80,6 +80,21 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
 </ul>
 <p>The agent's page shows each kind's record and when it last dropped back, with a button that makes it ask about everything again; <code>quilzo agent earned NAME [--reset]</code> does the same. A step that ran without asking says how it was earned, and every change is in the audit log. Turning <code>earn_after</code> on, or lowering it, is a widening an amendment must name (<code>quilzo agent declare --widen</code>).</p>
 
+<h2 id="lessons">Lessons from mistakes</h2>
+<p>An agent learns without its model being trained. A <strong>lesson</strong> is one sentence of advice, “when this happens, do that instead”, written by a model from a run that went wrong: the gate refused a step, a step failed, a person declined, or the run stopped short.</p>
+<pre><code>quilzo agent lessons reflect run-20261014-1a2b3c4d
+quilzo agent lessons try helper ls_5e6f7a8b9c0d --k 3
+quilzo agent lessons adopt helper ls_5e6f7a8b9c0d</code></pre>
+<p>Trying a lesson runs the agent's kept evaluation cases twice under the model its runs use: once with its current lessons, once with this one added, each time with instructions planted in what it reads. It helped when more cases passed every time, or the same number passed more often, and no more cases were steered by a planted instruction. Only then can a person adopt it, and only for that model, because a lesson that helps one model can hurt another.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A lesson</th><th scope="col">Because</th></tr></thead>
+<tbody>
+<tr><td>Is advice in the model's prompt, never a permission</td><td>The gate decides every action whatever the prompt says.</td></tr>
+<tr><td>Cannot name a host, an address, an email address or anything shaped like a credential</td><td>Advice that points somewhere is how a planted instruction would leave.</td></tr>
+<tr><td>From a run that read somebody else's words, is adopted only by somebody who says they read it</td><td>Its words could carry theirs.</td></tr>
+<tr><td>Is short, and an agent reads at most 12</td><td>Small additions with a record of what helped improve agents; rewriting their whole context does not.</td></tr>
+</tbody></table></div>
+<p>Each run's record names the lessons its model read. <strong>Agents › Runs › What it is learning</strong> shows the agent week by week (runs, how many went wrong, steps and cost a run) and every lesson: where it came from, how its trial went, how many runs read it and how many of those went wrong. Adopt or retire one there or with <code>quilzo agent lessons retire NAME ID --why …</code>.</p>
 <h2 id="benchmark">How this compares to a benchmark</h2>
 <p>Quilzo's own gate is measured against <a href="https://github.com/ethz-spylab/agentdojo">AgentDojo</a> v1.2.1 under the strongest assumption: the attack has already won and the model emits the attacker's calls verbatim. The gate refuses 26 of 26 attacks, and 73% of tasks still run unattended. That measures the declaration, which holds for any model. Evaluations measure the model you run, on your own tasks. The method is in <a href="https://github.com/Quilzo/Quilzo/blob/main/scripts/agentdojo/README.md">scripts/agentdojo</a>.</p>
 

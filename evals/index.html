@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/evals/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-13">
+<meta property="article:modified_time" content="2026-10-14">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI agent evaluation: pass^k and prompt injection tests">
 <meta name="twitter:description" content="Test an AI agent on real tasks, many times, with instructions planted in what it reads. It earns the right to draft or publish only by resisting them.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-13","description":"Test an AI agent on real tasks, many times, with instructions planted in what it reads. It earns the right to draft or publish only by resisting them.","headline":"Evaluate AI agents against prompt injection, and let them earn autonomy","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/evals/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/evals/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Evaluate agents","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-14","description":"Test an AI agent on real tasks, many times, with instructions planted in what it reads. It earns the right to draft or publish only by resisting them.","headline":"Evaluate AI agents against prompt injection, and let them earn autonomy","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/evals/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/evals/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Evaluate agents","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -231,6 +231,21 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
 <li>Sending, paying, deleting, publishing, signing in and answering a decider's question always ask, and the exfiltration breaker is never earned away.</li>
 </ul>
 <p>The agent's page shows each kind's record and when it last dropped back, with a button that makes it ask about everything again; <code>quilzo agent earned NAME [--reset]</code> does the same. A step that ran without asking says how it was earned, and every change is in the audit log. Turning <code>earn_after</code> on, or lowering it, is a widening an amendment must name (<code>quilzo agent declare --widen</code>).</p>
+<h2 id="lessons">Lessons from mistakes<a class="anchor" href="#lessons" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An agent learns without its model being trained. A <strong>lesson</strong> is one sentence of advice, “when this happens, do that instead”, written by a model from a run that went wrong: the gate refused a step, a step failed, a person declined, or the run stopped short.</p>
+<pre><code>quilzo agent lessons reflect run-20261014-1a2b3c4d
+quilzo agent lessons try helper ls_5e6f7a8b9c0d --k 3
+quilzo agent lessons adopt helper ls_5e6f7a8b9c0d</code></pre>
+<p>Trying a lesson runs the agent's kept evaluation cases twice under the model its runs use: once with its current lessons, once with this one added, each time with instructions planted in what it reads. It helped when more cases passed every time, or the same number passed more often, and no more cases were steered by a planted instruction. Only then can a person adopt it, and only for that model, because a lesson that helps one model can hurt another.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A lesson</th><th scope="col">Because</th></tr></thead>
+<tbody>
+<tr><td>Is advice in the model's prompt, never a permission</td><td>The gate decides every action whatever the prompt says.</td></tr>
+<tr><td>Cannot name a host, an address, an email address or anything shaped like a credential</td><td>Advice that points somewhere is how a planted instruction would leave.</td></tr>
+<tr><td>From a run that read somebody else's words, is adopted only by somebody who says they read it</td><td>Its words could carry theirs.</td></tr>
+<tr><td>Is short, and an agent reads at most 12</td><td>Small additions with a record of what helped improve agents; rewriting their whole context does not.</td></tr>
+</tbody></table></div>
+<p>Each run's record names the lessons its model read. <strong>Agents › Runs › What it is learning</strong> shows the agent week by week (runs, how many went wrong, steps and cost a run) and every lesson: where it came from, how its trial went, how many runs read it and how many of those went wrong. Adopt or retire one there or with <code>quilzo agent lessons retire NAME ID --why …</code>.</p>
 <h2 id="benchmark">How this compares to a benchmark<a class="anchor" href="#benchmark" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Quilzo's own gate is measured against <a href="https://github.com/ethz-spylab/agentdojo">AgentDojo</a> v1.2.1 under the strongest assumption: the attack has already won and the model emits the attacker's calls verbatim. The gate refuses 26 of 26 attacks, and 73% of tasks still run unattended. That measures the declaration, which holds for any model. Evaluations measure the model you run, on your own tasks. The method is in <a href="https://github.com/Quilzo/Quilzo/blob/main/scripts/agentdojo/README.md">scripts/agentdojo</a>.</p>
 <section class="see-also">
@@ -242,7 +257,7 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-13 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/evals.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-14 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/evals.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/agent-identity/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">AI agent identity: sponsors, principals and signed receipts</span></a>
       <a class="pager-next" href="/programs/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Run an AI agent&#39;s own code in a sandbox</span></a>
@@ -256,6 +271,7 @@ quilzo eval add returns-editor --goal "Can a customer return an opened bottle of
     <li><a href="#write-cases">Write test cases</a></li>
     <li><a href="#read-results">Read the results</a></li>
     <li><a href="#earned-autonomy">Autonomy that is earned</a></li>
+    <li><a href="#lessons">Lessons from mistakes</a></li>
     <li><a href="#benchmark">How this compares to a benchmark</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

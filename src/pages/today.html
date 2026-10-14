@@ -2,15 +2,15 @@
 title: Today, the first screen after signing in
 short: Today
 seo: Today: what waits for you and what is happening, at sign-in
-description: The first screen after signing in: what waits for you to decide, in priority order, and counts from your parts of the store, each linked to its records.
+description: The first screen after signing in: what waits for you to decide, a brief whose every figure is a link, and counts from your parts of the store.
 lead: What is waiting for you, then what is happening in the parts of the store you work in.
 icon: today
 screens: Today
 updated: 2026-10-14
 -->
 
-<figure class="shot"><img src="/images/today/today.webp" alt="The Today screen: one item waiting, and four counts"><figcaption>Today, for an administrator.</figcaption></figure>
-<p>Signing in opens <span class="where">Today</span>, after <a href="/start/">Get started</a> until you dismiss it. It has the same two parts every day, and nothing on it is written by a model.</p>
+<figure class="shot"><img src="/images/today/today.webp" alt="The Today screen: one item waiting, a brief of three sentences whose figures are links, and four counts"><figcaption>Today, for an administrator.</figcaption></figure>
+<p>Signing in opens <span class="where">Today</span>, after <a href="/start/">Get started</a> until you dismiss it. It has the same parts every day: what is waiting for you, a brief when a model is set up, and counts from your parts of the store.</p>
 <h2 id="waiting">Waiting for you</h2>
 <p>Everything you may decide, from every part of Quilzo: what agents asked, calls held for a second person, changes waiting for review, acts on other tools, held memories and features waiting to be installed. It lists the same items as <a href="/agents/#approvals">Approvals</a>, in this order:</p>
 <ol>
@@ -19,6 +19,15 @@ updated: 2026-10-14
 <li>the oldest first.</li>
 </ol>
 <p>The first seven are shown, with a link to the rest on Approvals.</p>
+<h2 id="brief">In brief</h2>
+<p>A few sentences on what matters most, written by the configured model below what is waiting. The model never writes a figure:</p>
+<ul>
+<li>it is given the figures, each with a placeholder, and refers to one only by its placeholder; Quilzo puts in the figure, as a link to its records;</li>
+<li>a sentence with a number or a number word of its own, a link or markup is left out, and at most three are kept;</li>
+<li>it is given counts, kinds of decision and agents' names, never anything somebody else wrote: no agent's question, visitor's message, finding's title or log line.</li>
+</ul>
+<p>The brief says which model wrote it and when, and whether the figures have changed since. It is written on your first visit of the day and again when the figures change, at most every half hour, through the <a href="/models/">model gateway</a>, and charged to your own budget. Somebody whose only access is to read the evidence and the log, such as an auditor, is not given one. Turn briefs off for everybody with:</p>
+<pre><code>quilzo config set today.brief false</code></pre>
 <h2 id="happening">In your parts of the store</h2>
 <p>A count for each part of the store you can open, taken when the screen is loaded. Each count links to the records it counts:</p>
 <div class="table-wrap"><table>

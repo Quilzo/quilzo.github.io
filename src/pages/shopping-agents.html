@@ -1,0 +1,43 @@
+<!--
+title: Selling to shopping agents
+short: Shopping agents
+seo: Agentic commerce catalogue: UCP and a product feed
+description: Let shopping agents find what a shop sells, through a product feed and UCP catalog search, lookup and product, priced from published records.
+lead: Shopping agents search the shop's catalogue and read its prices from the records you publish, and nothing else.
+icon: inventory_2
+screens: Settings
+updated: 2026-10-16
+-->
+
+<div class="definition"><p>The <strong>catalogue</strong> is one listing, named in configuration, that says what the site sells. Shopping agents read it as a feed at <code>/catalogue.json</code>, or search it over the <strong>Universal Commerce Protocol</strong> (UCP), the protocol shopping agents use to find products and prices.</p></div>
+<h2 id="catalogue">Name the catalogue</h2>
+<pre><code>quilzo config set site.catalogue catalogue</code></pre>
+<p>The listing decides which products are in it, in what order, and which fields are public, exactly as it does on a page. <code>/catalogue.json</code> serves it with the licence terms beside the products.</p>
+<h2 id="ucp">Turn on UCP</h2>
+<pre><code>quilzo config set site.base_url https://shop.example
+quilzo config set ucp.catalogue true</code></pre>
+<p>The site then answers:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Path</th><th scope="col">What it is</th></tr></thead>
+<tbody>
+<tr><td><code>GET /.well-known/ucp</code></td><td>The shop's profile: the protocol version (2026-08-25), the REST endpoint, and the two capabilities it offers, catalog search and catalog lookup. Cacheable for five minutes.</td></tr>
+<tr><td><code>POST /ucp/catalog/search</code></td><td>Products matching a query, categories or a price range, a page at a time.</td></tr>
+<tr><td><code>POST /ucp/catalog/lookup</code></td><td>Products by id, variant id or SKU, up to 50 at once, saying which identifiers matched nothing.</td></tr>
+<tr><td><code>POST /ucp/catalog/product</code></td><td>One product in full.</td></tr>
+</tbody></table></div>
+<pre><code>curl -s https://shop.example/ucp/catalog/search \
+  -H 'Content-Type: application/json' -H 'Request-Id: 1' \
+  -H 'UCP-Agent: profile="https://platform.example/.well-known/ucp"' \
+  -d '{"query": "brass pen", "pagination": {"limit": 10}}'</code></pre>
+<p>Every request carries a <code>Request-Id</code> and a <code>UCP-Agent</code> header, as the protocol requires. Every product in the listing can be found, not only the listing's first page, and prices are read from the published records on each request: a price published a minute ago is the price an agent is told. A request field the protocol does not define is refused.</p>
+<p><code>site.base_url</code> must be the site's https address: every URL an agent is given is built from it, and platforms fetch only https. Plain http is accepted for <code>127.0.0.1</code> and <code>localhost</code>, for trying it out.</p>
+<h2 id="limits">What it does not do</h2>
+<p>Agents read; nothing is written. There are no carts, no checkout and no orders: an agent that finds something sends its person to the product's page to buy it. Nothing an agent sends changes a price, and nothing is kept from its requests.</p>
+<p>Each address may make <code>ucp.requests.per_hour</code> requests an hour (600 by default), with a tenth of that at once. A request past it is answered <code>429</code> with how long to wait. When <code>crawl.keys</code> is set, a signed request is held to the same licence terms here as on every other path.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/types/"><span class="card-icon"><icon name="types"></icon></span><h3 class="card-title">Types and listings</h3><p>The listing the catalogue is.</p></a></li>
+<li><a class="card" href="/payments/"><span class="card-icon"><icon name="agents"></icon></span><h3 class="card-title">Agents that pay</h3><p>The other side: your own agents buying.</p></a></li>
+</ul>
+</section>

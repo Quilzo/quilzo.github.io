@@ -56,6 +56,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 - [Review, publish, schedule and roll back](https://quilzo.github.io/publishing/): Review what changed, let the accessibility and content gates run, publish by moving a pointer, promote through environments, and roll back at once.
 - [Analytics, A/B tests and personalisation](https://quilzo.github.io/growth/): Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.
+- [Selling to shopping agents](https://quilzo.github.io/shopping-agents/): Let shopping agents find what a shop sells, through a product feed and UCP catalog search, lookup and product, priced from published records.
 - [Import, export, replicas and the permanent web](https://quilzo.github.io/transfer/): Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.
 
 ## Security operations

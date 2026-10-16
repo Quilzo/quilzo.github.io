@@ -48,6 +48,7 @@ members
 ## Release
 publishing
 growth
+shopping-agents
 transfer
 
 ## Security operations

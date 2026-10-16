@@ -6,7 +6,7 @@ description: Research projects for people and AI agents: a plan registered befor
 lead: A report whose every number is linked to the code that produced it, and whose every citation is a work that exists and says what the sentence claims.
 icon: research
 screens: Research
-updated: 2026-10-14
+updated: 2026-10-16
 -->
 
 <div class="definition"><p>A <strong>research project</strong> is a question, a plan registered before the data is analysed, computations run in a box with no network, and a report. Every number the report states is a <strong>claim</strong> pinned to the computation that produced it, by the digests of its code, its inputs and its environment. Every citation is a work an open index returned, and the sentence citing it must be supported by what the work says. People and AI agents work on a project the same way, and only people register or amend its plan.</p></div>
@@ -46,6 +46,17 @@ quilzo research register fever-children</code></pre>
 <pre><code>quilzo research claim fever-children --run r-20261014-c40b032d
 quilzo research claim fever-children difference ci_low ci_high --run r-20261014-c40b032d</code></pre>
 <p>A claim is a value a computation that finished cleanly wrote down. Pinning a value of the same name again moves the claim to the newer computation.</p>
+
+<h2 id="ideas">Ideas: hypotheses, judged, then tested</h2>
+<p>A model can propose hypotheses the project could test; Quilzo keeps them apart from the evidence until computations and a person have spoken:</p>
+<pre><code>quilzo research ideas fever-children --count 3
+quilzo research ideas fever-children</code></pre>
+<p>Each round asks for new hypotheses, a sceptical critique of each, and judges the ideas in pairs, each pair twice, once each way round: a judge that prefers whichever hypothesis it read first splits, and a split is a tie. Standings are fitted to all the matches at once, so the order they were played in changes nothing, and an idea is ranked once it has played three. A repeat of a standing idea is refused; an idea and its opposite are two ideas. An idea whose text addresses the judge rather than the question is held, shown with the reason, and never judged. Judging uses the gateway consumer <code>research:ideas:judge</code>, so it can be a different model from the one proposing; <code>--play</code> judges the pairs owed without proposing more.</p>
+<p>A rating is what judges thought of the text. What an idea is worth is what testing it showed:</p>
+<pre><code>quilzo research run fever-children analysis.py --input data/trial.csv --idea i-1ddaff81
+quilzo research claim fever-children difference --run r-20261014-c40b032d
+quilzo research ideas fever-children --verdict i-1ddaff81 --outcome supported --claim difference</code></pre>
+<p>Every idea is listed with the computations that ran it, whether they finished and reproduced, and the verdict a person recorded: supported, refuted or inconclusive, resting only on claims those computations made. An idea proposed after the first computation ran is marked, because testing a hypothesis on the data that suggested it is exploration, not confirmation. A model never writes the plan or a verdict. Reading the ideas needs only view; a round needs use-models as well as edit-draft.</p>
 
 <h2 id="literature">Cite only works that exist</h2>
 <p>Search the open indexes, then cite a work by its identifier, never by a title somebody remembers:</p>

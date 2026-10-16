@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/research/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-14">
+<meta property="article:modified_time" content="2026-10-16">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI for research: claims linked to code, real citations">
 <meta name="twitter:description" content="Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-14","description":"Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.","headline":"Research projects with claims you can check: numbers linked to code, real citations","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/research/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/research/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Research","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-16","description":"Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.","headline":"Research projects with claims you can check: numbers linked to code, real citations","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/research/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/research/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Research","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -206,6 +206,16 @@ quilzo research register fever-children</code></pre>
 <pre><code>quilzo research claim fever-children --run r-20261014-c40b032d
 quilzo research claim fever-children difference ci_low ci_high --run r-20261014-c40b032d</code></pre>
 <p>A claim is a value a computation that finished cleanly wrote down. Pinning a value of the same name again moves the claim to the newer computation.</p>
+<h2 id="ideas">Ideas: hypotheses, judged, then tested<a class="anchor" href="#ideas" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A model can propose hypotheses the project could test; Quilzo keeps them apart from the evidence until computations and a person have spoken:</p>
+<pre><code>quilzo research ideas fever-children --count 3
+quilzo research ideas fever-children</code></pre>
+<p>Each round asks for new hypotheses, a sceptical critique of each, and judges the ideas in pairs, each pair twice, once each way round: a judge that prefers whichever hypothesis it read first splits, and a split is a tie. Standings are fitted to all the matches at once, so the order they were played in changes nothing, and an idea is ranked once it has played three. A repeat of a standing idea is refused; an idea and its opposite are two ideas. An idea whose text addresses the judge rather than the question is held, shown with the reason, and never judged. Judging uses the gateway consumer <code>research:ideas:judge</code>, so it can be a different model from the one proposing; <code>--play</code> judges the pairs owed without proposing more.</p>
+<p>A rating is what judges thought of the text. What an idea is worth is what testing it showed:</p>
+<pre><code>quilzo research run fever-children analysis.py --input data/trial.csv --idea i-1ddaff81
+quilzo research claim fever-children difference --run r-20261014-c40b032d
+quilzo research ideas fever-children --verdict i-1ddaff81 --outcome supported --claim difference</code></pre>
+<p>Every idea is listed with the computations that ran it, whether they finished and reproduced, and the verdict a person recorded: supported, refuted or inconclusive, resting only on claims those computations made. An idea proposed after the first computation ran is marked, because testing a hypothesis on the data that suggested it is exploration, not confirmation. A model never writes the plan or a verdict. Reading the ideas needs only view; a round needs use-models as well as edit-draft.</p>
 <h2 id="literature">Cite only works that exist<a class="anchor" href="#literature" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Search the open indexes, then cite a work by its identifier, never by a title somebody remembers:</p>
 <pre><code>quilzo research search "paracetamol ibuprofen fever children randomised trial"
@@ -255,7 +265,7 @@ quilzo research check fever-children</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-14 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/research.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-16 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/research.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/make/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Make features as packages</span></a>
       <a class="pager-next" href="/evolve/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Evolve: search over programs with a sealed evaluator</span></a>
@@ -269,6 +279,7 @@ quilzo research check fever-children</code></pre>
     <li><a href="#start">Start a project</a></li>
     <li><a href="#compute">Compute in a box</a></li>
     <li><a href="#claims">Pin numbers as claims</a></li>
+    <li><a href="#ideas">Ideas: hypotheses, judged, then tested</a></li>
     <li><a href="#literature">Cite only works that exist</a></li>
     <li><a href="#report">Write and check the report</a></li>
     <li><a href="#agents">Research agents</a></li>

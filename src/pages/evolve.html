@@ -1,0 +1,44 @@
+<!--
+title: Evolve: search over programs with a sealed evaluator
+short: Evolve
+seo: Evolve programs with an LLM against a sealed evaluator
+description: Let a model improve a program generation by generation, scored by an evaluator in its own box that the programs cannot read, with a test set and a journal.
+lead: A model proposes changes, each program runs in a box, and an evaluator it cannot reach decides which survive.
+icon: research
+screens: none; the command line
+updated: 2026-10-16
+-->
+
+<div class="definition"><p><strong>Evolve</strong> searches for a better program the way AlphaEvolve does: a model proposes changes to the best programs so far, each changed program runs, an evaluator scores what it wrote, and the best are kept for the next generation. In Quilzo the program and the evaluator run in separate boxes, so a program can never read the cases it is scored on or write its own score.</p></div>
+<h2 id="try">Try it on the demonstration</h2>
+<p><code>quilzo demo</code> writes a packing bench to <code>examples/evolve/</code>: a program that packs a day's orders into 2 kg parcels first fit, which takes six parcels where five will do, and a judge that checks a packing and counts its parcels. With a model set up on the Models screen:</p>
+<pre><code>quilzo evolve run --program examples/evolve/pack.py \
+  --evaluator examples/evolve/judge.py \
+  --input examples/evolve/orders.json --eval-input examples/evolve/orders.json \
+  --test-input examples/evolve/test/orders.json \
+  --test-eval-input examples/evolve/test/orders.json \
+  --weight parcels=-1 --generations 10 \
+  --task "Pack the orders into as few 2 kg parcels as possible"</code></pre>
+<p>Each generation prints a line as it is recorded, and the end prints the best program's scores and where it was written.</p>
+<h2 id="contract">The program and the evaluator</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Side</th><th scope="col">Receives</th><th scope="col">Writes</th></tr></thead>
+<tbody>
+<tr><td>The program (<code>--program</code>, Python, R or Julia)</td><td>Its <code>--input</code> files, by name</td><td>Files in <code>output/</code>, at most 16, each at most 1 MiB</td></tr>
+<tr><td>The evaluator (<code>--evaluator</code>)</td><td>The program's files in <code>candidate/</code>, and its own <code>--eval-input</code> files</td><td><code>output/metrics.json</code>: one flat object of numbers, such as <code>{"parcels": 5}</code></td></tr>
+</tbody></table></div>
+<p>The seed program may mark the part to change between <code># EVOLVE-BLOCK-START</code> and <code># EVOLVE-BLOCK-END</code>; without markers the whole program changes. The model answers with SEARCH/REPLACE blocks applied to the program it was shown first.</p>
+<p>The score is the mean of the metrics, or with <code>--weight NAME=NUMBER</code> their weighted sum; a negative weight counts against, so <code>--weight parcels=-1</code> asks for fewer parcels and <code>--weight accuracy=1 --weight time=-0.1</code> trades a little speed for accuracy.</p>
+<h2 id="seal">What the seal does, and what it does not</h2>
+<p>Each run gets a box with no network, its own empty workspace and home, and limits on time (<code>--timeout</code>), memory per process (<code>--memory</code>) and disk (<code>--disk</code>). The only thing that crosses from a program to the evaluator is the files it wrote in <code>output/</code>, and a run that goes over a limit is not scored at all. Keep the evaluator and its files outside <code>/usr</code>, <code>/lib</code>, <code>/bin</code>, <code>/sbin</code> and <code>/etc</code>, which every box can read; a search refuses them there. The evaluator must read what a program wrote as data and never run it, or the program would run beside the evaluator's cases.</p>
+<p>The search still adapts to the evaluator's cases: their scores decide what survives, for every generation, so the best program's score says how well it fits those cases. A <strong>test set</strong> says how it does on others: <code>--test-input</code> files the programs run on and <code>--test-eval-input</code> files the evaluator judges with, used once on the final population and never to choose. Report the test score, not the selection score.</p>
+<h2 id="record">The record</h2>
+<p>Each search has a directory under the store's <code>evolve/</code> with <code>journal.jsonl</code>, one line per generation written before the population changes: the diff the model proposed, the program's digest, how its run ended, its metrics and whether it was kept. The first line holds the random seed (<code>--seed</code>, or one chosen and recorded) and the model; the same seed makes the same choices of which program to change. Every program that ran is kept in <code>programs/</code> by its digest, and the best in <code>best.py</code> or <code>--out</code>, written only when the search succeeds. The audit log records the start, with the digests of the program, the evaluator and its cases, and the end, with the best program, its scores and the journal's digest. <code>--json</code> prints the result as JSON.</p>
+<p>A search needs the <code>use-models</code> permission, since every generation is a model call, and is charged to the model gateway as consumer <code>evolve</code>.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/research/"><span class="card-icon"><icon name="research"></icon></span><h3 class="card-title">Research</h3><p>Computations in the box, claims and citations.</p></a></li>
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3 class="card-title">Models</h3><p>The gateway a search is charged to.</p></a></li>
+</ul>
+</section>

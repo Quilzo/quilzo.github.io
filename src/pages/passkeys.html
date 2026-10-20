@@ -6,10 +6,10 @@ description: Sign in with passkeys and no password, issue API tokens scoped belo
 lead: Passkeys for people, scoped tokens for programs, and sessions that end.
 icon: passkeys
 screens: Passkeys
-updated: 2026-10-14
+updated: 2026-10-20
 -->
 
-<figure class="shot"><img src="/images/passkeys/passkeys.webp" alt="The Passkeys screen"><figcaption>Your passkeys, and adding one.</figcaption></figure><p>Everybody manages their own passkeys under <span class="where">Administration › Passkeys</span>. There is no password: no password storage, no reset flow and nothing to stuff.</p><div class="table-wrap"><table>
+<figure class="shot"><img src="/images/passkeys/passkeys.webp" alt="The Passkeys screen"><figcaption>Your passkeys, and adding one.</figcaption></figure><p>Everybody manages their own passkeys under <span class="where">Administration › Passkeys</span>. There is no password: no password storage, no reset flow and nothing to stuff.</p><p>Every passkey asks for the PIN, fingerprint or face that unlocks it, when it is added and at every sign-in, so one passkey is two factors. Touch ID, Windows Hello and a phone's screen lock already do this; a security key that has no PIN needs one set before it works here.</p><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
 <tr><td>Issue a token, a week by default</td><td><code>quilzo token issue nightly --principal deploy --role publisher</code></td></tr>

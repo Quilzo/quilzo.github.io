@@ -6,7 +6,7 @@ description: Review what changed, let the accessibility and content gates run, p
 lead: Publishing moves a pointer, so it cannot half-complete and rolling back is instant.
 icon: publishing
 screens: Review, Publishing, History, Notes
-updated: 2026-10-11
+updated: 2026-10-20
 -->
 
 <ol class="steps">
@@ -16,7 +16,7 @@ updated: 2026-10-11
 <tr><td>Who has agreed</td><td><code>quilzo review status</code></td></tr>
 <tr><td>Agree to it (authors cannot)</td><td><code>quilzo review approve --note "..."</code></td></tr>
 <tr><td>Require approvals</td><td><code>quilzo review require 2</code></td></tr>
-</tbody></table></div></li>
+</tbody></table></div><p>Approving takes the publish permission. Anything a model wrote needs a person's approval before it is published, whatever the number required; the person whose agent run wrote it approves it only when nobody else may publish.</p></li>
 <li><h3>Let the gates run</h3><p>Accessibility, provenance, claims that need substantiating, image rights and content scans stop a publish rather than warn. Each can be overridden with a reason, and the reason is recorded.</p><pre><code>quilzo a11y
 quilzo provenance check
 quilzo brand check

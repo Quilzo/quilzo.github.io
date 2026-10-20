@@ -9,7 +9,7 @@ screens: Provisioning
 updated: 2026-10-20
 -->
 
-<figure class="shot"><img src="/images/provisioning/provisioning.webp" alt="The Provisioning screen"><figcaption>SCIM provisioning.</figcaption></figure><ol class="steps"><li><h3>Issue the SCIM token</h3><pre><code>quilzo scim token</code></pre><p>Give the identity provider the SCIM address and this token.</p></li>
+<figure class="shot"><img src="/images/provisioning/provisioning.webp" alt="The Provisioning screen"><figcaption>SCIM provisioning.</figcaption></figure><ol class="steps"><li><h3>Issue the SCIM token</h3><pre><code>quilzo scim token</code></pre><p>Give the identity provider the SCIM address and this token. It lasts 180 days; <code>--days</code> sets up to 365. <code>quilzo scim status</code>, the Provisioning screen and the posture check <code>scim.token-expiring</code> say when it ends, starting a month ahead. Make the next one before then: an ended token is refused, and that stops the identity provider taking access away too.</p></li>
 <li><h3>Say what each group means</h3><pre><code>quilzo scim map Editors author
 quilzo scim map Security analyst
 quilzo scim map "Lab technicians" lab-samples/technician</code></pre><p>A group means a role, a permission, a job, or a role an installed feature declares.</p></li>

@@ -28,15 +28,28 @@ quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model lla
 quilzo gateway route add hosted --url https://models.example.com/v1 --model example-large \
   --key-env EXAMPLE_API_KEY --price-in 2.50 --price-out 10.00</code></pre>
 <p>Mark a route <code>--personal</code> only if it may receive personal data: it runs on your own machines, or you have an agreement with the provider to process it. Text for any other route has personal data masked on the way out. A picture, such as a screenshot an agent takes, cannot be checked, so it goes only to a route marked <code>--personal</code>.</p>
+<p>A route's model is sent the conversation and the caller's output limit, and nothing else unless the route asks for it, because current frontier models refuse fields older ones took. Set these only for a model that needs them, under <strong>What this model is sent</strong> or with:</p>
+<table>
+<thead><tr><th scope="col">Option</th><th scope="col">Sends</th></tr></thead>
+<tbody>
+<tr><td><code>--max-tokens-field max_completion_tokens</code></td><td>The output limit under that name, for OpenAI's reasoning models. The default is <code>max_tokens</code>.</td></tr>
+<tr><td><code>--temperature T</code>, <code>--top-p P</code></td><td>That sampling on every call. Claude's current models refuse both.</td></tr>
+<tr><td><code>--timeout 300s</code></td><td>Nothing; it lets one call take that long, for a model that reasons at length. The default is two minutes.</td></tr>
+<tr><td><code>--auto-tool-choice</code></td><td><code>auto</code> where a caller forces a tool, for a model that refuses a forced choice.</td></tr>
+</tbody>
+</table>
+<pre><code>quilzo gateway route add reasoning --url https://models.example.com/v1 --model example-reasoner \
+  --key-env EXAMPLE_API_KEY --max-tokens-field max_completion_tokens --timeout 300s</code></pre>
 </li>
 <li>
 <h3>Check the order</h3>
-<p>Routes are tried in the order shown. A route that fails three times in a row rests for a minute while the next one answers. <strong>Try first</strong> moves a route to the top.</p>
+<p>Routes are tried in the order shown. A route that cannot answer three times in a row rests for a minute while the next one answers: no reply, a timeout, a rate limit, an outage, or a key or account the provider refused. A request the provider refuses as malformed (400, 413 or 422) goes back to the caller with the provider's reason; it is not sent to the next route, which would refuse it alike, and it rests nothing. <strong>Try first</strong> moves a route to the top.</p>
 <figure class="shot"><img src="/images/models/models.webp" alt="The Models screen with two routes: on-premises, which may receive personal data, and hosted, where personal data is masked and the key is not set"><figcaption>Two routes. Personal data is sent to the first and masked for the second.</figcaption></figure>
 </li>
 <li>
 <h3>Set budgets</h3>
-<p>Under <strong>Budgets</strong>, give a caller limits per minute, per day and per month: calls, characters, tokens and money. A caller is <code>agent:NAME</code>, <code>person:NAME</code>, <code>chatbot:NAME</code>, <code>door:NAME</code> for a person's agents built elsewhere, or <code>*</code> for everybody without a budget of their own.</p>
+<p>Under <strong>Budgets</strong>, give a caller limits per minute, per day and per month: calls, characters, tokens and money. A caller is <code>agent:NAME</code>, <code>person:NAME</code>, <code>chatbot:NAME</code>, <code>door:NAME</code> for a person's agents built elsewhere, <code>reviewer:AGENT</code> for the reviews of an agent's actions, or <code>*</code> for everybody without a budget of their own. A name may be the email address single sign-on gives a person, such as <code>person:dana@quilzo.io</code>.</p>
+<p>Whatever a person sets off is charged to <code>person:NAME</code> as well as to its own caller: agent runs and their reviews, drafts, features, evolution, research ideas and reflections. A budget on a person bounds all of it.</p>
 <pre><code>quilzo gateway budget agent:returns-editor --money-per-day 5.00 --money-per-month 60.00
 quilzo gateway budget agent:concierge --per-minute 20 --tokens-per-day 200000
 quilzo gateway budget '*' --money-per-day 20.00</code></pre>
@@ -119,6 +132,8 @@ reply = client.chat.completions.create(model="agent/concierge",
 <li>A call is charged twice, each against its own budget: to <code>door:PERSON</code>, or to <code>agent:NAME</code> when an agent was named, and to <code>person:PERSON</code>. Set a budget for either as for any caller (see <a href="#routes">Add routes, in fallback order</a>).</li>
 <li>Every call, refusals included, is a <code>model.door</code> record: who it acted for, which agent, the tokens, and the ids of what was recalled and remembered. Never the conversation.</li>
 <li>Refused, with the reason: a picture given as a web address (the provider would fetch it), a tool the provider runs itself, and a responses request continuing a conversation kept elsewhere (<code>previous_response_id</code>). Nothing here keeps conversations, so an agent sends the whole of it each time, as every SDK can.</li>
+<li>A request the route's provider refuses as malformed is answered with the provider's status (400, 413 or 422) and its reason, as the caller's to fix.</li>
+<li>A tool choice naming one tool is passed on as that tool, in every client's shape; a choice of a tool the request does not offer is refused.</li>
 <li>A request that asks for a stream gets the whole answer as one stream, in the events its client expects.</li>
 <li>The shield can turn it off for a while (<code>models</code>), as it can the agent interface.</li>
 </ul>

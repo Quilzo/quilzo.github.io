@@ -22,7 +22,7 @@ updated: 2026-10-20
 <tr><td>Give somebody a role an app declares</td><td><code>quilzo auth grant tess lab-samples/technician</code></td></tr>
 <tr><td>Let somebody work on one collection of records</td><td><code>quilzo auth grant tech author --on /@data/samples</code></td></tr>
 <tr><td>Break-glass when every admin token is lost</td><td><code>quilzo auth recover</code></td></tr>
-</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p>
+</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p><p>A grant or a deny on part of the site holds everywhere: on the command line, in the admin and over the machine interface. A list, a search or a diff shows only the pages the person may read, a publish is refused if it would change a page they may not publish, and an export is refused if it would hold a page or a collection they may not read.</p>
 
 <h2 id="agent-permissions">Permissions for working with agents</h2>
 <p>Roles decide what somebody may do to content. Working with agents brings decisions that are not about content, and each has a permission of its own:</p>

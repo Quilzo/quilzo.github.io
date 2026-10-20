@@ -231,7 +231,7 @@ quilzo integrations import billing-openapi.json --uses getInvoice,listInvoices -
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">A call</th><th scope="col">Is</th></tr></thead>
 <tbody>
-<tr><td>Built</td><td>Only from what its operation declares. An argument it does not declare is refused rather than passed on, and path values are escaped.</td></tr>
+<tr><td>Built</td><td>Only from what its operation declares. An argument it does not declare is refused rather than passed on, and path values are escaped. A JSON body is checked against its schema first: types, required fields, enumerations, lengths and bounds. A field the schema does not list is refused unless the schema sets <code>additionalProperties</code>.</td></tr>
 <tr><td>Sent</td><td>Over https, to the declared host and nothing else, with no redirects followed.</td></tr>
 <tr><td>Answered</td><td>Up to 32 KiB of the response, or the status and the start of the error.</td></tr>
 <tr><td>Changed</td><td>An operation edited after it was pinned is refused until somebody pins it again.</td></tr>

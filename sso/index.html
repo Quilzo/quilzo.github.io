@@ -178,7 +178,7 @@ quilzo oidc configure --provider microsoft --tenant TENANT
 quilzo oidc configure --issuer https://idp.example.com --client-id ID
 quilzo oidc check</code></pre><p>A sign-in finishes only in the browser that started it: starting one sets a cookie the provider's answer must come back with, so a sign-in somebody else began cannot be completed in your browser to put you in their account.</p><h2 id="saml">SAML<a class="anchor" href="#saml" aria-hidden="true" tabindex="-1">#</a></h2><pre><code>quilzo saml presets
 quilzo saml add okta --metadata metadata.xml --url https://quilzo.example.com --preset okta
-quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have checked it</code></pre><p>Presets: Okta, Microsoft Entra, Google, JumpCloud, OneLogin, PingOne, AD FS and Keycloak. Single sign-on can be required, with named break-glass accounts that keep working when the provider does not.</p>
+quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have checked it</code></pre><p>Presets: Okta, Microsoft Entra, Google, JumpCloud, OneLogin, PingOne, AD FS and Keycloak. Single sign-on can be required, with named break-glass accounts that keep working when the provider does not. A requirement holds on every request, not only at the sign-in form: a session that did not come through the provider is refused, whichever way it was made.</p>
   </div>
   <footer class="guide-foot">
     <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/sso.html">Edit this page on GitHub</a></p>

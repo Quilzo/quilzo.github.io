@@ -6,7 +6,7 @@ description: Sign in with passkeys and no password, issue API tokens scoped belo
 lead: Passkeys for people, scoped tokens for programs, and sessions that end.
 icon: passkeys
 screens: Passkeys
-updated: 2026-10-20
+updated: 2026-10-21
 -->
 
 <figure class="shot"><img src="/images/passkeys/passkeys.webp" alt="The Passkeys screen"><figcaption>Your passkeys, and adding one.</figcaption></figure><p>Everybody manages their own passkeys under <span class="where">Administration › Passkeys</span>. There is no password: no password storage, no reset flow and nothing to stuff.</p><p>Every passkey asks for the PIN, fingerprint or face that unlocks it, when it is added and at every sign-in, so one passkey is two factors. Touch ID, Windows Hello and a phone's screen lock already do this; a security key that has no PIN needs one set before it works here.</p><div class="table-wrap"><table>
@@ -19,3 +19,11 @@ updated: 2026-10-20
 <tr><td>Trade a stored token for a short session</td><td><code>quilzo token exchange</code></td></tr>
 <tr><td>List, revoke, find stale ones</td><td><code>quilzo token list / quilzo token revoke ID / quilzo token stale</code></td></tr>
 </tbody></table></div><p>A token can carry less than the person holding it, never more. Session limits are organisation policy (see <a href="/compliance/#policy">NIST parameters</a>).</p>
+<h2 id="two-factors">Two factors on every request</h2>
+<p>Every request a person makes to the admin carries two factors (NIST SP 800-63B-4, AAL2). A passkey is two on its own, and a sign-in through single sign-on counts as two. A token is one: anybody holding a copy has it.</p>
+<ul>
+<li>Signing in by pasting a token gives a session that reaches nothing but <strong>Confirm it's you</strong>. Confirming with your passkey replaces it with a session that came through both.</li>
+<li>A token sent in an <code>Authorization</code> header is a program's, and the admin's screens refuse it. Programs use the command line on the store's machine, the API or the agent interface.</li>
+<li>A passkey is added from a session already signed in with two factors, so a copied token cannot add its holder's own passkey.</li>
+</ul>
+<p>An installation is given fourteen days from the first time this version starts. Until then a token alone still reaches the admin, every page says when that ends, and the security posture names everybody with access who has no passkey and no single sign-on (<code>mfa.no-second-factor</code>). In those days a token's session may add its first passkey.</p>

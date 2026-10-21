@@ -25,20 +25,19 @@ sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre>
 <p><a href="/install/">Install and run it for real</a> covers the container image and running it as a service.</p>
 </li>
 <li>
-<h3>Create a store</h3>
+<h3>Create a store, with you as its administrator</h3>
 <p>A store is a directory holding everything Quilzo keeps: content, history, access policy, credentials, agents and the audit log. Back up that one directory and you have backed up everything.</p>
-<pre><code>quilzo init</code></pre>
+<pre><code>quilzo init --admin you</code></pre>
 <pre class="out"><code>created .quilzo
-  content is immutable and addressed by hash; publishing moves a pointer</code></pre>
-<p>Commands use <code>.quilzo</code> in the current directory. Pass <code>--root DIR</code> to use another.</p>
+  content is immutable and addressed by hash; publishing moves a pointer
+The first administrator is you. Start the admin (quilzo serve) and open this, once, to add their passkey:
+http://localhost:8080/enrol/qzenrol_…</code></pre>
+<p>Keep that link for step 5: it adds your passkey, once, within a day, and does nothing else. Commands use <code>.quilzo</code> in the current directory. Pass <code>--root DIR</code> to use another.</p>
 </li>
 <li>
-<h3>Make yourself an administrator and get a sign-in token</h3>
-<p>Access is granted before any credential exists. The policy names who may do what, and a token only proves you are one of those people.</p>
-<pre><code>quilzo auth grant you admin
-quilzo token issue you --principal you --role admin</code></pre>
-<pre class="out"><code>granted admin to you on /
-  you can now: view, edit-draft, publish, rollback, grant, manage-tokens on /</code></pre>
+<h3>Get a token for the command line</h3>
+<p>The admin takes a passkey; the command line takes a token, which proves you are the person the policy names.</p>
+<pre><code>quilzo token issue you --principal you --role admin</code></pre>
 <p>The token is printed once, and only its hash is stored. Save it to <code>~/.quilzo/token</code> with mode 0600 and the command line uses it from then on; the command line also accepts <code>--token</code> or <code>QUILZO_TOKEN</code>. If you lose it, issue another and revoke the first with <code>quilzo token revoke ID</code>.</p>
 </li>
 <li>
@@ -53,8 +52,8 @@ quilzo token issue you --principal you --role admin</code></pre>
 <h3>Open the admin and sign in</h3>
 <p>The admin listens on loopback by default. <code>--open</code> opens it in your browser.</p>
 <pre><code>quilzo serve --open</code></pre>
-<p>Paste the token from step 3. A token is one factor, and the admin takes two: add a passkey under <span class="where">Administration › Passkeys</span> straight away, or connect single sign-on (see <a href="/sso/">Single sign-on</a>). A new installation gives you fourteen days to do it; after that, a token alone only gets as far as <strong>Confirm it's you</strong> (see <a href="/passkeys/#two-factors">two factors on every request</a>).</p>
-<figure class="shot"><img src="/images/start/signin.webp" alt="The Quilzo admin sign-in screen, asking for a token"><figcaption>Signing in with the token. There is no password to store or reset.</figcaption></figure>
+<p>Open the link from step 2 and add your passkey; then sign in with it. Use <code>localhost</code>, not <code>127.0.0.1</code>: a passkey belongs to a name, and a browser refuses an address. Every request a person makes to the admin carries two factors, and a passkey is two on its own (see <a href="/passkeys/#two-factors">two factors on every request</a>). To bring in other people, grant them a role and give them a link of their own (see <a href="/passkeys/#enrolment">a link that adds somebody's passkey</a>), or connect single sign-on (see <a href="/sso/">Single sign-on</a>).</p>
+<figure class="shot"><img src="/images/start/enrol.webp" alt="The page an enrolment link opens: it adds a passkey for you, once, until a time the next day, and asks for a name for the passkey"><figcaption>The link from step 2. There is no password to store or reset.</figcaption></figure>
 </li>
 </ol>
 

@@ -19,6 +19,13 @@ updated: 2026-10-21
 <tr><td>Trade a stored token for a short session</td><td><code>quilzo token exchange</code></td></tr>
 <tr><td>List, revoke, find stale ones</td><td><code>quilzo token list / quilzo token revoke ID / quilzo token stale</code></td></tr>
 </tbody></table></div><p>A token can carry less than the person holding it, never more. Session limits are organisation policy (see <a href="/compliance/#policy">NIST parameters</a>).</p>
+<h2 id="sessions">How long a sign-in lasts</h2>
+<ul>
+<li>A sign-in to the admin lasts <code>session.max</code>: eight hours by default, twelve at most.</li>
+<li>With nobody using the page for <code>session.idle</code>, it ends: an hour by default, between five minutes and an hour, and never switched off. Anybody who can grant access is signed out after fifteen minutes at most.</li>
+<li>Typing, clicking and scrolling count as use. The page warns a minute before the end, and afterwards offers to sign in again with your passkey without leaving it, so nothing you were writing is lost. Only your own passkey carries on with your page.</li>
+<li>A site member signs in again after thirty days, or after two weeks unused.</li>
+</ul>
 <h2 id="two-factors">Two factors on every request</h2>
 <p>Every request a person makes to the admin carries two factors (NIST SP 800-63B-4, AAL2). A passkey is two on its own, and a sign-in through single sign-on counts as two when the identity provider says it used two (see <a href="/sso/#second-factor">when a sign-in counts as two factors</a>); otherwise it waits for your passkey. A token is one: anybody holding a copy has it.</p>
 <ul>

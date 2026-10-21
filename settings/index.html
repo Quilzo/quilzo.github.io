@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/settings/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-21">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Settings that explain themselves, and outbound network control">
 <meta name="twitter:description" content="Every setting with what it is for and what it costs, a recorded reason for any weakening, and every outbound connection named, with an offline mode.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Every setting with what it is for and what it costs, a recorded reason for any weakening, and every outbound connection named, with an offline mode.","headline":"Settings and outbound network control","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/settings/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/settings/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#administration","name":"Administration","position":2},{"@type":"ListItem","name":"Settings and network","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-21","description":"Every setting with what it is for and what it costs, a recorded reason for any weakening, and every outbound connection named, with an offline mode.","headline":"Settings and outbound network control","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/settings/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/settings/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#administration","name":"Administration","position":2},{"@type":"ListItem","name":"Settings and network","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -179,13 +179,14 @@
 <tr><td>Everything settable, and its default</td><td><code>quilzo config show</code></td></tr>
 <tr><td>What one is for, and what it costs</td><td><code>quilzo config explain KEY</code></td></tr>
 <tr><td>Change one; a weakening needs a reason</td><td><code>quilzo config set KEY VALUE --accept-risk "why"</code></td></tr>
+<tr><td>A weakening, or fewer approvals, waits for a second administrator</td><td><code>quilzo pending approve ID</code> (see <a href="/people/#two-administrators">changes that take two administrators</a>)</td></tr>
 <tr><td>Put one back</td><td><code>quilzo config unset KEY</code></td></tr>
 <tr><td>What this may connect to, and why</td><td><code>quilzo network</code></td></tr>
 </tbody></table></div>
 <h2 id="network">Every connection, named<a class="anchor" href="#network" aria-hidden="true" tabindex="-1">#</a></h2><p>Each outbound connection has a declared purpose (models, integrations, connectors, webhooks, guardrail, fleet and others) and is checked against the address actually dialled, after DNS. Set <code>network.mode</code> to <code>offline</code> and every connection that would leave the host is refused before a packet is sent, naming the feature that wanted it; loopback still works, so a local model keeps working.</p>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/settings.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-21 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/settings.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/credentials/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Credentials for programs and CI jobs</span></a>
       <a class="pager-next" href="/isolated/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Run Quilzo on an isolated or air-gapped network</span></a>

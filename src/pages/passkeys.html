@@ -20,13 +20,13 @@ updated: 2026-10-21
 <tr><td>List, revoke, find stale ones</td><td><code>quilzo token list / quilzo token revoke ID / quilzo token stale</code></td></tr>
 </tbody></table></div><p>A token can carry less than the person holding it, never more. Session limits are organisation policy (see <a href="/compliance/#policy">NIST parameters</a>).</p>
 <h2 id="two-factors">Two factors on every request</h2>
-<p>Every request a person makes to the admin carries two factors (NIST SP 800-63B-4, AAL2). A passkey is two on its own, and a sign-in through single sign-on counts as two. A token is one: anybody holding a copy has it.</p>
+<p>Every request a person makes to the admin carries two factors (NIST SP 800-63B-4, AAL2). A passkey is two on its own, and a sign-in through single sign-on counts as two when the identity provider says it used two (see <a href="/sso/#second-factor">when a sign-in counts as two factors</a>); otherwise it waits for your passkey. A token is one: anybody holding a copy has it.</p>
 <ul>
 <li>Signing in by pasting a token gives a session that reaches nothing but <strong>Confirm it's you</strong>. Confirming with your passkey replaces it with a session that came through both.</li>
 <li>A token sent in an <code>Authorization</code> header is a program's, and the admin's screens refuse it. Programs use the command line on the store's machine, the API or the agent interface.</li>
 <li>A passkey is added from a session already signed in with two factors, so a copied token cannot add its holder's own passkey.</li>
 </ul>
-<p>An installation is given fourteen days from the first time this version starts. Until then a token alone still reaches the admin, every page says when that ends, and the security posture names everybody with access who has no passkey and no single sign-on (<code>mfa.no-second-factor</code>). In those days a token's session may add its first passkey.</p>
+<p>An installation is given fourteen days from the first time this version starts. Until then a token alone still reaches the admin, every page says when that ends, and the security posture names everybody with access who has no passkey and no single sign-on that can say it used two factors (<code>mfa.no-second-factor</code>). In those days a token's session may add its first passkey.</p>
 <h2 id="enrolment">A link that adds somebody's passkey</h2>
 <p>Somebody without a passkey is given a link that adds one: <code>quilzo auth enrol dana</code> on the command line, or <strong>Give a passkey enrolment link</strong> beside them under <span class="where">Administration › People</span>.</p>
 <pre><code>quilzo auth enrol dana</code></pre>
@@ -44,7 +44,7 @@ updated: 2026-10-21
 <p>Failed passkey sign-ins to an account lock out the places they come from, not the person. The places you sign in from (the networks you have signed in from before) keep working, so nobody can lock you out by failing in your name.</p>
 <ul>
 <li>Ten failures from places the account is not used from lock those places out of it for thirty minutes, and each lockout after that doubles, up to a day.</li>
-<li>A hundred failures in a row, from anywhere, turn passkey sign-in to the account off until you sign in with single sign-on or another administrator unlocks it.</li>
+<li>A hundred failures in a row, from anywhere, turn passkey sign-in to the account off until you sign in with a single sign-on that says it used two factors, or another administrator unlocks it.</li>
 <li>Each lockout is recorded and raises the <code>account-locked</code> sign-in signal. At your next sign-in you are told how many failures came before it.</li>
 <li>Every other way in is slowed per address as well: the delay doubles after five failures in an hour, up to fifteen minutes, and nothing is accepted past a hundred. Throttling cannot be switched off. Its settings (<code>auth.throttle.after</code>, <code>.ceiling</code>, <code>.base</code>, <code>.max</code> and <code>auth.lockout.alert</code>) are held between bounds: at most ten free failures, a ceiling of 10 to 100, delays of a second to an hour, and an alert by twenty failures.</li>
 </ul>

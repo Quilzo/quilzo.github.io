@@ -53,7 +53,7 @@ quilzo token issue you --principal you --role admin</code></pre>
 <h3>Open the admin and sign in</h3>
 <p>The admin listens on loopback by default. <code>--open</code> opens it in your browser.</p>
 <pre><code>quilzo serve --open</code></pre>
-<p>Paste the token from step 3. Once you are in, you can add a passkey under <span class="where">Administration › Passkeys</span> or connect single sign-on (see <a href="/sso/">Single sign-on</a>).</p>
+<p>Paste the token from step 3. A token is one factor, and the admin takes two: add a passkey under <span class="where">Administration › Passkeys</span> straight away, or connect single sign-on (see <a href="/sso/">Single sign-on</a>). A new installation gives you fourteen days to do it; after that, a token alone only gets as far as <strong>Confirm it's you</strong> (see <a href="/passkeys/#two-factors">two factors on every request</a>).</p>
 <figure class="shot"><img src="/images/start/signin.webp" alt="The Quilzo admin sign-in screen, asking for a token"><figcaption>Signing in with the token. There is no password to store or reset.</figcaption></figure>
 </li>
 </ol>

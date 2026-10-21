@@ -6,7 +6,7 @@ description: Sign in to the Quilzo admin with Google Workspace, Microsoft Entra 
 lead: Sign in through the identity provider you already run.
 icon: sso
 screens: Single sign-on
-updated: 2026-10-08
+updated: 2026-10-21
 -->
 
 <figure class="shot"><img src="/images/sso/sso.webp" alt="The Single sign-on screen"><figcaption>Identity providers.</figcaption></figure><h2 id="oidc">OpenID Connect</h2><pre><code>quilzo oidc configure --provider google --domain example.com
@@ -15,3 +15,18 @@ quilzo oidc configure --issuer https://idp.example.com --client-id ID
 quilzo oidc check</code></pre><p>A sign-in finishes only in the browser that started it: starting one sets a cookie the provider's answer must come back with, so a sign-in somebody else began cannot be completed in your browser to put you in their account.</p><h2 id="saml">SAML</h2><pre><code>quilzo saml presets
 quilzo saml add okta --metadata metadata.xml --url https://quilzo.example.com --preset okta
 quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have checked it</code></pre><p>Presets: Okta, Microsoft Entra, Google, JumpCloud, OneLogin, PingOne, AD FS and Keycloak. Single sign-on can be required, with named break-glass accounts that keep working when the provider does not. A requirement holds on every request, not only at the sign-in form: a session that did not come through the provider is refused, whichever way it was made.</p>
+<h2 id="second-factor">When a sign-in counts as two factors</h2>
+<p>A single sign-on counts as two factors only when the identity provider says so, about a sign-in no older than <code>session.max</code>. Anything else is one factor: the session waits at <strong>Confirm it's you</strong> for the person's passkey. Somebody without a passkey here is given a <a href="/passkeys/#enrolment">link that adds one</a>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Provider</th><th scope="col">Counts as two factors when</th><th scope="col">To set up</th></tr></thead>
+<tbody>
+<tr><td>Microsoft Entra ID, OIDC</td><td>the ID token's <code>amr</code> names <code>mfa</code></td><td>In the app registration, <span class="where">Token configuration › Add optional claim › ID</span>: add <code>amr</code> and <code>auth_time</code></td></tr>
+<tr><td>Google, OIDC</td><td>Google's <code>amr</code> names <code>mfa</code>, which it says for verified apps</td><td>Nothing; otherwise people confirm with a passkey here</td></tr>
+<tr><td>Okta, Auth0 and others, OIDC</td><td><code>amr</code> names <code>mfa</code>, or <code>acr</code> is a value you name</td><td><code>quilzo oidc configure ... --mfa-acr urn:okta:loa:2fa:any</code>, if you want it asked for</td></tr>
+<tr><td>Keycloak, OIDC</td><td><code>acr</code> is a level you name, or <code>amr</code> names <code>mfa</code></td><td>Map levels to <code>acr</code>, or add the AMR mapper, and name the level: <code>--mfa-acr 2</code></td></tr>
+<tr><td>Okta, SAML</td><td>the attribute <code>amr</code> holds <code>mfa</code></td><td>In the app's attribute statements, add <code>amr</code> with the value <code>session.amr</code></td></tr>
+<tr><td>JumpCloud, OneLogin, PingOne, Keycloak, SAML</td><td>the assertion's context is <code>https://refeds.org/profile/mfa</code></td><td>Have the provider send that context for this app when it used a second factor</td></tr>
+<tr><td>Microsoft Entra ID, AD FS, SAML</td><td>the <code>authnmethodsreferences</code> attribute holds <code>multipleauthn</code></td><td>Entra: add the optional claim <code>amr</code> with the property <code>include_granular_amr</code></td></tr>
+<tr><td>Google Workspace, SAML</td><td>never: Google does not say</td><td>Nothing; every sign-in is confirmed with a passkey here</td></tr>
+</tbody></table></div>
+<p>A SAML sign-in asks the provider for nothing: one that cannot meet a requested context refuses the sign-in. An OIDC sign-in asks for one no older than <code>session.max</code> (<code>max_age</code>), and for <code>amr</code> and <code>auth_time</code> by name where the provider reads the claims parameter. <code>quilzo oidc check</code> says whether it does, and <code>quilzo oidc status</code> what your provider needs.</p>

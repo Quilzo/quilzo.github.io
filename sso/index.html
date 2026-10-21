@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/sso/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-21">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Single sign-on: Okta, Entra ID, Google Workspace, SAML, OIDC">
 <meta name="twitter:description" content="Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.","headline":"Single sign-on with OIDC and SAML","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/sso/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/sso/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#administration","name":"Administration","position":2},{"@type":"ListItem","name":"Single sign-on","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-21","description":"Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.","headline":"Single sign-on with OIDC and SAML","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/sso/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/sso/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#administration","name":"Administration","position":2},{"@type":"ListItem","name":"Single sign-on","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -179,9 +179,24 @@ quilzo oidc configure --issuer https://idp.example.com --client-id ID
 quilzo oidc check</code></pre><p>A sign-in finishes only in the browser that started it: starting one sets a cookie the provider's answer must come back with, so a sign-in somebody else began cannot be completed in your browser to put you in their account.</p><h2 id="saml">SAML<a class="anchor" href="#saml" aria-hidden="true" tabindex="-1">#</a></h2><pre><code>quilzo saml presets
 quilzo saml add okta --metadata metadata.xml --url https://quilzo.example.com --preset okta
 quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have checked it</code></pre><p>Presets: Okta, Microsoft Entra, Google, JumpCloud, OneLogin, PingOne, AD FS and Keycloak. Single sign-on can be required, with named break-glass accounts that keep working when the provider does not. A requirement holds on every request, not only at the sign-in form: a session that did not come through the provider is refused, whichever way it was made.</p>
+<h2 id="second-factor">When a sign-in counts as two factors<a class="anchor" href="#second-factor" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A single sign-on counts as two factors only when the identity provider says so, about a sign-in no older than <code>session.max</code>. Anything else is one factor: the session waits at <strong>Confirm it's you</strong> for the person's passkey. Somebody without a passkey here is given a <a href="/passkeys/#enrolment">link that adds one</a>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Provider</th><th scope="col">Counts as two factors when</th><th scope="col">To set up</th></tr></thead>
+<tbody>
+<tr><td>Microsoft Entra ID, OIDC</td><td>the ID token's <code>amr</code> names <code>mfa</code></td><td>In the app registration, <span class="where">Token configuration › Add optional claim › ID</span>: add <code>amr</code> and <code>auth_time</code></td></tr>
+<tr><td>Google, OIDC</td><td>Google's <code>amr</code> names <code>mfa</code>, which it says for verified apps</td><td>Nothing; otherwise people confirm with a passkey here</td></tr>
+<tr><td>Okta, Auth0 and others, OIDC</td><td><code>amr</code> names <code>mfa</code>, or <code>acr</code> is a value you name</td><td><code>quilzo oidc configure ... --mfa-acr urn:okta:loa:2fa:any</code>, if you want it asked for</td></tr>
+<tr><td>Keycloak, OIDC</td><td><code>acr</code> is a level you name, or <code>amr</code> names <code>mfa</code></td><td>Map levels to <code>acr</code>, or add the AMR mapper, and name the level: <code>--mfa-acr 2</code></td></tr>
+<tr><td>Okta, SAML</td><td>the attribute <code>amr</code> holds <code>mfa</code></td><td>In the app's attribute statements, add <code>amr</code> with the value <code>session.amr</code></td></tr>
+<tr><td>JumpCloud, OneLogin, PingOne, Keycloak, SAML</td><td>the assertion's context is <code>https://refeds.org/profile/mfa</code></td><td>Have the provider send that context for this app when it used a second factor</td></tr>
+<tr><td>Microsoft Entra ID, AD FS, SAML</td><td>the <code>authnmethodsreferences</code> attribute holds <code>multipleauthn</code></td><td>Entra: add the optional claim <code>amr</code> with the property <code>include_granular_amr</code></td></tr>
+<tr><td>Google Workspace, SAML</td><td>never: Google does not say</td><td>Nothing; every sign-in is confirmed with a passkey here</td></tr>
+</tbody></table></div>
+<p>A SAML sign-in asks the provider for nothing: one that cannot meet a requested context refuses the sign-in. An OIDC sign-in asks for one no older than <code>session.max</code> (<code>max_age</code>), and for <code>amr</code> and <code>auth_time</code> by name where the provider reads the claims parameter. <code>quilzo oidc check</code> says whether it does, and <code>quilzo oidc status</code> what your provider needs.</p>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/sso.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-21 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/sso.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/people/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">People, roles and permissions for working with agents</span></a>
       <a class="pager-next" href="/provisioning/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">SCIM provisioning from Okta and Entra</span></a>
@@ -194,6 +209,7 @@ quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have c
   <ul>
     <li><a href="#oidc">OpenID Connect</a></li>
     <li><a href="#saml">SAML</a></li>
+    <li><a href="#second-factor">When a sign-in counts as two factors</a></li>
   </ul>
 </aside>
 </div>

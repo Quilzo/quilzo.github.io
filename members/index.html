@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/members/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-21">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Website member accounts with passkeys, and moderated boards">
 <meta name="twitter:description" content="Let visitors have accounts that sign in with passkeys, invite them, write on moderated boards, and erase an account completely on request.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Let visitors have accounts that sign in with passkeys, invite them, write on moderated boards, and erase an account completely on request.","headline":"Member accounts and boards","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/members/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/members/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Members and boards","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-21","description":"Let visitors have accounts that sign in with passkeys, invite them, write on moderated boards, and erase an account completely on request.","headline":"Member accounts and boards","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/members/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/members/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Members and boards","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -173,7 +173,7 @@
     <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Members</span><span class="chip">Boards</span></p>
   </header>
   <div class="prose">
-<figure class="shot"><img src="/images/members/members.webp" alt="The Members screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Members, before accounts are turned on.</figcaption></figure><p>Turn accounts on with the setting <code>site.members</code>. Members sign in with passkeys, and no password. A recovery code, for a member who has lost their passkeys, opens the account to add a new passkey and nothing else, for fifteen minutes; adding it signs them in as a passkey sign-in would. Each code works once.</p>
+<figure class="shot"><img src="/images/members/members.webp" alt="The Members screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Members, before accounts are turned on.</figcaption></figure><p>Turn accounts on with the setting <code>site.members</code>. Members sign in with passkeys, and no password. A recovery code, for a member who has lost their passkeys, opens the account to add a new passkey and nothing else, for fifteen minutes; adding it signs them in as a passkey sign-in would. Each code works once.</p><p>Members get the same <a href="/passkeys/#lockout">lockout</a> as the admin: ten failed sign-ins from places a member does not sign in from lock those places out of the account, and a hundred in a row turn its passkeys off until a recovery code is used. A locked-out sign-in gets the same answer as any failure, so it tells nobody that the account exists. The account page tells the member how many failed sign-ins came before their last one.</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
@@ -185,7 +185,7 @@
 </tbody></table></div><figure class="shot"><img src="/images/members/boards.webp" alt="The Boards screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Making a board.</figcaption></figure>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/members.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-21 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/members.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/languages/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Languages and translations</span></a>
       <a class="pager-next" href="/publishing/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Review, publish, schedule and roll back</span></a>

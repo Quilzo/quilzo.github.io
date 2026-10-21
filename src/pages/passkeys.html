@@ -40,3 +40,19 @@ updated: 2026-10-21
 <li><code>quilzo auth enrol dana --revoke</code> ends a link nobody has used.</li>
 </ul>
 <p>A passkey belongs to the address it was made on, and a browser refuses an IP address as one, so open the admin as <code>http://localhost:8080</code> rather than <code>127.0.0.1</code>, or set <code>admin.base_url</code> and links carry it.</p>
+<h2 id="lockout">Too many failed sign-ins</h2>
+<p>Failed passkey sign-ins to an account lock out the places they come from, not the person. The places you sign in from (the networks you have signed in from before) keep working, so nobody can lock you out by failing in your name.</p>
+<ul>
+<li>Ten failures from places the account is not used from lock those places out of it for thirty minutes, and each lockout after that doubles, up to a day.</li>
+<li>A hundred failures in a row, from anywhere, turn passkey sign-in to the account off until you sign in with single sign-on or another administrator unlocks it.</li>
+<li>Each lockout is recorded and raises the <code>account-locked</code> sign-in signal. At your next sign-in you are told how many failures came before it.</li>
+<li>Every other way in is slowed per address as well: the delay doubles after five failures in an hour, up to fifteen minutes, and nothing is accepted past a hundred. Throttling cannot be switched off. Its settings (<code>auth.throttle.after</code>, <code>.ceiling</code>, <code>.base</code>, <code>.max</code> and <code>auth.lockout.alert</code>) are held between bounds: at most ten free failures, a ceiling of 10 to 100, delays of a second to an hour, and an alert by twenty failures.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Do</th></tr></thead>
+<tbody>
+<tr><td>See who is locked out</td><td><span class="where">Security operations › Sign-ins</span>, under <strong>Locked out</strong></td></tr>
+<tr><td>Let somebody sign in again from everywhere</td><td><strong>Unlock</strong> beside them there</td></tr>
+<tr><td>Get back the only administrator, at the store's machine</td><td><code>quilzo auth unlock dana</code>, with the short-lived token <code>quilzo auth recover</code> issues when no other is left</td></tr>
+</tbody></table></div>
+<p>Nobody unlocks themselves on the Sign-ins screen, and somebody who administers the whole site is unlocked only by another administrator of the whole site.</p>

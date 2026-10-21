@@ -6,7 +6,7 @@ description: Automate responses that watch, ask or act; see sign-ins by office, 
 lead: When this happens, do this: watch, ask, or act.
 icon: automations
 screens: Automations, Sign-ins
-updated: 2026-10-08
+updated: 2026-10-21
 -->
 
 <figure class="shot"><img src="/images/automations/automations.webp" alt="The Automations screen"><figcaption>Templates to start an automation from.</figcaption></figure><div class="table-wrap"><table>
@@ -18,6 +18,7 @@ updated: 2026-10-08
 <tr><td>Name your offices and VPNs</td><td><code>quilzo geo network add 203.0.113.0/24 London --kind office</code></td></tr>
 <tr><td>Plant a value nothing should read</td><td><code>quilzo canary plant --where W --why Y</code></td></tr>
 <tr><td>Run an access review</td><td><code>quilzo access open ID --scope S</code></td></tr>
+<tr><td>Let somebody locked out sign in again</td><td><strong>Unlock</strong> on the Sign-ins screen, or <code>quilzo auth unlock dana</code> (see <a href="/passkeys/#lockout">lockout</a>)</td></tr>
 <tr><td>Check vendors against real credentials</td><td><code>quilzo vendor reconcile</code></td></tr>
 <tr><td>GDPR notices and their deadlines</td><td><code>quilzo notify list</code></td></tr>
 </tbody></table></div><figure class="shot"><img src="/images/automations/signins.webp" alt="The Sign-ins screen"><figcaption>Where sign-ins come from.</figcaption></figure>

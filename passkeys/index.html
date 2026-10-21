@@ -191,6 +191,19 @@
 <li>A passkey is added from a session already signed in with two factors, so a copied token cannot add its holder's own passkey.</li>
 </ul>
 <p>An installation is given fourteen days from the first time this version starts. Until then a token alone still reaches the admin, every page says when that ends, and the security posture names everybody with access who has no passkey and no single sign-on (<code>mfa.no-second-factor</code>). In those days a token's session may add its first passkey.</p>
+<h2 id="enrolment">A link that adds somebody's passkey<a class="anchor" href="#enrolment" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Somebody without a passkey is given a link that adds one: <code>quilzo auth enrol dana</code> on the command line, or <strong>Give a passkey enrolment link</strong> beside them under <span class="where">Administration › People</span>.</p>
+<pre><code>quilzo auth enrol dana</code></pre>
+<pre class="out"><code>http://localhost:8080/enrol/qzenrol_…
+  opened once, by dana, before 09:00 UTC on 22 October: it adds their passkey and does nothing else.</code></pre>
+<ul>
+<li>A link names one person, works once, and ends within a day (<code>--for</code> sets less). A newer link for the same person replaces the older one.</li>
+<li>It adds a passkey for that person and reaches nothing else: no session is made, and they sign in with the passkey they have just added.</li>
+<li>Only its hash is kept. Giving it, using it and ending it are recorded, with who gave it.</li>
+<li>Guessing at links is throttled, and none works while the admin is locked down.</li>
+<li><code>quilzo auth enrol dana --revoke</code> ends a link nobody has used.</li>
+</ul>
+<p>A passkey belongs to the address it was made on, and a browser refuses an IP address as one, so open the admin as <code>http://localhost:8080</code> rather than <code>127.0.0.1</code>, or set <code>admin.base_url</code> and links carry it.</p>
   </div>
   <footer class="guide-foot">
     <p class="updated">Updated 2026-10-21 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/passkeys.html">Edit this page on GitHub</a></p>
@@ -205,6 +218,7 @@
   <h2>On this page</h2>
   <ul>
     <li><a href="#two-factors">Two factors on every request</a></li>
+    <li><a href="#enrolment">A link that adds somebody&#39;s passkey</a></li>
   </ul>
 </aside>
 </div>

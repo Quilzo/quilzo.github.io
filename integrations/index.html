@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/integrations/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-10">
+<meta property="article:modified_time" content="2026-10-21">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MCP gateway: tool pinning, approvals and audit for AI agents">
 <meta name="twitter:description" content="Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-10","description":"Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.","headline":"MCP gateway: govern the tools AI agents call, with pinning and approvals","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/integrations/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/integrations/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Tools and the MCP gateway","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-21","description":"Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.","headline":"MCP gateway: govern the tools AI agents call, with pinning and approvals","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/integrations/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/integrations/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Tools and the MCP gateway","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -315,6 +315,17 @@ quilzo siem verify audit.jsonl --envelope evidence.json</code></pre>
 <pre class="out"><code>verified  185 event(s), sequences 1-185
   nothing was added, removed, reordered or altered since export</code></pre>
 <p>An OCSF or CEF record carries its event's hash (<code>metadata.uid</code>, or <code>cs3</code> in CEF) rather than the whole event, so compare those with the envelope. A JSON Lines export carries each event whole, which is what <code>siem verify</code> recomputes; keep one of those as evidence.</p>
+<h3 id="stream">The audit log, streamed as it is written<a class="anchor" href="#stream" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>Set <code>siem.stream.url</code> and <code>quilzo serve</code> pushes the log every fifteen seconds to a SIEM, so the record is kept where Quilzo cannot reach it. Each request is a batch of OCSF records that follows the last exactly. It carries the chain envelope, each record's Merkle leaf and a tree head signed with Ed25519 and ML-DSA, and the request is signed as an HTTP message (RFC 9421) over its body's digest. A receiver that keeps the leaves can prove it holds every record, unchanged.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Send to a SIEM</td><td><code>quilzo config set siem.stream.url https://siem.example.com/quilzo</code></td></tr>
+<tr><td>Give the receiver the keys to check what it is sent</td><td><code>quilzo siem stream key --json</code></td></tr>
+<tr><td>See how far it has got, and why it is failing</td><td><code>quilzo siem stream status</code></td></tr>
+<tr><td>Send what is waiting now</td><td><code>quilzo siem stream send</code></td></tr>
+</tbody></table></div>
+<p>The receiver answers 2xx for a batch it took, or 409 with <code>{"holds": N}</code> when it holds a different last record; the stream carries on from there. Nothing is lost while the receiver is down: the stream waits, and posture reports one failing for an hour. People stay pseudonymous unless <code>siem.stream.reveal</code> is set. A receiver off this network needs <code>siem.stream.allow_remote</code>. Both are weaker settings, so each takes <a href="/people/#two-administrators">two administrators</a>.</p>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
@@ -324,7 +335,7 @@ quilzo siem verify audit.jsonl --envelope evidence.json</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-10 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/integrations.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-21 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/integrations.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/agent-interface/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Connect AI apps and agents to Quilzo over MCP, with OAuth and receipts</span></a>
       <a class="pager-next" href="/frameworks/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK</span></a>

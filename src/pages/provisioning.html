@@ -6,12 +6,12 @@ description: Let Okta, Microsoft Entra or another identity provider create, upda
 lead: People kept in step by the identity provider, including when they leave.
 icon: provisioning
 screens: Provisioning
-updated: 2026-10-20
+updated: 2026-10-27
 -->
 
 <figure class="shot"><img src="/images/provisioning/provisioning.webp" alt="The Provisioning screen"><figcaption>SCIM provisioning.</figcaption></figure><ol class="steps"><li><h3>Issue the SCIM token</h3><pre><code>quilzo scim token</code></pre><p>Give the identity provider the SCIM address and this token. It lasts 180 days; <code>--days</code> sets up to 365. <code>quilzo scim status</code>, the Provisioning screen and the posture check <code>scim.token-expiring</code> say when it ends, starting a month ahead. Make the next one before then: an ended token is refused, and that stops the identity provider taking access away too.</p></li>
 <li><h3>Say what each group means</h3><pre><code>quilzo scim map Editors author
 quilzo scim map Security analyst
-quilzo scim map "Lab technicians" lab-samples/technician</code></pre><p>A group means a role, a permission, a job, or a role an installed feature declares.</p></li>
+quilzo scim map "Lab technicians" lab-samples/technician</code></pre><p>A group means a role, a permission, a job, or a role an installed feature declares. Mapping a group to administrator, or to a job that administers anything, waits for a second administrator, as any other way of making somebody an administrator does; it is listed under <span class="where">People › Waiting for a second administrator</span> and by <code>quilzo pending</code>.</p></li>
 <li><h3>Check it</h3><pre><code>quilzo scim status</code></pre></li></ol>
 <p>Only grants made by provisioning are ever changed by it; access granted by hand is left alone. Deactivation suspends a person at once: their sessions, tokens and connected apps stop, and agents they sponsor stop. Deletion also erases what agents remember about them. When a change that takes access away cannot be applied, Quilzo answers the identity provider with an error, keeps the person or group as they were, and the provider sends the request again; requests that arrive together are each applied in full.</p>

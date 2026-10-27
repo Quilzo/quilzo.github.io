@@ -6,7 +6,7 @@ description: One gateway for every AI agent's model calls, built here or in any 
 lead: One gateway for every model call: which model answers, what each caller may spend, and what may leave in a prompt.
 icon: models
 screens: Models
-updated: 2026-10-14
+updated: 2026-10-27
 -->
 
 <div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, analyst triage, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much. AI agents built in any framework can use it too, with their memory (see <a href="#agents-anywhere">Agents built anywhere</a>).</p></div>
@@ -78,7 +78,7 @@ today
 <tr><td>National identity numbers: US SSN, UK National Insurance, Spanish DNI and NIE, Indian Aadhaar, Brazilian CPF, Canadian SIN, each checked with its own rules</td><td>Routes not marked <code>--personal</code></td></tr>
 <tr><td>Payment card numbers and credentials (API keys, tokens, private keys)</td><td>Every route, including personal ones</td></tr>
 </tbody></table></div>
-<p>A credential caught in a prompt is also a sign that a key was pasted somewhere it should not have been, so the shield's <code>secret-in-prompt</code> playbook opens a case for somebody to look at it and rotate it (see <a href="/shield/">The shield</a>). A hosted route allowed to receive personal data is a posture finding until an agreement is on record.</p>
+<p>A credential caught in a prompt is also a sign that a key was pasted somewhere it should not have been, so the shield's <code>secret-in-prompt</code> playbook asks the security team's tools that read this log, such as <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, to open a case for somebody to look at it and rotate it (see <a href="/shield/">The shield</a>). A hosted route allowed to receive personal data is a posture finding until an agreement is on record.</p>
 
 <h2 id="invisible-text">Invisible text never reaches a model</h2>
 <p>Characters that draw nothing, such as the Unicode tag block, zero-width characters and bidirectional controls, are taken out of every text before any model reads it. They are a known way to hide an instruction from the person reviewing a page while a model still reads it.</p>

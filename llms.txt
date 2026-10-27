@@ -60,15 +60,10 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 - [Selling to shopping agents](https://quilzo.github.io/shopping-agents/): Let shopping agents find what a shop sells, through a product feed and UCP catalog search, lookup and product, priced from published records.
 - [Import, export, replicas and the permanent web](https://quilzo.github.io/transfer/): Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.
 
-## Security operations
+## Protection
 
-- [Collect security logs from Okta, Entra, GitHub, AWS and more](https://quilzo.github.io/collect/): Read sign-in and audit logs from Okta, Entra, GitHub, AWS and more; take events from Okta hooks, webhooks and Shared Signals; map any log you have.
-- [Detections, findings and threat hunting](https://quilzo.github.io/detection/): Detection rules with their own fixtures, Sigma import, one ranked findings queue, hunting for what is rare, and an analyst agent that can only suggest.
-- [Cases, incidents and regulatory clocks](https://quilzo.github.io/cases/): Open incidents that start the reporting clocks each regime sets (NIS2, GDPR, DORA, SEC, CIRCIA, HIPAA), run playbooks, and take two-person actions on other tools.
-- [Security automations, sign-ins, canaries and access reviews](https://quilzo.github.io/automations/): Automate responses that watch, ask or act; see sign-ins by office, VPN and impossible travel; plant canaries; and run access reviews and vendor checks.
-- [Vulnerability prioritisation with KEV, EPSS, SSVC and VEX](https://quilzo.github.io/vulnerabilities/): Import SBOMs and advisories, rank vulnerabilities by exploitation and exposure with CISA KEV, EPSS and SSVC, plan upgrades, and publish OpenVEX.
-- [Workforce risk across HR, identity and device tools](https://quilzo.github.io/workforce/): Join people and their machines across HR, identity, device and training tools, find what no one system sees, and score each person with reasons.
 - [The shield: Quilzo defends itself](https://quilzo.github.io/shield/): Playbooks decided in advance block, slow, lock down or pause the moment an attack shows; every protection ends by itself; changes take two admins.
+- [Sign-ins: risky ones confirmed, lockouts and where they come from](https://quilzo.github.io/signins/): Every sign-in, where it came from and how risky it looked; a risky one waits until its person proves it, and failed ones lock out only the places they come from.
 
 ## Compliance and audit
 

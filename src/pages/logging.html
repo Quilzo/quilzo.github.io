@@ -6,7 +6,7 @@ description: Every action in a hash-chained log, identifiers pseudonymised, head
 lead: Every action recorded, chained, signed and provable entry by entry.
 icon: logs
 screens: Log
-updated: 2026-10-20
+updated: 2026-10-27
 -->
 
 <figure class="shot"><img src="/images/logging/log.webp" alt="The Log screen"><figcaption>The audit log.</figcaption></figure><div class="table-wrap"><table>
@@ -21,7 +21,7 @@ updated: 2026-10-20
 <tr><td>Anchor the head where you cannot alter it</td><td><code>quilzo auditlog anchor</code></td></tr>
 <tr><td>RFC 3161 proof of when you published</td><td><code>quilzo timestamp stamp</code></td></tr>
 <tr><td>Run the writer as its own account</td><td><code>quilzo logd</code></td></tr>
-</tbody></table></div><p>Identifiers are pseudonymised in the log, and a secret that was refused is never written. Receipts for runs, apps and forgotten memory are built from it (see <a href="/agent-identity/#receipts">receipts</a>), and it exports to a SIEM (see <a href="/integrations/#telemetry">traces and the audit log</a>).</p>
+</tbody></table></div><p>Identifiers are pseudonymised in the log, wherever a person appears: as who acted, in the resource, and in the text of a record, where a name is replaced by the same pseudonym. A secret that was refused is never written. Receipts for runs, apps and forgotten memory are built from it (see <a href="/agent-identity/#receipts">receipts</a>), and it exports to a SIEM (see <a href="/integrations/#telemetry">traces and the audit log</a>).</p>
 
 <h2 id="cannot-write">When the log cannot be written</h2>
 <p>An agent does nothing it cannot record. Before each action an agent takes, Quilzo checks that the log can take its record: the log writer answers, the key can be read, more than 8 MiB is left where the log is kept, and the last record was written. If any of these fails, the action is refused and the run stops with the reason, which names the audit log. A step whose record was refused stops the run before its next action.</p>

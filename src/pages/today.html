@@ -6,13 +6,13 @@ description: The first screen after signing in: what waits for you, a brief whos
 lead: What is waiting for you, then what is happening in the parts of the store you work in.
 icon: today
 screens: Today
-updated: 2026-10-14
+updated: 2026-10-27
 -->
 
 <figure class="shot"><img src="/images/today/today.webp" alt="The Today screen: one item waiting, a brief of three sentences whose figures are links, and four counts"><figcaption>Today, for an administrator.</figcaption></figure>
 <p>Signing in opens <span class="where">Today</span>, after <a href="/start/">Get started</a> until you dismiss it. It has the same parts every day: what is waiting for you, a brief when a model is set up, and counts from your parts of the store.</p>
 <h2 id="waiting">Waiting for you</h2>
-<p>Everything you may decide, from every part of Quilzo: what agents asked, calls held for a second person, changes waiting for review, acts on other tools, held memories and features waiting to be installed. It lists the same items as <a href="/agents/#approvals">Approvals</a>, in this order:</p>
+<p>Everything you may decide, from every part of Quilzo: what agents asked, calls held for a second person, changes waiting for review, held memories and features waiting to be installed. It lists the same items as <a href="/agents/#approvals">Approvals</a>, in this order:</p>
 <ol>
 <li>what was asked too long ago to agree to, so it stops holding its run;</li>
 <li>by what deciding commits to: questions, installs, then paying, deleting and publishing, which cannot be taken back, then sending, writing, acting and reading;</li>
@@ -24,7 +24,7 @@ updated: 2026-10-14
 <ul>
 <li>it is given the figures, each with a placeholder, and refers to one only by its placeholder; Quilzo puts in the figure, as a link to its records;</li>
 <li>a sentence with a number or a number word of its own, a link or markup is left out, and at most three are kept;</li>
-<li>it is given counts, kinds of decision and agents' names, never anything somebody else wrote: no agent's question, visitor's message, finding's title or log line.</li>
+<li>it is given counts, kinds of decision and agents' names, never anything somebody else wrote: no agent's question, visitor's message, page's text or log line.</li>
 </ul>
 <p>The brief says which model wrote it and when, and whether the figures have changed since. It is written on your first visit of the day and again when the figures change, at most every half hour, through the <a href="/models/">model gateway</a>, and charged to your own budget. Somebody whose only access is to read the evidence and the log, such as an auditor, is not given one. Turn briefs off for everybody with:</p>
 <pre><code>quilzo config set today.brief false</code></pre>
@@ -36,10 +36,10 @@ updated: 2026-10-14
 <tr><td>Pages changed in the draft and not published, among those you may read</td><td>Review</td></tr>
 <tr><td>Agent runs going now, finished in the last day, and failed, refused or stopped in the last day</td><td>Agents</td></tr>
 <tr><td>Visitors waiting for a reply</td><td>Inbox</td></tr>
-<tr><td>Findings to triage</td><td>Findings</td></tr>
-<tr><td>Cases open</td><td>Cases</td></tr>
+<tr><td>Protections in force, put on by the shield or a person</td><td>Shield</td></tr>
+<tr><td>Sign-ins waiting to confirm they are their person</td><td>Sign-ins</td></tr>
 </tbody></table></div>
-<p>The same grant check that decides the menu decides each count, so an analyst sees findings and cases and no pages, and a count is never shown for a screen you cannot open.</p>
+<p>The same grant check that decides the menu decides each count, so an analyst sees the shield and sign-ins and no pages, and a count is never shown for a screen you cannot open.</p>
 <h2 id="ask">Ask, and keep the answer</h2>
 <p>Somebody who may use the store's models (the <code>use-models</code> permission, which comes with author) can ask Today a question in their own words. The answer is cards Quilzo draws:</p>
 <div class="table-wrap"><table>

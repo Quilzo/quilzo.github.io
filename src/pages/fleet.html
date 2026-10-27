@@ -6,7 +6,7 @@ description: One inventory of every AI agent, app, tool server and model route, 
 lead: Every agent, app, tool server and model route, who answers for each, and what nobody registered.
 icon: fleet
 screens: Fleet
-updated: 2026-10-08
+updated: 2026-10-27
 -->
 
 <div class="definition"><p>The <strong>fleet</strong> is Quilzo's inventory of AI: its own agents, connected apps, MCP tool servers, model routes, and other vendors' agents registered by their A2A cards, with a map of who called what drawn from the signed audit log.</p></div>
@@ -18,12 +18,12 @@ updated: 2026-10-08
 quilzo fleet check
 quilzo fleet remove helpdesk-bot</code></pre><p>Quilzo reads the card when you register it and again on <code>fleet check</code>; a card that changed is a posture finding (<code>fleet.card-changed</code>).</p>
 <h2 id="shadow-ai">Find shadow AI</h2>
-<p>AI services reached directly, not through Quilzo, are found in the security events you already collect: destinations in proxy and DNS logs, app grants in your identity provider, browser extensions, and connections your own agents' programs made. Lookalike hosts are not matched.</p>
+<p>An agent's own program is meant to reach models through the <a href="/models/">model gateway</a>. When one reaches an AI service directly instead, its connection is in the log, and the Fleet screen lists it under shadow AI with the agent and the service. Lookalike hosts are not matched. What people across your organisation reach is in their proxy and DNS logs, which <a href="https://vaigil.github.io/connectors/">Vaigil</a> reads.</p>
 <pre><code>quilzo fleet shadow --days 7</code></pre><p>Direct use becomes the posture finding <code>ai.shadow-use</code>, and counts in the <a href="/ai-evidence/">AI evidence</a>.</p>
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">
-<li><a class="card" href="/collect/"><span class="card-icon"><icon name="feeds"></icon></span><h3 class="card-title">Collect events</h3><p>Where shadow AI is found.</p></a></li>
+<li><a class="card" href="/models/"><span class="card-icon"><icon name="models"></icon></span><h3 class="card-title">The model gateway</h3><p>Where agents are meant to reach models.</p></a></li>
 <li><a class="card" href="/agent-identity/"><span class="card-icon"><icon name="badge"></icon></span><h3 class="card-title">Identity and receipts</h3><p>Who answers for each agent.</p></a></li>
 </ul>
 </section>

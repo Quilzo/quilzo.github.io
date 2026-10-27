@@ -1,0 +1,51 @@
+<!--
+title: Sign-ins: risky ones confirmed, lockouts and where they come from
+short: Sign-ins
+seo: Adaptive sign-in: impossible travel, step-up and lockout
+description: Every sign-in, where it came from and how risky it looked; a risky one waits until its person proves it, and failed ones lock out only the places they come from.
+lead: A sign-in that does not look like its person waits until they prove it is them.
+icon: automations
+screens: Sign-ins
+updated: 2026-10-27
+-->
+
+<figure class="shot"><img src="/images/signins/signins.webp" alt="The Sign-ins screen: nobody waiting to confirm, nobody locked out, and recent sign-ins with where each came from and its risk"><figcaption>Sign-ins, under Protection.</figcaption></figure>
+<p><span class="where">Protection › Sign-ins</span> lists every sign-in to the admin in the last thirty days: who, when, where it appeared to come from, the device, how risky it looked and why. Above them are the sessions waiting for their person to prove it is them, and the people locked out.</p>
+
+<h2 id="adaptive">A risky sign-in has to confirm it is its person</h2>
+<p>A sign-in is held when it shows any of these:</p>
+<ul>
+<li>travel no person could have made since their last sign-in;</li>
+<li>a session copied to another device or another country;</li>
+<li>Tor, or a hosting provider rather than a home or office network;</li>
+<li>an administrator in a country they have never signed in from;</li>
+<li>three unfamiliar things at once, such as a new device, a new network and a new country.</li>
+</ul>
+<p>The session sees <strong>Confirm it's you</strong>, and nothing else, until its person signs in again with their passkey or with a fresh single sign-on. The security contact is mailed about the worst of them. This is the setting <code>signin.adaptive</code> (NIST SP 800-53 IA-10). It is on by default, and turning it off is a weaker setting, which takes two administrators.</p>
+<p>If somebody did not just sign in, <strong>This wasn't me</strong> on the same page ends every session they hold and tells the security team. A person without a passkey can ask an administrator, who gives them a link that adds one (<a href="/passkeys/">Passkeys</a>), or who lets the session in from <span class="where">Sign-ins</span> once they are sure. Nobody can let in their own session.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
+<tbody>
+<tr><td>Let a waiting session in</td><td><strong>Let them in</strong></td><td></td></tr>
+<tr><td>End a waiting session</td><td><strong>Sign them out</strong></td><td></td></tr>
+<tr><td>Let somebody locked out sign in again</td><td><strong>Unlock</strong></td><td><code>quilzo auth unlock dana</code></td></tr>
+</tbody></table></div>
+
+<h2 id="lockout">Lockout</h2>
+<p>Failed sign-ins that belong to an account lock out the places they come from: after ten, for half an hour, and longer each time after that. The places the person usually signs in from keep working, so somebody guessing at an account cannot lock its owner out. A hundred failures in a row turn the person's passkey sign-in off until an administrator turns it back on. See <a href="/passkeys/#lockout">lockout</a> for what the person sees.</p>
+
+<h2 id="where">Where sign-ins come from</h2>
+<p>Name your offices and VPNs first, so a sign-in from them reads as yours:</p>
+<pre><code>quilzo geo network add 203.0.113.0/24 London --kind office
+quilzo geo network add 198.51.100.0/24 "Staff VPN" --kind vpn
+quilzo geo status</code></pre>
+<p>Other addresses are placed from a city database you download once: DB-IP's free IP to City Lite, in MMDB form, at <code>.quilzo/geo/city.mmdb</code>. Beside it, DB-IP's IP to ASN Lite names the network, so a hosting provider can be told from a home connection, and the Tor Project's exit list, refreshed daily, marks Tor. Quilzo never fetches any of them, and no lookup leaves the machine. <code>quilzo geo help</code> says where each comes from.</p>
+<p>Every decision is in the <a href="/logging/">audit log</a>. When Quilzo streams its log to <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, its rules raise a risky sign-in, one its person reported, and repeated failures and lockouts for the security team.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/passkeys/"><span class="card-icon"><icon name="passkeys"></icon></span><h3 class="card-title">Passkeys</h3><p>The sign-in a stolen password cannot pass.</p></a></li>
+<li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+</ul>
+</section>

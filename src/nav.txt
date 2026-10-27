@@ -52,14 +52,9 @@ growth
 shopping-agents
 transfer
 
-## Security operations
-collect
-detection
-cases
-automations
-vulnerabilities
-workforce
+## Protection
 shield
+signins
 
 ## Compliance and audit
 security

@@ -6,7 +6,7 @@ description: Connect Claude, ChatGPT, coding agents or your own agents to Quilzo
 lead: Quilzo's operations for any agent or AI app, with each app acting for one person, with their access and no more.
 icon: apps
 screens: Connected apps
-updated: 2026-10-08
+updated: 2026-10-27
 -->
 
 <div class="definition"><p>The <strong>agent interface</strong> is Quilzo as an MCP server: the same operations, checks and audit log as the command line, for any client that speaks the Model Context Protocol. It runs over stdio for an app on the same machine, and over HTTP at <code>/mcp</code> (MCP revision 2026-07-28, stateless) for apps anywhere, which connect through OAuth 2.1 with a person's consent.</p></div>
@@ -17,7 +17,7 @@ updated: 2026-10-08
 <thead><tr><th scope="col">Tool</th><th scope="col">Does</th></tr></thead>
 <tbody>
 <tr><td><code>quilzo_find</code></td><td>Finds the operation for a task and returns its exact arguments. Call it first.</td></tr>
-<tr><td><code>quilzo_read</code></td><td>Runs a read operation: <code>read_page</code>, <code>search_pages</code>, <code>list_findings</code>, <code>incident_status</code> and many more.</td></tr>
+<tr><td><code>quilzo_read</code></td><td>Runs a read operation: <code>read_page</code>, <code>search_pages</code>, <code>shield_status</code>, <code>policy_status</code> and many more.</td></tr>
 <tr><td><code>quilzo_write</code></td><td>Changes a draft. Never publishes. What it writes is recorded as AI-generated.</td></tr>
 <tr><td><code>quilzo_check</code></td><td>Runs the checks that gate publishing: accessibility and content provenance.</td></tr>
 </tbody></table></div>

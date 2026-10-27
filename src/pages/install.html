@@ -5,7 +5,7 @@ seo: Install Quilzo: build from source or a container, run it
 description: Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
 lead: Get the program, check it came from this project, and run it the way it is meant to be run.
 icon: download
-updated: 2026-10-13
+updated: 2026-10-27
 -->
 
 <div class="definition"><p>Quilzo is <strong>one static binary</strong> with no dependencies to install. It runs as two processes from the same store: <code>quilzo serve</code>, the admin, which belongs on loopback; and <code>quilzo site</code>, the public site, which has no editing surface at all.</p></div>
@@ -25,7 +25,7 @@ docker run -p 8081:8081 -v quilzo:/srv quilzo --root /srv/store site --addr 0.0.
 <h2 id="production">Run it for real</h2>
 <ol class="steps">
 <li><h3>Keep the admin on loopback</h3><p><code>quilzo serve</code> listens on <code>127.0.0.1:8080</code> by default. Reach it through your own authenticating proxy or a VPN, and set its public address so sign-in flows and connected apps know where they are:</p><pre><code>quilzo config set admin.base_url https://quilzo.example.com</code></pre></li>
-<li><h3>Put the site on the internet, behind TLS</h3><pre><code>quilzo site --addr 0.0.0.0:8081 --base-url https://example.org</code></pre><p>Terminate TLS in front of both processes. <code>--base-url</code> is needed for the sitemap and feeds.</p></li>
+<li><h3>Put the site on the internet, behind TLS</h3><pre><code>quilzo site --addr 0.0.0.0:8081 --base-url https://example.org</code></pre><p>Terminate TLS in front of both processes. <code>--base-url</code> is needed for the sitemap and feeds.</p><p>The site is the one process facing the internet, so on Linux it confines itself with Landlock: it reads the store as before, and writes only its own state (form submissions, boards, members, analytics, the shield, the model ledger, webhook deliveries, the audit log and a temporary directory of its own). A flaw in it cannot write the policy, the tokens or the settings. It checks this before it serves, and a kernel without Landlock runs it as before and says so. Under systemd, the unit in the repository's <code>deploy/</code> makes the store read-only for it too, and <code>quilzo site --prepare</code> makes and lists what it writes.</p></li>
 <li><h3>Write the audit log as its own account</h3><p><code>quilzo logd</code> runs the log writer as a separate user the content platform cannot impersonate; <code>quilzo logd status</code> says whether the separation is in force.</p></li>
 <li><h3>Encrypt what is stored</h3><pre><code>quilzo vault enable     # prints the key once
 quilzo vault rotate     # a new key from now on

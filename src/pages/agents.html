@@ -6,7 +6,7 @@ description: Declare an AI agent's capabilities, budget and autonomy, make it as
 lead: Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.
 icon: agents
 screens: Agents
-updated: 2026-10-14
+updated: 2026-10-27
 -->
 
 <div class="definition"><p>An <strong>agent</strong> in Quilzo is a declaration: what it is for, which capabilities it has, what it may read, how far it may go on its own, and how much one run may spend. A model or a program decides each step. The declaration decides what is allowed, and a hijacked agent still cannot do anything the declaration does not list.</p></div>
@@ -51,6 +51,32 @@ updated: 2026-10-14
 <pre><code>quilzo agent declare returns-editor.json
 quilzo agent show returns-editor --json      # what is saved, as JSON
 quilzo agent check                           # does every declaration still validate</code></pre>
+<p>Two fields are optional. <code>instructions</code> says how the agent should work, as a system prompt did elsewhere: it goes to the model with every decision, after the operations and the rules, which still decide what can be done. <code>model</code> names the model it prefers: a run tries the <a href="/models/">gateway</a> route serving that model, or named so, first, and the others after it. Both are on the agent's page, under <strong>How it should work</strong> and <strong>Model</strong>.</p>
+
+<h2 id="import">Bring an agent from another platform</h2>
+<figure class="shot"><img src="/images/agents/import.webp" alt="Import an agent: an Amazon Bedrock agent read into a declaration, with what is yours to decide, such as registering its API, and what was changed to work here"><figcaption>A Bedrock agent, read. Nothing is declared until you tick it.</figcaption></figure>
+<p>An agent built elsewhere comes in as a declaration, with a report of what was <strong>kept</strong>, what was <strong>changed</strong> to work here, what was <strong>left out</strong> and what is <strong>yours to decide</strong>. Under <span class="where">Agents</span>, choose <strong>Import one from another platform</strong>, choose the file or paste it, and read the report; then declare the ones you tick. Or:</p>
+<pre><code>quilzo agent import .claude/agents/code-reviewer.md     # read it; nothing is declared
+quilzo agent import agents.yaml --save                  # declare what checks, a team's helpers first
+quilzo agent import bedrock-agent.json -o imported/     # write it out, to change before declaring
+quilzo agent formats                                    # what is read and what is written</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">From</th><th scope="col">The file</th><th scope="col">And back out</th></tr></thead>
+<tbody>
+<tr><td>OpenAI Assistants</td><td>an assistant object, or what <code>GET /v1/assistants</code> returns</td><td></td></tr>
+<tr><td>Claude Code</td><td><code>.claude/agents/NAME.md</code></td><td>yes</td></tr>
+<tr><td>Claude Agent SDK</td><td>the agents given to <code>query</code> or <code>claude --agents</code>, as JSON</td><td>yes</td></tr>
+<tr><td>Google ADK</td><td><code>root_agent.yaml</code>, with its sub-agents</td><td>yes</td></tr>
+<tr><td>Microsoft 365 Copilot</td><td><code>declarativeAgent.json</code>, schema 1.x</td><td>yes</td></tr>
+<tr><td>Open Agent Specification</td><td>an <code>Agent</code> component, JSON or YAML</td><td>yes</td></tr>
+<tr><td>Letta</td><td>an <code>.af</code> agent file</td><td></td></tr>
+<tr><td>Amazon Bedrock Agents</td><td><code>get-agent</code> output with its action groups, or CloudFormation</td><td></td></tr>
+<tr><td>CrewAI</td><td><code>agents.yaml</code></td><td>yes</td></tr>
+<tr><td>AutoGen AgentChat</td><td>an AutoGen Studio component, or a team</td><td></td></tr>
+</tbody></table></div>
+<p>The format is recognised from the file, and <code>--from</code> names it when it cannot be. Instructions, the model, the helpers an agent hands work to and its step and time limits carry over as they were. Read, search and file tools become the capabilities that do the same here. An API an agent called through an OpenAPI schema becomes tools on that host, the operations that write asked about first, with the schema written beside it for <code>quilzo integrations import</code>.</p>
+<p>Code another platform ran for the agent (a Python tool, a Lambda, a code interpreter), a shell, MCP servers and other platforms' data sources become decisions, because here nothing is reached that the declaration does not name. Whatever it was allowed elsewhere, an imported agent starts at <strong>propose</strong>, or <strong>draft</strong> if it writes, until you give it more. An agent another vendor runs and offers by an A2A card is registered rather than imported (see <a href="/fleet/">Fleet</a>).</p>
+<p>To take one the other way, open the agent and choose <strong>Take it to another platform</strong>, or run <code>quilzo agent export returns-editor --to claude-subagent</code>. The file is printed alone, and what the format has no field for (the budget, autonomy, asking first, which pages it reads) is listed beside it rather than lost without a word.</p>
 
 <h2 id="run">Run it</h2>
 <p>On the agent's page, under <strong>Try it</strong>, write what it should do and press <strong>Run it once</strong>. Tick <strong>Let a model choose the actions</strong> to have a model decide. Leave it unticked to try every capability once without a model, which costs nothing and shows what this store answers. From the command line:</p>
@@ -70,7 +96,7 @@ quilzo agent decline RUN 3</code></pre>
 <p>The agent's sponsor decides, as does whoever holds the approve permission on the agent or on the page it would change (see <a href="/people/#who-approves">who approves an agent's actions</a>). A model cannot approve its own work, declare an agent, or widen one. What an agent writes is a draft: it goes live only when somebody publishes (see <a href="/publishing/">Review, publish and roll back</a>).</p>
 
 <h3 id="approvals">Everything waiting, in one place</h3>
-<p><span class="where">Approvals</span> lists everything waiting for you to decide: what agent runs are asking, questions they need answered, actions the reviewer stopped, tool calls held for a second person, acts a case is waiting to have approved, a change waiting for your review, and memories held until somebody confirms them. Each says what deciding commits to: reads, acts, writes, sends, pays, deletes, publishes or answers. <code>quilzo approvals</code> lists the same, with the command that decides each.</p>
+<p><span class="where">Approvals</span> lists everything waiting for you to decide: what agent runs are asking, questions they need answered, actions the reviewer stopped, tool calls held for a second person, a change waiting for your review, memories held until somebody confirms them, and features waiting to be installed. Each says what deciding commits to: reads, acts, writes, sends, pays, deletes, publishes or answers. <code>quilzo approvals</code> lists the same, with the command that decides each.</p>
 <p>When several runs wait on the same action, with the same input and the same reason, and the action only reads or acts, <strong>Let all go ahead</strong> approves them together. Anything that writes, sends, pays, deletes or publishes, and every question, is decided on its own page.</p>
 
 <h3 id="questions">Questions it cannot answer alone</h3>

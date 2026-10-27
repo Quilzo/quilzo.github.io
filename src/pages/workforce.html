@@ -1,22 +1,26 @@
 <!--
-title: Workforce risk across HR, identity and device tools
-short: Workforce risk
-seo: Workforce risk: joining HR, identity and device data
-description: Join people and their machines across HR, identity, device and training tools, find what no one system sees, and score each person with reasons.
-lead: People and their machines, joined across your tools, scored with reasons.
+title: Workforce risk is Vaigil's now
+short: Workforce risk (Vaigil)
+seo: Workforce and estate risk moved to Vaigil
+description: People and their machines joined across your tools, scored with reasons, and reminders to fix what is theirs, are Vaigil's now. Quilzo keeps its own access.
+lead: Vaigil scores the people and machines across your tools; Quilzo governs who may do what here.
 icon: workforce
-screens: Workforce risk
-updated: 2026-10-08
+updated: 2026-10-27
 -->
 
-<figure class="shot"><img src="/images/workforce/workforce.webp" alt="The Workforce risk screen with a sample company: people by band and where the risk is"><figcaption>The sample company, Northwind Labs.</figcaption></figure><p>Only administrators see this screen, and opening a person's page is written to the log. Try it with sample data before connecting anything: <code>quilzo estate sample</code>, then <code>quilzo estate build</code>; <code>quilzo estate sample --remove</code> takes it away.</p>
-<div class="table-wrap"><table>
-<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
-<tbody>
-<tr><td>Read every installed tool, then build</td><td><code>quilzo estate sync</code></td></tr>
-<tr><td>On a schedule</td><td><code>quilzo estate auto --every 24h</code></td></tr>
-<tr><td>Scores and their reasons</td><td><code>quilzo estate scores</code></td></tr>
-<tr><td>What no single system could see</td><td><code>quilzo workforce gaps</code></td></tr>
-<tr><td>Confirm two records are one person</td><td><code>quilzo workforce link A B --because W</code></td></tr>
-<tr><td>Remind people, inside working hours</td><td><code>quilzo remind send</code></td></tr>
-</tbody></table></div>
+<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> People and their machines joined across your tools, scored with reasons, and reminders sent to whoever can fix them are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/workforce/">Workforce risk</a>.</p></div></div>
+<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. Who may do what in Quilzo is still Quilzo's: <a href="/people/">people and roles</a>, <a href="/provisioning/">provisioning from your identity provider</a>, and the <a href="/security/">posture checks</a> of how this deployment is set up.</p>
+<h2 id="send">Send Vaigil what happens here</h2>
+<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
+<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
+quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
+quilzo siem stream status</code></pre>
+<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="https://vaigil.github.io/workforce/"><span class="card-icon"><icon name="workforce"></icon></span><h3 class="card-title">Workforce risk, in Vaigil</h3><p>People and their machines, joined across your tools.</p></a></li>
+<li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+</ul>
+</section>

@@ -1,24 +1,26 @@
 <!--
-title: Security automations, sign-ins, canaries and access reviews
-short: Automations and sign-ins
-seo: Security automation, impossible travel and access reviews
-description: Automate responses that watch, ask or act; see sign-ins by office, VPN and impossible travel; plant canaries; and run access reviews and vendor checks.
-lead: When this happens, do this: watch, ask, or act.
+title: Security automations are Vaigil's now
+short: Automations (Vaigil)
+seo: Security automations and access reviews moved to Vaigil
+description: Security automations, canaries across the estate, access reviews, vendor checks and breach notices are Vaigil's now. Sign-ins stay in Quilzo.
+lead: Vaigil automates the security team's work; Quilzo keeps its own sign-ins safe.
 icon: automations
-screens: Automations, Sign-ins
-updated: 2026-10-21
+updated: 2026-10-27
 -->
 
-<figure class="shot"><img src="/images/automations/automations.webp" alt="The Automations screen"><figcaption>Templates to start an automation from.</figcaption></figure><div class="table-wrap"><table>
-<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
-<tbody>
-<tr><td>Start from a template</td><td><code>quilzo automate templates / quilzo automate add TEMPLATE</code></td></tr>
-<tr><td>Choose how far it goes</td><td><code>quilzo automate mode ID watch|ask|act</code></td></tr>
-<tr><td>Approve a run that asks</td><td><code>quilzo automate approve RUN</code></td></tr>
-<tr><td>Name your offices and VPNs</td><td><code>quilzo geo network add 203.0.113.0/24 London --kind office</code></td></tr>
-<tr><td>Plant a value nothing should read</td><td><code>quilzo canary plant --where W --why Y</code></td></tr>
-<tr><td>Run an access review</td><td><code>quilzo access open ID --scope S</code></td></tr>
-<tr><td>Let somebody locked out sign in again</td><td><strong>Unlock</strong> on the Sign-ins screen, or <code>quilzo auth unlock dana</code> (see <a href="/passkeys/#lockout">lockout</a>)</td></tr>
-<tr><td>Check vendors against real credentials</td><td><code>quilzo vendor reconcile</code></td></tr>
-<tr><td>GDPR notices and their deadlines</td><td><code>quilzo notify list</code></td></tr>
-</tbody></table></div><figure class="shot"><img src="/images/automations/signins.webp" alt="The Sign-ins screen"><figcaption>Where sign-ins come from.</figcaption></figure>
+<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> Automations that watch, ask or act, canaries planted across your systems, access reviews, vendor checks and notices to people about a breach are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/automations/">Automations</a>.</p></div></div>
+<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. What protects Quilzo itself stays here and is on by default. A risky sign-in has to confirm it is its person (see <a href="/signins/">Sign-ins</a>), and the <a href="/shield/">shield</a>'s playbooks respond to attacks on the admin, the site, the chatbots and the agents. Its decoy tokens are <code>quilzo shield decoy add</code>.</p>
+<h2 id="send">Send Vaigil what happens here</h2>
+<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
+<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
+quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
+quilzo siem stream status</code></pre>
+<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="https://vaigil.github.io/automations/"><span class="card-icon"><icon name="automations"></icon></span><h3 class="card-title">Automations, in Vaigil</h3><p>When this happens, do this: watch, ask, or act.</p></a></li>
+<li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+</ul>
+</section>

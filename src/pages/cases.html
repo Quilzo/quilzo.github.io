@@ -1,23 +1,26 @@
 <!--
-title: Cases, incidents and regulatory clocks
-short: Cases and incidents
-seo: Incident response with NIS2, GDPR, DORA and SEC clocks
-description: Open incidents that start the reporting clocks each regime sets (NIS2, GDPR, DORA, SEC, CIRCIA, HIPAA), run playbooks, and take two-person actions on other tools.
-lead: Incidents with the clocks each law starts, and actions a second person approves.
+title: Cases and incidents are Vaigil's now
+short: Cases (Vaigil)
+seo: Cases, incidents and regulatory clocks moved to Vaigil
+description: Incidents, the reporting clocks each law starts, playbooks and two-person actions on other tools are Vaigil's now, and Quilzo's shield asks it for cases.
+lead: Vaigil keeps the incidents and their clocks; Quilzo asks it to open them.
 icon: cases
-screens: Cases
-updated: 2026-10-08
+updated: 2026-10-27
 -->
 
-<figure class="shot"><img src="/images/cases/cases.webp" alt="The Cases screen"><figcaption>Cases, here four the shield opened by itself.</figcaption></figure>
-<ol class="steps">
-<li><h3>Declare an incident</h3><pre><code>quilzo incident regimes eu nis2
-quilzo incident declare --title "Token used from an unknown country" --grade sev2 --finding ID</code></pre></li>
-<li><h3>Start the clocks</h3><p>A clock starts when somebody decides the organisation is aware, and that decision is recorded with its reason.</p><pre><code>quilzo incident decide ID aware --because "..."
-quilzo incident duties</code></pre></li>
-<li><h3>Discharge or waive each duty</h3><pre><code>quilzo incident discharge ID "NIS2 early warning" --because "sent to the CSIRT"
-quilzo incident waive ID "GDPR Article 34" --because "no personal data involved"</code></pre></li>
-<li><h3>Act on another tool, with a second person</h3><pre><code>quilzo action add okta-suspend-user --org example
-quilzo incident act ID okta-suspend-user okta:USER --because "..."
-quilzo incident act-approve ID 1</code></pre><p>The exact request is shown before anybody approves it, and it is sent only when a second person does.</p></li>
-</ol>
+<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> Incidents with the NIS2, GDPR, DORA, SEC, CIRCIA and HIPAA clocks they start, playbooks, and actions on other tools that a second person approves are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/cases/">Cases and incidents</a>.</p></div></div>
+<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. A shield playbook whose step is <em>open a case</em> writes that request into the audit log, with the title, the signal, what it was about and a summary. Vaigil's rule <code>quilzo.shield-asked-for-a-case</code> puts it in the finding queue there; another SIEM can do the same with the record.</p>
+<h2 id="send">Send Vaigil what happens here</h2>
+<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
+<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
+quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
+quilzo siem stream status</code></pre>
+<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="https://vaigil.github.io/cases/"><span class="card-icon"><icon name="cases"></icon></span><h3 class="card-title">Cases and incidents, in Vaigil</h3><p>Incidents with the clocks each law starts.</p></a></li>
+<li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+</ul>
+</section>

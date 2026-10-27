@@ -6,7 +6,7 @@ description: Declare a feature as one package of types, records, pages, forms, a
 lead: A feature is one package: read what it can do, install it as one decision, and take it back as one.
 icon: make
 screens: Make
-updated: 2026-10-14
+updated: 2026-10-27
 -->
 
 <div class="definition"><p>A <strong>feature</strong> is one file that declares the blocks a piece of work needs: content types, collections of records, listings, forms, pages, menus, chatbots, agents, webhooks, and roles for the people who work in it. Quilzo checks every block by the same rules it holds that block to anywhere else, shows what the whole can do in plain words, and installs it as one decision.</p></div>
@@ -29,6 +29,8 @@ quilzo feature check lab.json      # what it would store, show, send and change;
 <tr><td><code>roles</code></td><td>Roles for the people who work in the feature, over its own records, pages and agents (see <a href="#roles">Roles</a>)</td></tr>
 </tbody></table></div>
 <p>A package has a name, a version, a title and a purpose, and a key it does not know is refused rather than ignored. It carries no code and no secrets, and grants nobody anything: a role it declares is held by nobody until somebody gives it to them.</p>
+<h2 id="site">A whole site</h2>
+<p>A package can also declare the site itself: its name, a sentence about it, the layouts it renders through and its look, checked for contrast like any theme. <strong>Build a whole site</strong> writes one from a sentence, with every fact only you know left blank for <strong>Fill in</strong> (see <a href="/site/">Build a whole site</a>). One package owns the site, a site somebody set up by hand is taken over only when they say so, and removing the package puts it back.</p>
 <h2 id="describe">Describe it, or start from a spreadsheet</h2>
 <p>Have a model draft a package from a sentence. The draft holds content blocks only: types, collections, listings, forms, pages, menus and chatbots. Anything that would reach another server, such as an agent, a webhook or a menu entry pointing at another site, is left out and named, and so are roles. A draft that fails the checks is shown its failures once, and nothing is installed until you install it.</p>
 <pre><code>quilzo feature draft "Track the lab's samples and show members which are available" -o lab.json</code></pre>
@@ -47,7 +49,7 @@ quilzo feature install samples.json --rows samples.rows.json</code></pre>
 <li>sends events or calls to another server;</li>
 <li>adds an agent that acts without asking first.</li>
 </ul>
-<p>A model may draft a package. Only a person installs or approves one.</p>
+<p>A store with only one administrator approves these alone, as it does every change that would need two, and the record says it was approved alone. A model may draft a package. Only a person installs or approves one.</p>
 <h2 id="roles">Roles for the people who work in it</h2>
 <p>A feature can declare roles for the people who work in it, over its own blocks and nothing else. The lab sample example declares two:</p>
 <pre><code>"roles": [

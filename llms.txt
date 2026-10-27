@@ -41,6 +41,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 ## Content
 
+- [Build a whole site from a sentence](https://quilzo.github.io/site/): A working site from one sentence: pages, menus, a contact form, a question box, a privacy page and a look, with every fact only you know left to fill in.
 - [Make features as packages](https://quilzo.github.io/make/): Declare a feature as one package of types, records, pages, forms, agents, webhooks and roles, read what it can do, and install it or take it back as one decision.
 - [Research projects with claims you can check: numbers linked to code, real citations](https://quilzo.github.io/research/): Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.
 - [Evolve: search over programs with a sealed evaluator](https://quilzo.github.io/evolve/): Let a model improve a program generation by generation, scored by an evaluator in its own box that the programs cannot read, with a test set and a journal.

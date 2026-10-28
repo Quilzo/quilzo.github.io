@@ -1,0 +1,46 @@
+<!--
+title: Agents visiting your site: asking it and using its forms
+short: Visiting agents
+seo: Make a website agent-ready with NLWeb and WebMCP
+description: How visitors' AI agents use your site: ask it in plain words over NLWeb and MCP, and fill in its search, questions, forms and bookings with WebMCP.
+lead: More visitors arrive through an agent. Your site answers them as data, and lets their agent fill in a form for them while the visitor stays the one who sends it.
+icon: apps
+screens: Settings
+updated: 2026-10-28
+-->
+
+<div class="definition"><p>A <strong>visiting agent</strong> is an AI assistant acting for somebody looking at your site: a chat app answering their question, or the agent in their browser. Every Quilzo site offers such agents two things without any setting: it answers questions as data (<strong>NLWeb</strong>), and its forms say what they are for (<strong>WebMCP</strong>).</p></div>
+<h2 id="ask">Asking the site</h2>
+<p>An agent asks in plain words at <code>/ask</code> and gets the published pages that match, each as a schema.org object:</p>
+<pre><code>curl 'https://your-site.example/ask?query=gluten-free+bread&amp;streaming=false'</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Parameter</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>query</code></td><td>The question or the words to look for; required, at most 300 characters.</td></tr>
+<tr><td><code>mode</code></td><td><code>list</code> (the default) returns the matching pages. <code>summarize</code> and <code>generate</code> also return the answer your site's question box gives, with its sources and the AI disclosure, when it has one.</td></tr>
+<tr><td><code>streaming</code></td><td>Server-sent events by default; <code>false</code> for one JSON document.</td></tr>
+<tr><td><code>decontextualized_query</code></td><td>The question already put in context by the agent, answered in place of <code>query</code>.</td></tr>
+<tr><td><code>query_id</code></td><td>Echoed back; made up when not given.</td></tr>
+</tbody></table></div>
+<p>Each result has its <code>url</code>, <code>name</code>, <code>site</code>, <code>score</code>, <code>description</code> and <code>schema_object</code>, the same structured data the page carries for search engines. The same is offered over MCP at <code>/mcp</code> on the public site, as one read-only tool called <code>ask</code>, so an agent that speaks MCP can connect to the site directly. This is not the admin's agent interface (see <a href="/agent-interface/">Connect AI apps</a>), which acts for your own people and is not on the public site. <code>/llms.txt</code> tells agents where both are.</p>
+<p>It answers only from what any visitor may read now: never a page for members, and nothing before or after its publish window. It changes nothing on the site. An answer in summarize or generate mode is the question box's own, with its limits and its refusal when your pages do not say.</p>
+<h2 id="forms">Using its forms</h2>
+<p>WebMCP is a way for a page to say that a form is a tool: its name, what it does and what each field means. An agent in the visitor's browser then fills it in instead of guessing from a screenshot. Quilzo marks the forms itself, from what you declared:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Form</th><th scope="col">The agent may</th></tr></thead>
+<tbody>
+<tr><td>Site search, and asking a chatbot</td><td>Run it on its own: neither changes anything.</td></tr>
+<tr><td>A declared form, such as an enquiry (see <a href="/forms/">Forms</a>)</td><td>Fill it in; the visitor sends it. A form with a sensitive field is not offered.</td></tr>
+<tr><td>A booking (see <a href="/bookings/">Bookings</a>)</td><td>Choose a free time and fill in the details; the visitor books it. Nothing is offered while bookings are paused.</td></tr>
+<tr><td>Signing in, accounts and posting under a name</td><td>Nothing: a person's own account and words are theirs to operate.</td></tr>
+</tbody></table></div>
+<p>Every description comes from what you wrote: the form's label and notice, the fields' labels and help, the service's title, length and price. Browsers that do not know WebMCP ignore the markings, and no script is added to the page.</p>
+<h2 id="who">Who may ask</h2>
+<p>Both are the site's published content, so the rules in front of every page decide. When <code>crawl.keys</code> is set, a signed request from an AI crawler is held to your site's licence terms on <code>/ask</code> and <code>/mcp</code> exactly as on any page, and a question box answer is rate limited per address as it is on the site. To keep the site from being asked at all, unpublish what should not be read; there is nothing here that is not already public.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/shopping-agents/"><span class="card-icon"><icon name="inventory_2"></icon></span><h3 class="card-title">Shopping agents</h3><p>The catalogue as a feed and over the Universal Commerce Protocol.</p></a></li>
+<li><a class="card" href="/chatbots/"><span class="card-icon"><icon name="assistants"></icon></span><h3 class="card-title">Chatbots</h3><p>The question box whose answers summarize and generate return.</p></a></li>
+</ul>
+</section>

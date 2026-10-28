@@ -62,6 +62,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 - [Analytics, A/B tests and personalisation](https://quilzo.github.io/growth/): Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.
 - [Sell through the provider's own checkout](https://quilzo.github.io/selling/): Sell the catalogue through Stripe's hosted checkout: a Buy button only where the link charges what the page says, and no card or order kept.
 - [Selling to shopping agents](https://quilzo.github.io/shopping-agents/): Let shopping agents find what a shop sells, through a product feed and UCP catalog search, lookup and product, priced from published records.
+- [Agents visiting your site: asking it and using its forms](https://quilzo.github.io/visiting-agents/): How visitors' AI agents use your site: ask it in plain words over NLWeb and MCP, and fill in its search, questions, forms and bookings with WebMCP.
 - [Import, export, replicas and the permanent web](https://quilzo.github.io/transfer/): Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, bring a live site or a WordPress export in, replicate, and publish to IPFS.
 
 ## Protection

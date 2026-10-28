@@ -212,6 +212,11 @@ quilzo booking setup bookings.json</code></pre>
 </tbody></table></div>
 <p>The calendar address is shown once and kept only as a hash; making another ends it, and <code>quilzo booking feed --off</code> turns it off. It shows when each booking is and for what, never who, because the address is a secret your calendar app holds and sends over the internet.</p>
 <p>Webhooks can be told <code>booked</code> and <code>booking-cancelled</code> (see <a href="/integrations/">Integrations</a>). Each says which service, and nothing about when or who.</p>
+<h2 id="agents">Agents<a class="anchor" href="#agents" aria-hidden="true" tabindex="-1">#</a></h2>
+<ul>
+<li><strong>Your site crew.</strong> An agent connected over MCP sees the free times visitors see with <code>booking_times</code>, and never who booked. It can propose a site that takes bookings as a package with a <code>bookings</code> block beside its booking page (see <a href="/site/#crew">the site crew</a>). Two people approve it, because it collects who booked. An upgrade keeps your calendar address and any pause you set, and a setup you made by hand is not taken over.</li>
+<li><strong>Your visitors' agents.</strong> A visitor's browser agent is offered the booking form as a tool, described from your setup: the service, its length, its price and the clock the times are on. The agent fills it in and the visitor books. Nothing is offered while bookings are paused.</li>
+</ul>
 <h2 id="limits">What it is, and is not<a class="anchor" href="#limits" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Bookings has one calendar, taking one booking at a time, for one person or one room. Staff with calendars of their own, deposits, recurring appointments and reminders by email are not here. A site that needs those needs a booking system rather than a page.</p>
 <p>A site made before this version renders the booking section only once it has the latest layout. To get it, choose your starter again under <strong>Design</strong>.</p>
@@ -239,6 +244,7 @@ quilzo booking setup bookings.json</code></pre>
     <li><a href="#visitor">What a visitor sees</a></li>
     <li><a href="#who">Who booked, and where that is kept</a></li>
     <li><a href="#manage">Cancel, pause, and your own calendar</a></li>
+    <li><a href="#agents">Agents</a></li>
     <li><a href="#limits">What it is, and is not</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

@@ -1,0 +1,52 @@
+<!--
+title: Sell through the provider's own checkout
+short: Payments
+seo: Take payments with Stripe Checkout, keeping no cards or orders
+description: Sell the catalogue through Stripe's hosted checkout: a Buy button only where the link charges what the page says, and no card or order kept.
+lead: A Buy button beside every product that can be bought, charging exactly the price the page shows, with the card and the order kept by the provider and not here.
+icon: selling
+screens: Payments
+updated: 2026-10-28
+-->
+
+<div class="definition"><p>A <strong>payment link</strong> is a checkout at the provider for one product at one price. Quilzo makes one for each price the published catalogue offers, and shows a Buy button only where a live link charges exactly what the page says.</p></div>
+<figure class="shot"><img src="/images/selling/shop.webp" alt="The demonstration shop: product cards with their price, whether they are in stock, and a Buy button that says what it charges, such as Buy for £24.00"><figcaption>Each button says what it charges, read from the link itself.</figcaption></figure>
+<h2 id="start">Turn payments on</h2>
+<ol class="steps">
+<li><p>Name the catalogue listing, if the site does not already serve one: <code>quilzo config set site.catalogue catalogue</code>. A product needs a slug or an id, a name, a whole-number price in minor units (pence, cents) and a currency.</p></li>
+<li><p>Keep a Stripe key sealed in the store. A <strong>restricted key</strong> is enough, and it is safer than a secret key, which can also refund, pay out and read every customer. Allow it to write Prices, Products and Payment Links, and to read Checkout Sessions:</p>
+<pre><code>quilzo secret set stripe &lt; key.txt</code></pre>
+<p>Or set <code>QUILZO_SECRET_STRIPE</code> in the admin's environment. A test key (<code>rk_test_…</code>) takes test payments; the screen says which you have.</p></li>
+<li><p>Ask for payments to be turned on. A second administrator approves it, in <a href="/agents/#approvals">Approvals</a> or with <code>quilzo pending approve ID</code>, because from then on a price on a page is a price somebody pays. A store with only one administrator approves it alone, and the record says so.</p>
+<pre><code>quilzo pay enable stripe --ship-to GB,IE --done "Thank you. We post within two working days."</code></pre>
+<p><code>--ship-to</code> lists the countries the checkout asks for a delivery address in; leave it out for downloads, services and collection.</p></li>
+</ol>
+<p>In the admin, <strong>Payments</strong>, under Release, says what is still missing, asks for the second administrator, and shows test or live mode once payments are on.</p>
+<figure class="shot"><img src="/images/selling/payments.webp" alt="The Payments screen: on, through Stripe, in test mode, eleven products for sale and eleven payment links selling them, with buttons to bring the links up to date and to show the latest orders"><figcaption>Payments, under Release.</figcaption></figure>
+<h2 id="links">How the links follow the prices</h2>
+<ul>
+<li>After every publish, rollback and scheduled publish, the links are brought into line with the live catalogue. A new price gets a new link first; then the old one is retired, so a product is never without a way to buy it at the price the page shows.</li>
+<li>A product that is sold out, out of stock or discontinued, or has no price, gets no link and no button.</li>
+<li>While Stripe cannot be reached, a changed price shows no Buy button, never one charging the old price. The screen and <code>quilzo pay</code> say what stopped, and <code>quilzo pay sync</code> or <strong>Bring the links up to date</strong> tries again.</li>
+<li>The button names the price it charges. A page may show a price written by hand beside the number it sells at, and the button is what is paid.</li>
+</ul>
+<h2 id="keeps">What Quilzo keeps, and what it never does</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Thing</th><th scope="col">Where it lives</th></tr></thead>
+<tbody>
+<tr><td>Card numbers, names, email and delivery addresses</td><td>At Stripe, collected by its checkout under its privacy notice. Never here.</td></tr>
+<tr><td>Orders</td><td>At Stripe. <code>quilzo pay orders</code> and <strong>Show the latest orders</strong> read the latest from Stripe when somebody asks; nothing is written down, and the audit log records that somebody looked, not who bought.</td></tr>
+<tr><td>The Stripe key</td><td>Sealed in the store, read by the admin only, over a connection declared as the <code>payments</code> purpose so an isolated deployment can see and refuse it (see <a href="/isolated/">Isolated deployments</a>).</td></tr>
+<tr><td>The payment links</td><td>In the store, read by the site. The confined site proves at start that it cannot write them, because a site that could would be able to send every Buy button to somebody else's checkout.</td></tr>
+</tbody></table></div>
+<p>Say on the site's privacy page that Stripe takes the payments. A site built with <a href="/site/">Build a whole site</a> has a privacy page to add it to.</p>
+<h2 id="off">Turn payments off</h2>
+<pre><code>quilzo pay disable</code></pre>
+<p>One administrator can do it. The Buy buttons go at once, and every payment link is retired at Stripe, so a link somebody copied stops selling too. Orders stay at Stripe. Pages carrying listings change their ETag with the links, so a browser holding the page is not told it still has the current one.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/shopping-agents/"><span class="card-icon"><icon name="selling"></icon></span><h3 class="card-title">Selling to shopping agents</h3><p>The same catalogue, for agents that search and compare.</p></a></li>
+<li><a class="card" href="/publishing/"><span class="card-icon"><icon name="publishing"></icon></span><h3 class="card-title">Publishing</h3><p>The step after which the links follow.</p></a></li>
+</ul>
+</section>

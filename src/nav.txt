@@ -43,6 +43,7 @@ pages
 types
 structure
 forms
+bookings
 media
 design
 languages

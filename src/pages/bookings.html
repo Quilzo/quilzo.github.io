@@ -1,0 +1,61 @@
+<!--
+title: Take bookings on your site, with who booked kept off it
+short: Bookings
+seo: Appointment booking that keeps visitors' details private
+description: Appointments on your site: hours in your time zone, services, free times on any page, calendar files, and names that never reach the public site.
+lead: Say when you are open and what can be booked. Any page can offer the free times, and a visitor books, adds it to their calendar and can cancel, with no script and no account.
+icon: bookings
+screens: Bookings
+updated: 2026-10-28
+-->
+
+<div class="definition"><p><strong>Bookings</strong> are appointments taken on the site: one calendar, its hours each week in its own time zone, the dates it is closed, and the services it offers, each with how long it takes and how long to leave after it. A <strong>booking</strong> section on any page offers the free times for one service.</p></div>
+<figure class="shot"><img src="/images/bookings/times.webp" alt="A booking section for a haircut: the service with its length and price, seven days of free times as rounded buttons, a link to later dates, then fields for name, email, telephone and a note, a Book button, and how long the details are kept"><figcaption>Free times for a haircut, on the salon's own page.</figcaption></figure>
+<h2 id="set-up">Set it up</h2>
+<p>On the <strong>Bookings</strong> screen, say:</p>
+<ul>
+<li>the time zone the hours are in, such as <code>Europe/London</code>; visitors are shown times on this clock, and told which it is;</li>
+<li>the hours each day, as spans such as <code>09:00-12:30, 13:30-17:00</code>, with a day left empty when closed;</li>
+<li>the dates you are closed;</li>
+<li>the least notice in hours, how many days ahead you take bookings, and how long who booked is kept after the appointment (30 days unless you say otherwise);</li>
+<li>each service: a name for pages to use, a title, its length and how long to leave after it, in minutes, and a price to show. The price is shown, never charged.</li>
+</ul>
+<p>Or from the command line:</p>
+<pre><code>quilzo booking example &gt; bookings.json    # a setup to start from
+quilzo booking setup bookings.json</code></pre>
+<p>Changing the hours or services changes what the site offers at once, as publishing does, so it takes whoever may publish. Then add a <strong>booking</strong> section to a page, naming a service, in the page's editor or with <code>quilzo section add PAGE booking</code>.</p>
+<h2 id="visitor">What a visitor sees</h2>
+<p>The section shows the next seven days with free times, and <strong>Later dates</strong> for more. The times are buttons with no script behind them, so they work with a keyboard and a screen reader. A visitor picks one, gives a name and an email address, and optionally a telephone number and a note, and books.</p>
+<figure class="shot"><img src="/images/bookings/booked.webp" alt="The same section after booking: You are booked for Thursday 29 October 2026 at 10:00, London time, with Add to your calendar and Cancel this booking"><figcaption>The booking, on the page it was made on.</figcaption></figure>
+<p>They are shown the booking on the same page, at an address only they were given. From there they can add it to their calendar, as a file every calendar reads, with the address to come back to. They can also cancel it until it starts. Nobody needs an account.</p>
+<p>A time is free when it is within the hours, not on a closed date, not sooner than the notice, and clear of every booking and the time left after it, whatever service that booking was for. On the day the clocks change, ten o'clock is still offered at ten, and a time the clocks skip is not offered. The time is checked again as it is booked, so two visitors who saw the same free time cannot both get it.</p>
+<h2 id="who">Who booked, and where that is kept</h2>
+<p>A booking is kept as two things:</p>
+<ul>
+<li><strong>the calendar</strong>: when, for how long and for what. The public site reads it to offer free times. It never holds a name.</li>
+<li><strong>who booked</strong>: name, email, telephone and note. The public site writes it once and cannot read it back. You read it on the Bookings screen or with <code>quilzo booking list</code>, and it is forgotten the set number of days after the appointment.</li>
+</ul>
+<p>So a flaw in the part of Quilzo that faces the internet could show that somebody booked a haircut at ten on Tuesday, and not who. The audit log records that a booking was made or cancelled, from where and for which service, and never by whom.</p>
+<figure class="shot"><img src="/images/bookings/screen.webp" alt="The Bookings screen: each booking with its day and time, the service, the name, email and telephone of who booked, their note, and a Cancel menu; one marked cancelled by the visitor; then a link to download the bookings as a calendar file, Pause new bookings, and A calendar address for your phone"><figcaption>The Bookings screen.</figcaption></figure>
+<h2 id="manage">Cancel, pause, and your own calendar</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
+<tbody>
+<tr><td>Cancel a booking, and tell them yourself, since the site sends no mail</td><td><strong>Cancel</strong> on its row</td><td><code>quilzo booking cancel ID</code></td></tr>
+<tr><td>Cancel it and forget who made it, for somebody asking to be forgotten</td><td><strong>Forget who booked it too</strong></td><td><code>quilzo booking cancel ID --erase</code></td></tr>
+<tr><td>Stop taking new bookings; those made stand</td><td><strong>Pause new bookings</strong></td><td><code>quilzo booking pause</code>, then <code>resume</code></td></tr>
+<tr><td>Take the bookings into your calendar, names and all</td><td><strong>Download them as a calendar file</strong></td><td>On the screen only; <code>quilzo booking list</code> lists them</td></tr>
+<tr><td>Subscribe your phone to the times</td><td><strong>A calendar address for your phone</strong></td><td><code>quilzo booking feed</code></td></tr>
+</tbody></table></div>
+<p>The calendar address is shown once and kept only as a hash; making another ends it, and <code>quilzo booking feed --off</code> turns it off. It shows when each booking is and for what, never who, because the address is a secret your calendar app holds and sends over the internet.</p>
+<p>Webhooks can be told <code>booked</code> and <code>booking-cancelled</code> (see <a href="/integrations/">Integrations</a>). Each says which service, and nothing about when or who.</p>
+<h2 id="limits">What it is, and is not</h2>
+<p>Bookings has one calendar, taking one booking at a time, for one person or one room. Staff with calendars of their own, deposits, recurring appointments and reminders by email are not here. A site that needs those needs a booking system rather than a page.</p>
+<p>A site made before this version renders the booking section only once it has the latest layout. To get it, choose your starter again under <strong>Design</strong>.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/forms/"><span class="card-icon"><icon name="forms"></icon></span><h3 class="card-title">Forms</h3><p>Ask visitors anything else, with what you collect declared and kept for a set time.</p></a></li>
+<li><a class="card" href="/selling/"><span class="card-icon"><icon name="selling"></icon></span><h3 class="card-title">Payments</h3><p>Sell through the provider's own checkout.</p></a></li>
+</ul>
+</section>

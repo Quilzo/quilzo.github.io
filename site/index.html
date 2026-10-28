@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/site/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-10-28">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Build a whole website from a sentence, with nothing made up">
 <meta name="twitter:description" content="A working site from one sentence: pages, menus, a contact form, a question box, a privacy page and a look, with every fact only you know left to fill in.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"A working site from one sentence: pages, menus, a contact form, a question box, a privacy page and a look, with every fact only you know left to fill in.","headline":"Build a whole site from a sentence","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/site/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/site/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Build a site","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-28","description":"A working site from one sentence: pages, menus, a contact form, a question box, a privacy page and a look, with every fact only you know left to fill in.","headline":"Build a whole site from a sentence","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/site/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/site/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Build a site","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -218,6 +218,25 @@ quilzo publish</code></pre>
 <li>once you fill them in, they are <code>compositeWithTrainedAlgorithmicMedia</code> or <code>humanEdits</code>, with you as their author.</li>
 </ul>
 <p>How a package was written is taken from this installation's own record of what its builder made. A package from elsewhere is believed only when it says a model wrote it.</p>
+<h2 id="crew">An agent as the site crew<a class="anchor" href="#crew" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An agent connected over MCP (see <a href="/agent-interface/">Connect AI apps</a>) can do the building too, and a person still decides what goes in:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Operation</th><th scope="col">What the agent can do</th></tr></thead>
+<tbody>
+<tr><td><code>site_build</code></td><td>Build a whole site from a description, as the builder does without a model.</td></tr>
+<tr><td><code>site_import</code></td><td>Bring a live site in by its address (see <a href="/bring/">Bring your site</a>), leaving its pictures behind.</td></tr>
+<tr><td><code>propose_feature</code></td><td>Propose a package it wrote, such as a booking form or a directory, checked as an install would check it.</td></tr>
+<tr><td><code>site_blanks</code>, <code>site_fill</code></td><td>List what is left to fill in, and fill it with facts you gave it.</td></tr>
+</tbody></table></div>
+<p>Building, bringing in and proposing install nothing. What the agent made waits under <strong>Make › Proposed for you</strong>, on <strong>Approvals</strong> and in <code>quilzo feature proposals</code>, until you read its card and install it as your own decision, with the same approvals as anything you bring. The agent counts as nobody: a site with a contact form still needs two people, or the only administrator on the record.</p>
+<figure class="shot"><img src="/images/site/proposed.webp" alt="Make's Proposed for you list: York Voices 1.0.0, a site built from a description, by mcp-client for dana, just now, with Read it and Set aside" width="948" height="265" loading="lazy" decoding="async"><figcaption>What an agent proposed, waiting on the Make screen.</figcaption></figure>
+<figure class="shot"><img src="/images/site/proposal.webp" alt="The card for the proposed site: its name and purpose, a notice that it was proposed by mcp-client for dana and that nothing is installed until you install it, its risk and who approves it, and what it collects" width="1056" height="400" loading="lazy" decoding="async"><figcaption>Read like any package, with who proposed it and for whom.</figcaption></figure>
+<ul>
+<li>A newer proposal of the same package replaces the older one, at most twenty wait, and one nobody reads lapses after two weeks. <strong>Set aside</strong> removes one unread; an agent cannot.</li>
+<li>An agent's import leaves pictures behind, because the site serves and signs whatever is in the media library: nothing an agent brings is kept before you decide. Bring the site in from Make to keep them.</li>
+<li>Pages an agent filled in are marked <code>compositeWithTrainedAlgorithmicMedia</code>, and the pages of a package an agent wrote <code>trainedAlgorithmicMedia</code>, so the disclosure says a model wrote them. A blank it cannot fill stays one, and keeps its page from being published.</li>
+<li>Filling in checks each page it changes, so a page you have kept from somebody stays theirs to leave alone, whoever fills in its blanks.</li>
+</ul>
 <h2 id="install">Install, take over, take back<a class="anchor" href="#install" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>A site package installs like any feature (see <a href="/make/">Make</a>). Its contact form collects what visitors type, so a second administrator approves it; a store with one administrator approves it alone, and the record says so. One package owns the site. A site whose name or look somebody set by hand is taken over only with <code>--take-site</code>, or <strong>Let it take over the site</strong>, and removing the package puts it back as it was. The layouts stay, because a site with none renders nothing.</p>
 <section class="see-also">
@@ -229,7 +248,7 @@ quilzo publish</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/site.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-28 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/site.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/api/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">The content API and the command line</span></a>
       <a class="pager-next" href="/bring/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Bring your site from anywhere, by its address</span></a>
@@ -245,6 +264,7 @@ quilzo publish</code></pre>
     <li><a href="#blanks">Nothing is made up</a></li>
     <li><a href="#privacy">The privacy page</a></li>
     <li><a href="#provenance">Marked for how it was written</a></li>
+    <li><a href="#crew">An agent as the site crew</a></li>
     <li><a href="#install">Install, take over, take back</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

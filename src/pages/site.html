@@ -6,7 +6,7 @@ description: A working site from one sentence: pages, menus, a contact form, a q
 lead: Say what the site is for. Quilzo builds all of it, leaves blank every fact only you know, and publishes nothing until you fill those in.
 icon: design
 screens: Make
-updated: 2026-10-27
+updated: 2026-10-28
 -->
 
 <div class="definition"><p>A <strong>site package</strong> is a feature that declares a whole site: its name and look, its pages, its menus, its forms and its question box. The site builder writes one from a sentence. You read it, install it as one decision, fill in what only you know, and publish.</p></div>
@@ -56,6 +56,25 @@ quilzo publish</code></pre>
 <li>once you fill them in, they are <code>compositeWithTrainedAlgorithmicMedia</code> or <code>humanEdits</code>, with you as their author.</li>
 </ul>
 <p>How a package was written is taken from this installation's own record of what its builder made. A package from elsewhere is believed only when it says a model wrote it.</p>
+<h2 id="crew">An agent as the site crew</h2>
+<p>An agent connected over MCP (see <a href="/agent-interface/">Connect AI apps</a>) can do the building too, and a person still decides what goes in:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Operation</th><th scope="col">What the agent can do</th></tr></thead>
+<tbody>
+<tr><td><code>site_build</code></td><td>Build a whole site from a description, as the builder does without a model.</td></tr>
+<tr><td><code>site_import</code></td><td>Bring a live site in by its address (see <a href="/bring/">Bring your site</a>), leaving its pictures behind.</td></tr>
+<tr><td><code>propose_feature</code></td><td>Propose a package it wrote, such as a booking form or a directory, checked as an install would check it.</td></tr>
+<tr><td><code>site_blanks</code>, <code>site_fill</code></td><td>List what is left to fill in, and fill it with facts you gave it.</td></tr>
+</tbody></table></div>
+<p>Building, bringing in and proposing install nothing. What the agent made waits under <strong>Make › Proposed for you</strong>, on <strong>Approvals</strong> and in <code>quilzo feature proposals</code>, until you read its card and install it as your own decision, with the same approvals as anything you bring. The agent counts as nobody: a site with a contact form still needs two people, or the only administrator on the record.</p>
+<figure class="shot"><img src="/images/site/proposed.webp" alt="Make's Proposed for you list: York Voices 1.0.0, a site built from a description, by mcp-client for dana, just now, with Read it and Set aside"><figcaption>What an agent proposed, waiting on the Make screen.</figcaption></figure>
+<figure class="shot"><img src="/images/site/proposal.webp" alt="The card for the proposed site: its name and purpose, a notice that it was proposed by mcp-client for dana and that nothing is installed until you install it, its risk and who approves it, and what it collects"><figcaption>Read like any package, with who proposed it and for whom.</figcaption></figure>
+<ul>
+<li>A newer proposal of the same package replaces the older one, at most twenty wait, and one nobody reads lapses after two weeks. <strong>Set aside</strong> removes one unread; an agent cannot.</li>
+<li>An agent's import leaves pictures behind, because the site serves and signs whatever is in the media library: nothing an agent brings is kept before you decide. Bring the site in from Make to keep them.</li>
+<li>Pages an agent filled in are marked <code>compositeWithTrainedAlgorithmicMedia</code>, and the pages of a package an agent wrote <code>trainedAlgorithmicMedia</code>, so the disclosure says a model wrote them. A blank it cannot fill stays one, and keeps its page from being published.</li>
+<li>Filling in checks each page it changes, so a page you have kept from somebody stays theirs to leave alone, whoever fills in its blanks.</li>
+</ul>
 <h2 id="install">Install, take over, take back</h2>
 <p>A site package installs like any feature (see <a href="/make/">Make</a>). Its contact form collects what visitors type, so a second administrator approves it; a store with one administrator approves it alone, and the record says so. One package owns the site. A site whose name or look somebody set by hand is taken over only with <code>--take-site</code>, or <strong>Let it take over the site</strong>, and removing the package puts it back as it was. The layouts stay, because a site with none renders nothing.</p>
 <section class="see-also">

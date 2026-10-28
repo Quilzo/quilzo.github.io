@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/agent-interface/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-10-28">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MCP server with OAuth 2.1: connect AI apps to your content">
 <meta name="twitter:description" content="Connect Claude, ChatGPT, coding agents or your own agents to Quilzo over MCP, locally or with OAuth 2.1, each acting as one person, with a receipt for every call.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"Connect Claude, ChatGPT, coding agents or your own agents to Quilzo over MCP, locally or with OAuth 2.1, each acting as one person, with a receipt for every call.","headline":"Connect AI apps and agents to Quilzo over MCP, with OAuth and receipts","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/agent-interface/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/agent-interface/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Connect AI apps (MCP)","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-28","description":"Connect Claude, ChatGPT, coding agents or your own agents to Quilzo over MCP, locally or with OAuth 2.1, each acting as one person, with a receipt for every call.","headline":"Connect AI apps and agents to Quilzo over MCP, with OAuth and receipts","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/agent-interface/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/agent-interface/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Connect AI apps (MCP)","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -173,14 +173,15 @@
   <div class="prose">
 <div class="definition"><p>The <strong>agent interface</strong> is Quilzo as an MCP server: the same operations, checks and audit log as the command line, for any client that speaks the Model Context Protocol. It runs over stdio for an app on the same machine, and over HTTP at <code>/mcp</code> (MCP revision 2026-07-28, stateless) for apps anywhere, which connect through OAuth 2.1 with a person's consent.</p></div>
 <h2 id="tools">What an app sees<a class="anchor" href="#tools" aria-hidden="true" tabindex="-1">#</a></h2>
-<p>Four tools, so an app's context is not filled with dozens of definitions:</p>
+<p>Five tools, so an app's context is not filled with dozens of definitions:</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Tool</th><th scope="col">Does</th></tr></thead>
 <tbody>
 <tr><td><code>quilzo_find</code></td><td>Finds the operation for a task and returns its exact arguments. Call it first.</td></tr>
 <tr><td><code>quilzo_read</code></td><td>Runs a read operation: <code>read_page</code>, <code>search_pages</code>, <code>shield_status</code>, <code>policy_status</code> and many more.</td></tr>
-<tr><td><code>quilzo_write</code></td><td>Changes a draft. Never publishes. What it writes is recorded as AI-generated.</td></tr>
+<tr><td><code>quilzo_write</code></td><td>Changes a draft, or proposes a whole site or a feature for a person to install (see <a href="/site/#crew">the site crew</a>). Never publishes and never installs. What it writes is recorded as AI-generated.</td></tr>
 <tr><td><code>quilzo_check</code></td><td>Runs the checks that gate publishing: accessibility and content provenance.</td></tr>
+<tr><td><code>quilzo_publish</code></td><td>Makes the draft live, for a publisher, after every check publishing runs. A check that fails, or cannot run, refuses it, with no override here: overriding is a person's decision.</td></tr>
 </tbody></table></div>
 <p><code>quilzo mcp --list</code> prints every operation, read or write, with what it does. An agent cannot change who may do what, what code runs, or what the keys are, because a planted instruction in a page an agent reads is a plausible route to anything that agent can call.</p>
 <h2 id="local">Connect an app on the same machine<a class="anchor" href="#local" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -268,7 +269,7 @@ Mcp-Name: quilzo_read
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/agent-interface.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-28 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/agent-interface.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/assistant/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">The writing assistant, and typed AI decisions with a confidence gate</span></a>
       <a class="pager-next" href="/integrations/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">MCP gateway: govern the tools AI agents call, with pinning and approvals</span></a>

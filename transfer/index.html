@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Export a CMS to Markdown, WordPress or IPFS: no lock-in | Quilzo</title>
-<meta name="description" content="Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.">
+<meta name="description" content="Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, bring a live site or a WordPress export in, replicate, and publish to IPFS.">
 <link rel="canonical" href="https://quilzo.github.io/transfer/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
 <meta property="og:title" content="Export a CMS to Markdown, WordPress or IPFS: no lock-in">
-<meta property="og:description" content="Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.">
+<meta property="og:description" content="Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, bring a live site or a WordPress export in, replicate, and publish to IPFS.">
 <meta property="og:url" content="https://quilzo.github.io/transfer/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-10-28">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Export a CMS to Markdown, WordPress or IPFS: no lock-in">
-<meta name="twitter:description" content="Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.">
+<meta name="twitter:description" content="Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, bring a live site or a WordPress export in, replicate, and publish to IPFS.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.","headline":"Import, export, replicas and the permanent web","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/transfer/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/transfer/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Import and export","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-28","description":"Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, bring a live site or a WordPress export in, replicate, and publish to IPFS.","headline":"Import, export, replicas and the permanent web","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/transfer/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/transfer/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Import and export","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -100,6 +100,7 @@
     <summary><h2>Content</h2><span class="chev"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-362q-8 0-15-2.5t-13-8.5L268-557q-11-11-11-28t11-28q11-11 28-11t28 11l156 156 156-156q11-11 28-11t28 11q11 11 11 28t-11 28L508-373q-6 6-13 8.5t-15 2.5Z"/></svg></span></summary>
     <ul class="nav">
       <li><a href="/site/"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-80q-82 0-155-31.5t-127.5-86Q143-252 111.5-325T80-480q0-83 32.5-156t88-127Q256-817 330-848.5T488-880q80 0 151 27.5t124.5 76q53.5 48.5 85 115T880-518q0 115-70 176.5T640-280h-74q-9 0-12.5 5t-3.5 11q0 12 15 34.5t15 51.5q0 50-27.5 74T480-80Zm0-400Zm-220 40q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120-160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm200 0q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17Zm120 160q26 0 43-17t17-43q0-26-17-43t-43-17q-26 0-43 17t-17 43q0 26 17 43t43 17ZM480-160q9 0 14.5-5t5.5-13q0-14-15-33t-15-57q0-42 29-67t71-25h70q66 0 113-38.5T800-518q0-121-92.5-201.5T488-800q-136 0-232 93t-96 227q0 133 93.5 226.5T480-160Z"/></svg><span>Build a site</span></a></li>
+      <li><a href="/bring/"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m233-320 75 75q11 11 11 27.5T308-189q-12 12-28.5 12T251-189L108-332q-6-6-8.5-13T97-360q0-8 2.5-15t8.5-13l144-144q12-12 28-11.5t28 12.5q11 12 11.5 28T308-475l-75 75h247q17 0 28.5 11.5T520-360q0 17-11.5 28.5T480-320H233Zm494-240H480q-17 0-28.5-11.5T440-600q0-17 11.5-28.5T480-640h247l-75-75q-11-11-11-27.5t11-28.5q12-12 28.5-12t28.5 12l143 143q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L708-428q-12 12-28 11.5T652-429q-11-12-11.5-28t11.5-28l75-75Z"/></svg><span>Bring your site</span></a></li>
       <li><a href="/make/"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M352-120H200q-33 0-56.5-23.5T120-200v-152q48 0 84-30.5t36-77.5q0-47-36-77.5T120-568v-152q0-33 23.5-56.5T200-800h160q0-42 29-71t71-29q42 0 71 29t29 71h160q33 0 56.5 23.5T800-720v160q42 0 71 29t29 71q0 42-29 71t-71 29v160q0 33-23.5 56.5T720-120H568q0-50-31.5-85T460-240q-45 0-76.5 35T352-120Zm-152-80h85q24-66 77-93t98-27q45 0 98 27t77 93h85v-240h80q8 0 14-6t6-14q0-8-6-14t-14-6h-80v-240H480v-80q0-8-6-14t-14-6q-8 0-14 6t-6 14v80H200v88q54 20 87 67t33 105q0 57-33 104t-87 68v88Zm260-260Z"/></svg><span>Make</span></a></li>
       <li><a href="/research/"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M400-200v-80q-83 0-141.5-58.5T200-480q0-61 33.5-111t90.5-73q8-34 35.5-55t62.5-21l-9-25q-5-16 1.5-30.5T437-816h1q-6-15 1-29.5t24-20.5q15-5 29.5 1.5T512-842q16-6 31 1t21 23l82 225q6 16-.5 30.5T623-542h-1q6 16-1 31t-24 21q-15 5-29.5-1.5T548-514q-16 6-31-1t-21-23l-10-28q-15 14-34.5 21t-39.5 5q-22-2-41-13.5T338-582q-27 16-42.5 43T280-480q0 50 35 85t85 35h280q17 0 28.5 11.5T720-320q0 17-11.5 28.5T680-280H520v80h200q17 0 28.5 11.5T760-160q0 17-11.5 28.5T720-120H240q-17 0-28.5-11.5T200-160q0-17 11.5-28.5T240-200h160Zm146-378 36-14-68-188-38 14 70 188Zm-97.5-33.5Q460-623 460-640t-11.5-28.5Q437-680 420-680t-28.5 11.5Q380-657 380-640t11.5 28.5Q403-600 420-600t28.5-11.5ZM546-578Zm-126-62Zm0 0Z"/></svg><span>Research</span></a></li>
       <li><a href="/evolve/"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M400-200v-80q-83 0-141.5-58.5T200-480q0-61 33.5-111t90.5-73q8-34 35.5-55t62.5-21l-9-25q-5-16 1.5-30.5T437-816h1q-6-15 1-29.5t24-20.5q15-5 29.5 1.5T512-842q16-6 31 1t21 23l82 225q6 16-.5 30.5T623-542h-1q6 16-1 31t-24 21q-15 5-29.5-1.5T548-514q-16 6-31-1t-21-23l-10-28q-15 14-34.5 21t-39.5 5q-22-2-41-13.5T338-582q-27 16-42.5 43T280-480q0 50 35 85t85 35h280q17 0 28.5 11.5T720-320q0 17-11.5 28.5T680-280H520v80h200q17 0 28.5 11.5T760-160q0 17-11.5 28.5T720-120H240q-17 0-28.5-11.5T200-160q0-17 11.5-28.5T240-200h160Zm146-378 36-14-68-188-38 14 70 188Zm-97.5-33.5Q460-623 460-640t-11.5-28.5Q437-680 420-680t-28.5 11.5Q380-657 380-640t11.5 28.5Q403-600 420-600t28.5-11.5ZM546-578Zm-126-62Zm0 0Z"/></svg><span>Evolve</span></a></li>
@@ -177,6 +178,7 @@
 <tr><td>WordPress</td><td><code>quilzo export wxr --to DIR</code></td></tr>
 <tr><td>Lossless, re-importable</td><td><code>quilzo export json --to DIR</code></td></tr>
 <tr><td>A research deposit</td><td><code>quilzo export ro-crate --licence URI</code></td></tr>
+<tr><td>Bring a live site by its address</td><td><code>quilzo site import https://… --install</code> (see <a href="/bring/">Bring your site</a>)</td></tr>
 <tr><td>Import from WordPress</td><td><code>quilzo import FILE --from wordpress</code></td></tr>
 <tr><td>Replicate from another store</td><td><code>quilzo peer add NAME https://host</code></td></tr>
 <tr><td>Render for IPFS</td><td><code>quilzo ipfs write -o site</code></td></tr>
@@ -184,7 +186,7 @@
 </tbody></table></div><figure class="shot"><img src="/images/transfer/permanent-web.webp" alt="The Permanent web screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>The site's IPFS identifier.</figcaption></figure>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/transfer.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-10-28 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/transfer.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/shopping-agents/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Selling to shopping agents</span></a>
       <a class="pager-next" href="/shield/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">The shield: Quilzo defends itself</span></a>

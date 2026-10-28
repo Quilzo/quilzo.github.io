@@ -42,6 +42,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 ## Content
 
 - [Build a whole site from a sentence](https://quilzo.github.io/site/): A working site from one sentence: pages, menus, a contact form, a question box, a privacy page and a look, with every fact only you know left to fill in.
+- [Bring your site from anywhere, by its address](https://quilzo.github.io/bring/): Move a live site in by its address, whatever it was built with: its pages, menus, pictures and look, with redirects so its old addresses keep working.
 - [Make features as packages](https://quilzo.github.io/make/): Declare a feature as one package of types, records, pages, forms, agents, webhooks and roles, read what it can do, and install it or take it back as one decision.
 - [Research projects with claims you can check: numbers linked to code, real citations](https://quilzo.github.io/research/): Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.
 - [Evolve: search over programs with a sealed evaluator](https://quilzo.github.io/evolve/): Let a model improve a program generation by generation, scored by an evaluator in its own box that the programs cannot read, with a test set and a journal.
@@ -60,7 +61,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 - [Analytics, A/B tests and personalisation](https://quilzo.github.io/growth/): Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.
 - [Sell through the provider's own checkout](https://quilzo.github.io/selling/): Sell the catalogue through Stripe's hosted checkout: a Buy button only where the link charges what the page says, and no card or order kept.
 - [Selling to shopping agents](https://quilzo.github.io/shopping-agents/): Let shopping agents find what a shop sells, through a product feed and UCP catalog search, lookup and product, priced from published records.
-- [Import, export, replicas and the permanent web](https://quilzo.github.io/transfer/): Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, import from WordPress, replicate, and publish to IPFS.
+- [Import, export, replicas and the permanent web](https://quilzo.github.io/transfer/): Leave whenever you like: export to Markdown, WordPress WXR, lossless JSON or RO-Crate, bring a live site or a WordPress export in, replicate, and publish to IPFS.
 
 ## Protection
 

@@ -1,0 +1,76 @@
+<!--
+title: Bring your site from anywhere, by its address
+short: Bring your site
+seo: Move a website from Wix, WordPress or dotCMS by its address
+description: Move a live site in by its address, whatever it was built with: its pages, menus, pictures and look, with redirects so its old addresses keep working.
+lead: Give Quilzo your old site's address. It reads the site the way a careful visitor would and hands you all of it as one package to read before anything changes.
+icon: transfer
+screens: Make
+updated: 2026-10-28
+-->
+
+<div class="definition"><p>Most sites somebody wants to move have no export file, but every site has pages. <strong>Bring your site</strong> reads a live site by its address, whatever it was built with: Wix, Squarespace, Webflow, WordPress, dotCMS, Drupal or pages written by hand. It turns what it reads into a <a href="/site/">site package</a>, which you read and install as one decision.</p></div>
+<h2 id="bring">Bring it in</h2>
+<pre><code># read it and write the package, to read first
+quilzo site import https://your-old-site.example
+# or read it and install it
+quilzo site import https://your-old-site.example --install
+quilzo publish</code></pre>
+<p>In the admin, <strong>Make › Bring your site</strong> asks for the address, what the site is called (what it calls itself by default), how many pages to read, and whether to keep its pictures. You see the package before anything is installed.</p>
+<figure class="shot"><img src="/images/bring/form.webp" alt="The Bring your site form: the site's address, what it is called, how many pages to read, a box to keep the pictures it describes, and a Read it button"><figcaption>Bring your site, on the Make screen.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Option</th><th scope="col">What it does</th></tr></thead>
+<tbody>
+<tr><td><code>--pages N</code></td><td>How many pages to read: 60 by default from the command line, 40 from the Make screen, 400 at most. The site's top pages are read first.</td></tr>
+<tr><td><code>--name NAME</code></td><td>What the site is called, when not what it calls itself.</td></tr>
+<tr><td><code>--no-pictures</code></td><td>Leave the pictures behind.</td></tr>
+<tr><td><code>-o FILE</code></td><td>Where to write the package; its name and <code>.json</code> by default. The redirects are written beside it too, so you can read them.</td></tr>
+<tr><td><code>--install</code></td><td>Install it as well, as <code>quilzo feature install</code> would.</td></tr>
+<tr><td><code>--take-site</code></td><td>With <code>--install</code>: let it take over a site somebody set up by hand.</td></tr>
+</tbody></table></div>
+<h2 id="read">How it reads a site</h2>
+<ul>
+<li><strong>Politely.</strong> robots.txt is read first and obeyed. Each request waits for the one before, with a pause between them, and the whole read stops at the page budget.</li>
+<li><strong>Only that site.</strong> Pages are found from the site's own map of itself (<code>sitemap.xml</code>) when it publishes one, and from its links when it does not. Only that host is read, with or without <code>www.</code>, through the fetcher that refuses private and internal addresses.</li>
+<li><strong>Its content, not its frame.</strong> Each page's main content is read. The header, footer and navigation are left out, and so are scripts, frames and forms.</li>
+</ul>
+<h2 id="what">What it brings</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">On the old site</th><th scope="col">In the package</th></tr></thead>
+<tbody>
+<tr><td>Each page's main heading and first short paragraph</td><td>The page's title and its hero</td></tr>
+<tr><td>Its other headings and paragraphs</td><td>Prose sections, in the same order; lists keep their items</td></tr>
+<tr><td>Pictures with a description (alt text)</td><td>Kept in the <a href="/media/">media library</a> with that description and where it came from, made smaller and stripped of location data like any upload</td></tr>
+<tr><td>Its navigation</td><td>The main and footer menus</td></tr>
+<tr><td>Its name and theme colour</td><td>The site's name and look; a colour the theme would refuse for contrast is left out</td></tr>
+<tr><td>Old addresses such as <code>/About_Us.html</code></td><td>Redirects to the new pages, so links and search results keep working</td></tr>
+</tbody></table></div>
+<p>Every brought site also gets a question box that answers visitors from the site's own pages.</p>
+<figure class="shot"><img src="/images/bring/check.webp" alt="The check page for a bakery's site brought from its address: who made it and from where, one administrator approves it, and what it shows: the site's name and look, keeping two old addresses working, its five pages and its two menus"><figcaption>A brought site is read like any package before it is installed.</figcaption></figure>
+<h2 id="left">What it leaves behind, and says so</h2>
+<p>The card lists what did not come, so nothing goes missing without you knowing:</p>
+<ul>
+<li><strong>Pictures with no description.</strong> They are left out rather than given a description nobody wrote. Add them with <code>quilzo media add FILE --alt "…"</code>.</li>
+<li><strong>Forms.</strong> A form here says what it asks, why, and how long answers are kept, which an old form's markup cannot tell you. Declare yours with <code>quilzo form add</code> or <strong>Forms</strong> (see <a href="/forms/">Forms</a>).</li>
+<li><strong>Scripts and frames</strong>, such as trackers, embedded maps and widgets. The site's own security policy would block them anyway.</li>
+<li>Pages robots.txt asked not to be read, pages that did not answer, pages with no words, and pages past the budget.</li>
+</ul>
+<h2 id="redirects">Old addresses keep working</h2>
+<p>A site package can carry redirects, and a brought site carries one for every address that changed. On install they go into the site's own redirect map, <code>redirects.json</code> in the store. Removing the package takes them out again. They follow a few rules:</p>
+<ul>
+<li>A package can only redirect to its own pages, never off the site.</li>
+<li>A package cannot redirect from one of its own pages either: redirects are served before pages, so that would hide the page.</li>
+<li>A redirect you set yourself for the same old address stays yours.</li>
+<li>A redirect that would hide a page your site already has is left out, and the audit record counts it.</li>
+</ul>
+<p><code>quilzo site</code> serves the site's redirect map, with any <code>--redirects</code> file laid over it, and <code>quilzo export</code> carries it, so the old addresses keep working wherever the site goes next (see <a href="/transfer/">Import and export</a>).</p>
+<h2 id="after">After it is in</h2>
+<p>The pages are in the draft, marked as carried over by software, so the AI-content disclosure is right (see <a href="/provenance/">Provenance</a>). Read them, change what you like, and publish. Moving off your old host can wait until the new site is live.</p>
+<figure class="shot"><img src="/images/bring/home.webp" alt="The bakery's home page as brought in: its name and menu, a tinted hero with its heading and lead, then its own sections, and an Ask button"><figcaption>The bakery's home page, brought in and published.</figcaption></figure>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/site/"><span class="card-icon"><icon name="design"></icon></span><h3 class="card-title">Build a whole site</h3><p>Start from a sentence instead, and fill in what only you know.</p></a></li>
+<li><a class="card" href="/transfer/"><span class="card-icon"><icon name="transfer"></icon></span><h3 class="card-title">Import and export</h3><p>WordPress exports in, and every way out.</p></a></li>
+</ul>
+</section>

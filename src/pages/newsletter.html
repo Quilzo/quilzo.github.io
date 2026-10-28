@@ -1,0 +1,67 @@
+<!--
+title: A newsletter whose every reader asked for it
+short: Newsletter
+seo: Double opt-in newsletter with one-click unsubscribe
+description: A mailing list on your site: sign-ups confirmed by mail, issues sent from published pages, one-click unsubscribe, and lists moved in and out as CSV.
+lead: A page takes sign-ups, each address says yes from its own inbox, and an issue is a page you have published, sent to everybody who did.
+icon: newsletter
+screens: Newsletter
+updated: 2026-10-28
+-->
+
+<div class="definition"><p>The <strong>newsletter</strong> is the site's mailing list: the addresses that asked for it and confirmed, and the <strong>issues</strong> sent to them. An issue is a published page, sent as mail. A <strong>newsletter</strong> section on any page takes sign-ups.</p></div>
+<h2 id="set-up">Before you start</h2>
+<p>Two settings, both on the <strong>Settings</strong> screen or the command line:</p>
+<ul>
+<li><strong>Mail.</strong> Your relay in <code>mail.json</code>: its host and port and the address issues come from. Quilzo only sends over an encrypted connection. The relay should sign mail with DKIM for your domain, which is what lets a mail app trust its unsubscribe button.</li>
+<li><strong>The site's address.</strong> <code>site.base_url</code>, starting <code>https://</code>. Every link in an issue points there, and the one-click unsubscribe has to be https.</li>
+</ul>
+<p>Until both are set, a newsletter section says sign-ups are not taken, and the <strong>Newsletter</strong> screen says what is missing.</p>
+<h2 id="sign-up">Taking sign-ups</h2>
+<p>Add a <strong>newsletter</strong> section to a page, in the page's editor or with <code>quilzo section add PAGE newsletter</code>. Give it a title and a line saying what readers get and how often. That line is what each address is recorded as agreeing to.</p>
+<figure class="shot"><img src="/images/newsletter/signup.webp" alt="A newsletter section headed Get our news: an email field with a Subscribe button, the line What is new in the oven, at most once a month, and a note that a link to confirm is mailed first and every issue has a link to stop it"><figcaption>A sign-up on the bakery's home page.</figcaption></figure>
+<p>Signing up mails the address one link. The page the link opens has a button, and nothing else is sent until it is pressed. A button rather than the link alone, because mail filters open links to look at them, and a filter is not a person saying yes.</p>
+<figure class="shot"><img src="/images/newsletter/confirm.webp" alt="A page on a phone headed Get Crumb's newsletter: Press the button to say yes. Until you do, nothing is sent to this address. A button reads Yes, send it to me"><figcaption>The page the link opens.</figcaption></figure>
+<ul>
+<li>An address that never presses it is forgotten after a week.</li>
+<li>One address is mailed a link at most once an hour, and the whole site at most 200 an hour, so the form cannot be used to fill somebody's inbox.</li>
+<li>The page says the same thing whether or not the address was already subscribed, so the form tells nobody who is on the list.</li>
+</ul>
+<h2 id="send">Sending an issue</h2>
+<p>Write the issue as a page and publish it. Then, on the <strong>Newsletter</strong> screen, choose the page, send yourself a test, read it, tick the box and send it. Or from the command line:</p>
+<pre><code>quilzo newsletter test october --to you@example.com
+quilzo newsletter send october --yes</code></pre>
+<figure class="shot"><img src="/images/newsletter/screen.webp" alt="The Newsletter screen: counts of subscribed, waiting to confirm and left; Send an issue with a page, a subject, an address for a test, a Send a test button, a box to tick saying a test was read, and a Send to 2 button; then the list of addresses with when they joined and how, each with a Remove menu"><figcaption>The Newsletter screen.</figcaption></figure>
+<p>The page becomes mail by its words, in the order a visitor reads them: title, lead, picture, text, then each section's heading, paragraphs, items and buttons, in your site's colour. It is sent as plain text and as a simple page, so every mail app shows it. What a mail cannot hold, such as a booking or a question box, stays on the page, and the mail says so and links to it.</p>
+<figure class="shot"><img src="/images/newsletter/issue.webp" alt="The issue as it arrives: October at Crumb, a lead line, The rye with two paragraphs, New this month with two items, a quote from a regular, an Order a loaf button, Read it on the web, and under it You are getting this because you asked for Crumb's newsletter. Stop getting it"><figcaption>The issue, as a mail app shows it.</figcaption></figure>
+<p>Each address gets its own message, never a list in copy. Sending is paced and written down address by address. If it stops, because the relay failed or the program was stopped, <strong>Carry on</strong> (or <code>quilzo newsletter send --issue ID --yes</code>) goes on from there, and nobody gets an issue twice. Five refusals from the relay in a row stop a send and say why.</p>
+<h2 id="leave">Leaving</h2>
+<p>Every issue ends with a link to stop it. It also carries the <code>List-Unsubscribe</code> and <code>List-Unsubscribe-Post</code> headers of RFC 8058, which Gmail, Apple Mail, Outlook and Yahoo turn into their own unsubscribe button. That button ends the subscription with one request, with no page to find and nothing to fill in.</p>
+<p>An address that leaves is deleted. Quilzo keeps only a keyed fingerprint of it, so an old list imported again cannot put it back. Signing up again on the site, and confirming, is the one way back. You can also remove an address yourself on the screen, or with <code>quilzo newsletter remove ADDRESS</code>, for somebody who asks you directly.</p>
+<h2 id="move">Bringing a list, and taking it elsewhere</h2>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
+<tbody>
+<tr><td>Bring the list from Mailchimp, Substack, Ghost, MailPoet, Buttondown or most others</td><td><strong>Bring a list from another service</strong>, with where they agreed</td><td><code>quilzo newsletter import FILE.csv --agreed "…"</code></td></tr>
+<tr><td>Take the list to any other service</td><td><strong>Download the list</strong></td><td><code>quilzo newsletter export</code></td></tr>
+<tr><td>Ask one person, who joins when they say yes</td><td><strong>Ask somebody</strong></td><td><code>quilzo newsletter add ADDRESS</code></td></tr>
+</tbody></table></div>
+<p>An import finds the columns by their names, as each service writes them. People it adds count as having said yes, and where they agreed is kept as the record of it, so say truthfully where that was. Anybody the file marks as unsubscribed, bounced or complained is kept as having left, and never sent anything. Somebody already subscribed here is never taken off by an older list. The export is plain CSV: address, name, when they joined, when they confirmed, and what they agreed to.</p>
+<h2 id="privacy">Who can see the addresses</h2>
+<p>The public site writes a sign-up, writes that it was confirmed, and deletes an address that leaves. It never reads an address back. The links in mail are keyed with a secret the public site can read and cannot change, so checking a link reads nothing either. The addresses are read on the <strong>Newsletter</strong> screen and with <code>quilzo newsletter list</code>, by whoever may read what forms collect. Sending an issue and importing a list take whoever may publish.</p>
+<p>The audit log records that somebody signed up, confirmed or left, and that an issue was sent and to how many, never which address. Webhooks can be told <code>subscribed</code> and <code>unsubscribed</code> (see <a href="/integrations/">Integrations</a>), with no address.</p>
+<h2 id="agents">Agents</h2>
+<ul>
+<li><strong>Your site crew.</strong> An agent can write the issue as a page, and over MCP propose it with <code>propose_issue</code>. It waits on the Newsletter screen, and a person sends it after reading a test. <code>newsletter_status</code> shows an agent how many have subscribed and what was sent, never an address.</li>
+<li><strong>Your visitors' agents.</strong> A visitor's browser agent is offered the sign-up form as a tool (see <a href="/visiting-agents/">Visiting agents</a>). It fills in the address, and the visitor sends it and confirms from their own inbox.</li>
+</ul>
+<h2 id="limits">What it is, and is not</h2>
+<p>One list per site, and issues that are pages. Segments, scheduled sends, automated sequences, paid subscriptions, and open and click tracking are not here; tracking pixels and rewritten links are exactly what a reader cannot see and did not ask for. A site that needs those needs an email marketing service, and the export takes the list there.</p>
+<p>A site made before this version renders the newsletter section only once it has the latest layout: choose your starter again under <strong>Design</strong>. A store a service manager keeps read-only needs <code>quilzo site --prepare</code> run once after upgrading, to make the newsletter's directory and key. Until then the site runs with sign-ups off, and says so.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/members/"><span class="card-icon"><icon name="members"></icon></span><h3 class="card-title">Members</h3><p>Accounts for your visitors, with passkeys and pages only they see.</p></a></li>
+<li><a class="card" href="/forms/"><span class="card-icon"><icon name="forms"></icon></span><h3 class="card-title">Forms</h3><p>Ask visitors anything else, with what you collect declared and kept for a set time.</p></a></li>
+</ul>
+</section>

@@ -44,6 +44,7 @@ types
 structure
 forms
 bookings
+newsletter
 media
 design
 languages

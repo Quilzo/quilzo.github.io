@@ -1,0 +1,67 @@
+<!--
+title: Build a whole site from a sentence
+short: Build a site
+seo: Build a whole website from a sentence, with nothing made up
+description: A working site from one sentence: pages, menus, a contact form, a question box, a privacy page and a look, with every fact only you know left to fill in.
+lead: Say what the site is for. Quilzo builds all of it, leaves blank every fact only you know, and publishes nothing until you fill those in.
+icon: design
+screens: Make
+updated: 2026-10-27
+-->
+
+<div class="definition"><p>A <strong>site package</strong> is a feature that declares a whole site: its name and look, its pages, its menus, its forms and its question box. The site builder writes one from a sentence. You read it, install it as one decision, fill in what only you know, and publish.</p></div>
+<figure class="shot"><img src="/images/site/built.webp" alt="A bakery's home page built from one sentence: the name over a tinted hero with See the menu and Find us, three dishes as cards, the address and opening hours, a closing call to action and an Ask button"><figcaption>A site built from “Our bakery in Leeds: sourdough, rye and pastries, with a small café”, with its blanks filled in.</figcaption></figure>
+<h2 id="build">Build it</h2>
+<pre><code>quilzo site new "Our bakery in Leeds: sourdough, rye and pastries, with a small café" \
+  --name "Hart's Bakery" --install
+quilzo site fill                                   # what only you know
+quilzo site fill "your address=4 Mill Lane, Leeds LS1 4AB"
+quilzo publish</code></pre>
+<p>In the admin, <strong>Make › Build a whole site</strong> asks the same: what the site is for, what it is called, and optionally the kind of site, a style and a main colour. Without <code>--install</code>, the package is written to a file for you to read first.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Kind</th><th scope="col">Pages besides About, Contact and Privacy</th></tr></thead>
+<tbody>
+<tr><td><code>business</code></td><td>Home with what you do, how it works and questions; What we do</td></tr>
+<tr><td><code>product</code></td><td>Home with what it does and questions; How it works; Pricing</td></tr>
+<tr><td><code>restaurant</code></td><td>Home with dishes and where to find you; Menu with prices and allergens; Visit with opening hours</td></tr>
+<tr><td><code>portfolio</code></td><td>Home with selected work; Work, with how a commission goes</td></tr>
+<tr><td><code>community</code></td><td>Home with what you do and how to join in; Get involved, with a form to volunteer</td></tr>
+<tr><td><code>event</code></td><td>Home with what to expect and questions; Programme; Register, with a form</td></tr>
+</tbody></table></div>
+<p>The kind is read from the description when you do not choose one (<code>quilzo site kinds</code> lists them). Every site also gets main and footer menus, a contact form, a question box that answers from the site's own pages, a privacy page and a look whose every colour is checked for contrast.</p>
+<h2 id="model">What a model writes, and what it cannot change</h2>
+<p>When a model is allowed (see <a href="/models/">Models</a>), it rewrites the builder's start for your description: headings, leads, cards, steps, questions and answers. Its answer is then held to that start, and the card lists every change:</p>
+<ul>
+<li>the name, style and colour you chose win over the model's;</li>
+<li>the home page, the contact page, the contact form and the question box come back if it drops them;</li>
+<li>a link anywhere but the site's own pages is taken out, and so is a section of a kind that would not render or a form that fails its checks;</li>
+<li>agents, webhooks, roles, members-only pages and other layouts are never kept;</li>
+<li>the question box answers from the site's pages without a model, with no handoff and no embedding;</li>
+<li>the privacy page is always the builder's.</li>
+</ul>
+<p>Without a model, or with <code>--no-model</code>, you get the builder's start, which needs a name.</p>
+<h2 id="blanks">Nothing is made up</h2>
+<p>A price, an address, opening hours, a date, a person's name or words, a figure: when the description does not give one, the page says <code>[[what goes here]]</code> instead, such as <code>[[your opening hours]]</code>. The card lists them before you install.</p>
+<figure class="shot"><img src="/images/site/check.webp" alt="The check page for a plumber's site: the risk and who approves it, what it collects, the pages, menus, chatbot and look it adds, and the list of things to fill in"><figcaption>The card says what the site collects and shows, and what is left for you to fill in.</figcaption></figure>
+<p><strong>Make › Fill in</strong>, or <code>quilzo site fill</code>, lists every blank in the draft in the order the site is read, with the pages it is on. Write each one once and it goes into every page it is on. <strong>Leave it out</strong> takes the blank off the page, and a sentence that was only the blank with it.</p>
+<figure class="shot"><img src="/images/site/fill.webp" alt="The Fill in screen: each blank as a question with a text box, the pages it is on, and a Leave it out box"><figcaption>Fill in, from the Make screen.</figcaption></figure>
+<p>A page that still holds one of the blanks a site package was built with is not published: the <strong>blanks</strong> gate refuses it on every surface, and cannot be waived. Square brackets you wrote yourself, such as <code>[[ -f file ]]</code> on a page about shell scripts, are not blanks.</p>
+<h2 id="privacy">The privacy page</h2>
+<p>The privacy page is written from the package, not by the model, so it says what the site does: who runs it (a blank), every form with what it asks for, why, on what lawful basis and for how long, what the question box keeps, and that visits are counted as daily totals with nothing kept that identifies anybody. It is written again whenever the site is built.</p>
+<h2 id="provenance">Marked for how it was written</h2>
+<p>Installed pages carry a provenance record, so the AI-content disclosure is right without anybody setting it (see <a href="/provenance/">Provenance</a>):</p>
+<ul>
+<li>pages a model wrote are <code>trainedAlgorithmicMedia</code>, and disclose it;</li>
+<li>pages the builder wrote without a model are <code>algorithmicMedia</code>;</li>
+<li>once you fill them in, they are <code>compositeWithTrainedAlgorithmicMedia</code> or <code>humanEdits</code>, with you as their author.</li>
+</ul>
+<p>How a package was written is taken from this installation's own record of what its builder made. A package from elsewhere is believed only when it says a model wrote it.</p>
+<h2 id="install">Install, take over, take back</h2>
+<p>A site package installs like any feature (see <a href="/make/">Make</a>). Its contact form collects what visitors type, so a second administrator approves it; a store with one administrator approves it alone, and the record says so. One package owns the site. A site whose name or look somebody set by hand is taken over only with <code>--take-site</code>, or <strong>Let it take over the site</strong>, and removing the package puts it back as it was. The layouts stay, because a site with none renders nothing.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/make/"><span class="card-icon"><icon name="make"></icon></span><h3 class="card-title">Make features as packages</h3><p>The card, two-person installs, rollback and removal.</p></a></li>
+<li><a class="card" href="/publishing/"><span class="card-icon"><icon name="publishing"></icon></span><h3 class="card-title">Publishing</h3><p>The gates a draft passes before it goes live.</p></a></li>
+</ul>
+</section>

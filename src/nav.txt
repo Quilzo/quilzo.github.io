@@ -54,6 +54,7 @@ publishing
 growth
 selling
 shopping-agents
+visiting-agents
 transfer
 
 ## Protection

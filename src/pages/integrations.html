@@ -6,7 +6,7 @@ description: Give AI agents tools on MCP servers you approve, refuse a tool whos
 lead: Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.
 icon: integrations
 screens: Integrations
-updated: 2026-10-21
+updated: 2026-10-28
 -->
 
 <div class="definition"><p>An <strong>MCP gateway</strong> sits between AI agents and MCP servers and decides each tool call: who may call which tool, how often, whether a person approves it first, and with which credential. Quilzo is one for its own agents, and offers the same to other vendors' agents at <code>/mcp/gateway/NAME</code>.</p></div>
@@ -134,7 +134,7 @@ quilzo integrations decline gq_915959844d12</code></pre>
 <p>Every caller of the gateway, and every tool server, also appears on the <a href="/fleet/">Fleet</a> map.</p>
 
 <h2 id="webhooks">Tell other systems when something happens</h2>
-<p>A webhook is a signed POST to a URL you choose when something is <code>published</code>, <code>rolled-back</code>, <code>scheduled</code>, <code>submitted</code> (a form), <code>proposed</code> (a change waiting for approval), <code>booked</code> or <code>booking-cancelled</code> (see <a href="/bookings/">Bookings</a>). Only https endpoints are accepted.</p>
+<p>A webhook is a signed POST to a URL you choose when something is <code>published</code>, <code>rolled-back</code>, <code>scheduled</code>, <code>submitted</code> (a form), <code>proposed</code> (a change waiting for approval), <code>booked</code> or <code>booking-cancelled</code> (see <a href="/bookings/">Bookings</a>), <code>subscribed</code> or <code>unsubscribed</code> (see <a href="/newsletter/">Newsletter</a>). Only https endpoints are accepted.</p>
 <pre><code>quilzo webhook add https://deploy.example.com/hooks/quilzo</code></pre>
 <p>The signing key is printed once. Each delivery carries <code>X-Quilzo-Event</code>, <code>X-Quilzo-Delivery</code>, <code>X-Quilzo-Timestamp</code> and <code>X-Quilzo-Signature</code>. The signature is an HMAC-SHA256 over the timestamp and the body, each prefixed with its length, so the boundary between them cannot be moved. Reject anything more than five minutes old. A receiver in Python:</p>
 <pre><code>import hmac, hashlib, struct, time

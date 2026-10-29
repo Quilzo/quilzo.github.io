@@ -6,7 +6,7 @@ description: Declare listings that show records on pages, menus that refuse a br
 lead: Declared queries, navigation that resolves, and vocabularies with defined terms.
 icon: structure
 screens: Structure, Listings
-updated: 2026-10-08
+updated: 2026-10-29
 -->
 
 <figure class="shot"><img src="/images/structure/structure.webp" alt="The Structure screen with menus and vocabularies"><figcaption>Menus and vocabularies.</figcaption></figure>
@@ -17,6 +17,7 @@ updated: 2026-10-08
 <tr><td>List the listings</td><td><code>quilzo listing list</code></td></tr>
 <tr><td>Run one</td><td><code>quilzo listing run NAME</code></td></tr>
 </tbody></table></div>
+<p>A condition keeps records whose field <strong>is</strong> a value, or <strong>has</strong> some words in it. Two compare a date with now instead: <strong>upcoming</strong> keeps what is today or later, and <strong>past</strong> what has gone by, on the site's clock (<code>site.timezone</code>). They are worked out when the listing is read, so a page that shows one changes as time passes, with nothing published. <a href="/events/">Events</a> are built on them.</p>
 <h2 id="menus">Menus and vocabularies</h2><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>

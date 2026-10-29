@@ -45,6 +45,7 @@ structure
 forms
 bookings
 newsletter
+events
 media
 design
 languages

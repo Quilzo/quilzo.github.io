@@ -1,0 +1,73 @@
+<!--
+title: Events that leave the page when they are over
+short: Events
+seo: Event listings, calendar feeds and schema.org Event data
+description: List what is on: a page for each event, a calendar visitors subscribe to, Event data for search engines, and events gone by themselves once over.
+lead: Add an event with its date, time and place. The site lists it, gives it a page, puts it in a calendar visitors can subscribe to, and takes it off when it is over, with nothing to publish.
+icon: event
+updated: 2026-10-29
+-->
+
+<div class="definition"><p><strong>Events</strong> are records the site knows are events: each has a date, perhaps a time, and a place or a link to join. The listing that <code>site.events</code> names says which records they are. From it come an <strong>events</strong> section on any page, a page for each event, a calendar at <code>/events.ics</code>, and Event data for search engines.</p></div>
+<figure class="shot"><img src="/images/events/list.webp" alt="An events section headed What's on: five events in date order, each with its day and month in a box, its name as a link, the date and time in words with the venue and price, a summary, Tickets and Add to calendar links, one marked Postponed, and under them a link reading Subscribe to these in your calendar"><figcaption>What is on, at a bakery.</figcaption></figure>
+<h2 id="set-up">Set it up</h2>
+<p>On the <strong>Make</strong> screen, under <strong>Ready to add</strong>, choose <strong>Events</strong> and <strong>Check it</strong>. Checking installs nothing: it shows what would be added, and you install it from there. Or run:</p>
+<pre><code>quilzo events setup</code></pre>
+<figure class="shot"><img src="/images/events/ready.webp" alt="Ready to add on the Make screen: Events, with what it adds, a Check it button, and a note that checking installs nothing"><figcaption>Events, ready to add.</figcaption></figure>
+<p>Both install one feature, as one decision on the record:</p>
+<ul>
+<li>an <strong>event</strong> type and an <strong>events</strong> collection for it;</li>
+<li>two listings: <code>upcoming_events</code>, what is still to come, and <code>past_events</code>, what has been, newest first;</li>
+<li>an <strong>events</strong> page with an events section, and an <strong>event</strong> page that shows each event at <code>/event/its-page-link</code>;</li>
+<li><code>site.events</code> set to <code>upcoming_events</code>.</li>
+</ul>
+<p>Installing takes whoever may install a feature. Removing it with <code>quilzo feature remove events</code> takes back what it added and keeps the events people entered, and the site stops serving a calendar.</p>
+<p>Then set the site's clock, on the <strong>Settings</strong> screen or with <code>quilzo config set site.timezone Europe/London</code>. Times are written as the people going say them, so 19:30 means half past seven where the site is. Until the zone is set, the clock is UTC, and a calendar entry would be an hour out for half the year in a place with summer time.</p>
+<h2 id="add">Add an event</h2>
+<p>On the <strong>Data</strong> screen, open the <strong>events</strong> collection. The form is the type's: a date picker for the date, a time picker for the times, and a list to choose a status from. <strong>Write it as JSON instead</strong> is there for anything the form does not show.</p>
+<figure class="shot narrow"><img src="/images/events/form.webp" alt="The form for a new event: Title Pastry masterclass, Page link pastry-masterclass, a Date picker set to 28 November 2026, Starts at 10:00, an empty Last day, and Finishes at 13:00, each with a line of help"><figcaption>A new event on the Data screen.</figcaption></figure>
+<p>From the command line:</p>
+<pre><code>quilzo records add events title="Rye night" slug=rye-night date=2026-11-14 time=19:30 until=21:00 venue="Crumb, the bakery" price=£5</code></pre>
+<p>Events are content like any other: they reach visitors when you publish.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">What it holds</th></tr></thead>
+<tbody>
+<tr><td>Title, Page link</td><td>Its name, and the end of its own page's address. Both are required.</td></tr>
+<tr><td>Date</td><td>The day it is on, or the first of several. Required.</td></tr>
+<tr><td>Starts at, Finishes at</td><td>Times of day on the site's clock. With no start time, it is all day. A finish earlier than the start is after midnight.</td></tr>
+<tr><td>Last day</td><td>For an event over several days.</td></tr>
+<tr><td>Venue, Location</td><td>The name of the place, and its street and town, so a map and a calendar can find it.</td></tr>
+<tr><td>Online at</td><td>Where to join, for an event online.</td></tr>
+<tr><td>About it, Picture</td><td>A summary, and a picture from the media library with what it shows.</td></tr>
+<tr><td>Price, Tickets</td><td>The price as it should read (£5, or Free), and where tickets are sold, when somewhere else sells them.</td></tr>
+<tr><td>Status</td><td>Cancelled, postponed, moved online or rescheduled. Empty while it is on as planned.</td></tr>
+</tbody></table></div>
+<h2 id="show">What visitors see</h2>
+<p>An <strong>events</strong> section can go on any page, in the page's editor or with <code>quilzo section add PAGE events</code>. It lists what is still to come in date order: the date and time in words, the place and the price, a status when there is one, links to tickets and to add the event to a calendar, and a link to subscribe to them all. Give it a title, a line under it, how many to show and what to say when nothing is planned.</p>
+<figure class="shot narrow"><img src="/images/events/event.webp" alt="An event's own page on a phone: Rye night, Saturday 14 November 2026, 19:30–21:00, Where Crumb, the bakery, 1 High Street, Leeds, Price £5, a Tickets button, an Add to your calendar button, and a paragraph about the evening"><figcaption>An event's own page.</figcaption></figure>
+<p>Each event has a page of its own, with its picture, where it is, the price, tickets, and a button to add it to a calendar. A cancelled or postponed event says so at the top of its page and beside it in the list.</p>
+<h3 id="over">When it is over</h3>
+<p>An event leaves the list when it is over, by the site's clock, with nothing to publish: at its finish time when it has one, and otherwise at the end of its last day. Its page then answers not found, and it leaves the calendar. A page showing events is never answered "not modified" with one that has ended.</p>
+<p>What has been is in the <code>past_events</code> listing. For an archive, add a <strong>listing</strong> section with it to a page.</p>
+<h2 id="calendar">Calendars</h2>
+<p><code>/events.ics</code> is every event still to come, as a calendar. Google Calendar, Apple Calendar and Outlook subscribe to it by its address, and keep up as you add, change and cancel events, each on its own schedule. Each event's <strong>Add to calendar</strong> is a file with that one event. A cancelled event is marked cancelled in the calendar, and a postponed one tentative, with the status in its title.</p>
+<p>Every page links the calendar in its head, where a calendar app or a feed reader looks for it, and <code>/llms.txt</code> lists it for agents.</p>
+<h2 id="search">Search engines</h2>
+<p>Each event's page carries schema.org <code>Event</code> data: when it starts and ends with the offset of the site's clock, the place or the link to join, whether it is in person or online, its status, and the price or that it is free. It is what search engines read for their event listings, and what an assistant reads to answer when and where. The page of an event is never described as a product, even when it has a price.</p>
+<h2 id="agents">Agents</h2>
+<ul>
+<li><strong>Your site crew.</strong> Over MCP, <code>upcoming_events</code> gives an agent what is on, as the events page lists it, with the site's time zone. It adds an event by writing a record to the <strong>events</strong> collection with <code>write_record</code>, and sets events up on a site by proposing the package <code>quilzo events example</code> prints, with <code>propose_feature</code>. A person installs it.</li>
+<li><strong>From the command line.</strong> <code>quilzo events list</code> shows what is on, at the live site. Add <code>--json</code> for a program.</li>
+</ul>
+<h2 id="move">Moving events</h2>
+<p>The calendar at <code>/events.ics</code> takes what is still to come to any calendar or events service that reads iCalendar. <code>quilzo records list events --json</code> gives every event, past ones too, and <code>quilzo records import events rows.json</code> brings many in one commit. The setup itself moves as a feature: <code>quilzo feature export events</code> on one site, install on another.</p>
+<h2 id="limits">What it is, and is not</h2>
+<p>One events listing per site, and events that are records. An event that repeats, such as a class every Tuesday, is one record for each date. Tickets are sold elsewhere and linked, or sold as a product in your catalogue (see <a href="/selling/">Selling</a>). To ask who is coming, add a form or a booking section to the event's page.</p>
+<p>A site made before this version shows the events section and each event's page only once it has the latest layout: choose your starter again under <strong>Design</strong>, or run <code>quilzo template use sections --force</code>. <code>quilzo events setup</code> says so when it is needed.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/bookings/"><span class="card-icon"><icon name="bookings"></icon></span><h3 class="card-title">Bookings</h3><p>Appointments taken on your site, with who booked kept off it.</p></a></li>
+<li><a class="card" href="/structure/"><span class="card-icon"><icon name="structure"></icon></span><h3 class="card-title">Structure and listings</h3><p>Listings that keep what is to come, or what has been.</p></a></li>
+</ul>
+</section>

@@ -6,7 +6,7 @@ description: Define content types every surface enforces, bind pages to them, an
 lead: A type says which fields a page must have, and every surface checks it.
 icon: types
 screens: Types, Data
-updated: 2026-10-14
+updated: 2026-10-29
 -->
 
 <div class="definition"><p>A <strong>type</strong> is a flat list of fields. Bind a page or a collection to it and every write must satisfy it, from the admin, the command line, the API and the agent interface, with no way to write around it.</p></div>
@@ -16,6 +16,7 @@ updated: 2026-10-14
 quilzo type add product.json
 quilzo type bind PAGE product
 quilzo type check                     # validate every bound page</code></pre>
+<p>A field is one of these kinds: a line of text, a body of text, a number, yes or no, a date, a time of day, a web address, an email address, a page link, one choice from a list, a list of short entries, or the name of another page. Each is checked as its kind, and the editor asks for it with the right control: a date picker for a date, a time picker for a time, the choices for a choice.</p>
 <h2 id="records">Keep records in collections</h2>
 <figure class="shot"><img src="/images/types/records.webp" alt="The Data screen listing the products collection"><figcaption>Collections of records.</figcaption></figure>
 <div class="table-wrap"><table>

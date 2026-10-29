@@ -1,15 +1,15 @@
 <!--
-title: Bring your site from anywhere, by its address
+title: Bring your site from anywhere, by its address or its export
 short: Bring your site
-seo: Move a website from Wix, WordPress or dotCMS by its address
-description: Move a live site in by its address, whatever it was built with: its pages, menus, pictures and look, with redirects so its old addresses keep working.
-lead: Give Quilzo your old site's address. It reads the site the way a careful visitor would and hands you all of it as one package to read before anything changes.
+seo: Move a website from WordPress, Ghost, Hugo, Wix or dotCMS
+description: Move a site in by its address or the file it exported: its pages, posts, menus, pictures and look, with redirects so its old addresses keep working.
+lead: Give Quilzo your old site's address, or the file it exported. It reads the site the way a careful visitor would and hands you all of it as one package to read before anything changes.
 icon: transfer
 screens: Make
-updated: 2026-10-28
+updated: 2026-10-29
 -->
 
-<div class="definition"><p>Most sites somebody wants to move have no export file, but every site has pages. <strong>Bring your site</strong> reads a live site by its address, whatever it was built with: Wix, Squarespace, Webflow, WordPress, dotCMS, Drupal or pages written by hand. It turns what it reads into a <a href="/site/">site package</a>, which you read and install as one decision.</p></div>
+<div class="definition"><p>Most sites somebody wants to move have no export file, but every site has pages. <strong>Bring your site</strong> reads a live site by its address, whatever it was built with: Wix, Squarespace, Webflow, WordPress, dotCMS, Drupal or pages written by hand. A site that can export itself comes in from the file instead, with its posts as a <a href="/blog/">blog</a>. Either way it becomes a <a href="/site/">site package</a>, which you read and install as one decision.</p></div>
 <h2 id="bring">Bring it in</h2>
 <pre><code># read it and write the package, to read first
 quilzo site import https://your-old-site.example
@@ -28,6 +28,27 @@ quilzo publish</code></pre>
 <tr><td><code>--install</code></td><td>Install it as well, as <code>quilzo feature install</code> would.</td></tr>
 <tr><td><code>--take-site</code></td><td>With <code>--install</code>: let it take over a site somebody set up by hand.</td></tr>
 </tbody></table></div>
+<h2 id="export">From the file it exported</h2>
+<p>An export says what a crawl cannot see: which pages are posts, when each went out, who wrote it, and its tags. Give the file, or a folder, instead of the address:</p>
+<pre><code>quilzo site import oldsite.WordPress.2026-10-29.xml --install
+quilzo site import crumb.ghost.json --site https://crumb.example --install
+quilzo site import ./my-hugo-site --install</code></pre>
+<p>On <strong>Make › Bring your site</strong>, choose the file under <strong>Or the file it exported</strong>. A folder goes there as a zip.</p>
+<figure class="shot narrow"><img src="/images/bring/export.webp" alt="Or the file it exported, on the Make screen: a file to choose, where the site was, what it is called, a box to keep the pictures it describes, a Read it button, and which exports it takes"><figcaption>Bringing a site from its export.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">From</th><th scope="col">Give it</th></tr></thead>
+<tbody>
+<tr><td>WordPress, WordPress.com</td><td>Tools › Export › All content: the <code>.xml</code> file</td></tr>
+<tr><td>Squarespace</td><td>Settings › Export: the WordPress export it writes, a <code>.xml</code> file</td></tr>
+<tr><td>Ghost</td><td>Settings › Export: the <code>.json</code> file, and the address the site was at, so its pictures can be brought</td></tr>
+<tr><td>Hugo, Jekyll, Eleventy, Astro, Docusaurus, Gatsby</td><td>The site's source folder, or a zip of it: the Markdown it is built from, its pictures and its settings</td></tr>
+<tr><td>Notion, Obsidian</td><td>The Markdown export, as a zip</td></tr>
+<tr><td>Webflow, or any site of plain pages</td><td>The zip of its pages</td></tr>
+</tbody></table></div>
+<p>Pages come in as pages. Posts become the blog, each at <code>/post/its-link</code> with its picture, author, tags, dates and the pictures among its words, and the home page lists the newest. A link from one page or post to another goes to where it is now, and every old address, including a post's other addresses, redirects there.</p>
+<figure class="shot"><img src="/images/bring/post.webp" alt="A post brought from a Hugo site: Rye, at last, by Sam Baker, with its picture, a heading What changed, a numbered list of three, a second picture among its words, a quotation, links, its tags, and a link to the older post"><figcaption>A post brought from a Hugo site, published.</figcaption></figure>
+<p>What an export holds that is not ready for everybody stays behind and is counted on the card: drafts, scheduled and private posts, and posts for members or paying subscribers, which moving must not make public. So do comments, which posts here do not take yet, and a generator's shortcodes, whose words are kept. A Markdown site's templates and scripts are never run.</p>
+<p>Nothing in the file is fetched while it is read. A folder is read through a root that nothing outside it can be reached from, and its pictures are its own files; an export's pictures come through the same fetcher as a crawl's. The posts travel as records named by the hash of the file they wait in, so the package stays one you can read, and they are written once, when it is first installed. Bringing a site is for a site that does not have one yet: on one with a blog or a home page already, the install refuses and says which parts.</p>
 <h2 id="read">How it reads a site</h2>
 <ul>
 <li><strong>Politely.</strong> robots.txt is read first and obeyed. Each request waits for the one before, with a pause between them, and the whole read stops at the page budget.</li>
@@ -39,7 +60,7 @@ quilzo publish</code></pre>
 <thead><tr><th scope="col">On the old site</th><th scope="col">In the package</th></tr></thead>
 <tbody>
 <tr><td>Each page's main heading and first short paragraph</td><td>The page's title and its hero</td></tr>
-<tr><td>Its other headings and paragraphs</td><td>Prose sections, in the same order; lists keep their items</td></tr>
+<tr><td>Its other headings and paragraphs</td><td>Prose sections, in the same order, keeping their links, bold and italic; lists, numbered lists and quotations keep their shape, and a table's rows read as lines</td></tr>
 <tr><td>Pictures with a description (alt text)</td><td>Kept in the <a href="/media/">media library</a> with that description and where it came from, made smaller and stripped of location data like any upload</td></tr>
 <tr><td>Its navigation</td><td>The main and footer menus</td></tr>
 <tr><td>Its name and theme colour</td><td>The site's name and look; a colour the theme would refuse for contrast is left out</td></tr>
@@ -73,6 +94,6 @@ quilzo publish</code></pre>
 <h2 id="next">Next</h2>
 <ul class="cards">
 <li><a class="card" href="/site/"><span class="card-icon"><icon name="design"></icon></span><h3 class="card-title">Build a whole site</h3><p>Start from a sentence instead, and fill in what only you know.</p></a></li>
-<li><a class="card" href="/transfer/"><span class="card-icon"><icon name="transfer"></icon></span><h3 class="card-title">Import and export</h3><p>WordPress exports in, and every way out.</p></a></li>
+<li><a class="card" href="/blog/"><span class="card-icon"><icon name="article"></icon></span><h3 class="card-title">Blog</h3><p>Where the posts you bring are kept, a page each.</p></a></li>
 </ul>
 </section>

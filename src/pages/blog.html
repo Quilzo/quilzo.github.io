@@ -1,0 +1,65 @@
+<!--
+title: A blog where every post keeps its address
+short: Blog
+seo: Blog posts, a feed and BlogPosting data, newest first
+description: Posts newest first on your site: a page for each, older ones a page at a time, a feed readers follow, and the date and author search engines read.
+lead: Write a post with its title, the day it went out and its words. The blog lists it newest first, gives it a page of its own that keeps working however many come after it, and puts it in the site's feed.
+icon: article
+updated: 2026-10-29
+-->
+
+<div class="definition"><p>A <strong>blog</strong> is posts, newest first. Each <strong>post</strong> is a record with a title, the day it went out and what it says. The listing that <code>site.blog</code> names says which records are posts. From it come a <strong>posts</strong> section on any page, a page for each post, and the post's data for search engines. The site's feed follows the blog.</p></div>
+<figure class="shot"><img src="/images/blog/list.webp" alt="A blog section: four posts newest first, each with its title as a link, the date and who wrote it, and a summary; the newest has a picture of rye loaves beside it; under them a link reading Follow these in a feed reader"><figcaption>A bakery's blog.</figcaption></figure>
+<h2 id="set-up">Set it up</h2>
+<p>On the <strong>Make</strong> screen, under <strong>Ready to add</strong>, choose <strong>Blog</strong> and <strong>Check it</strong>. Checking installs nothing: it shows what would be added, and you install it from there. Or run:</p>
+<pre><code>quilzo blog setup</code></pre>
+<figure class="shot"><img src="/images/blog/ready.webp" alt="Ready to add on the Make screen: Blog and Events, each with what it adds and a Check it button, and a note that checking installs nothing"><figcaption>The blog, ready to add.</figcaption></figure>
+<p>Both install one feature, as one decision on the record:</p>
+<ul>
+<li>a <strong>post</strong> type and a <strong>posts</strong> collection for it;</li>
+<li>a listing, <code>latest_posts</code>, of the posts newest first;</li>
+<li>a <strong>blog</strong> page with a posts section, and a <strong>post</strong> page that shows each post at <code>/post/its-page-link</code>;</li>
+<li><code>site.blog</code> set to <code>latest_posts</code>, and <code>site.feed</code> too when the site has no feed yet.</li>
+</ul>
+<p>The pages are marked as written by Quilzo, so they publish like the rest. Removing the feature with <code>quilzo feature remove blog</code> takes back what it added and keeps the posts people wrote, and a feed that was the blog goes with it.</p>
+<h2 id="write">Write a post</h2>
+<p>On the <strong>Data</strong> screen, open the <strong>posts</strong> collection. The form is the type's: a date picker for the day it went out, a box for the post itself, and for the picture a list of the library's pictures by what they show, so you type a word like <em>rye</em> and choose.</p>
+<figure class="shot"><img src="/images/blog/form.webp" alt="The form for a new post: Title, Page link, a Published date picker, Written by, Summary, and a large box for the post with a line saying how to write headings, lists, bold, italic and links"><figcaption>A new post on the Data screen.</figcaption></figure>
+<p>From the command line:</p>
+<pre><code>quilzo records add posts title="Rye, at last" slug=rye published=2026-10-27 byline="Sam Baker" tags='["rye","bread"]' body="The rye took three tries."</code></pre>
+<p>Posts are content like any other: they reach readers when you publish.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">What it holds</th></tr></thead>
+<tbody>
+<tr><td>Title, Page link</td><td>Its title, and the end of its own page's address. Both are required.</td></tr>
+<tr><td>Published</td><td>The day it went out. Posts are listed newest first by it. Required.</td></tr>
+<tr><td>Written by</td><td>As it should read under the title.</td></tr>
+<tr><td>Summary</td><td>A sentence or two for the list of posts, the feed and search results.</td></tr>
+<tr><td>The post</td><td>Its words. A blank line between paragraphs; <code>##</code> before a heading, <code>-</code> before each item of a list, <code>**bold**</code>, <code>*italic*</code> and <code>[a link](https://example.com)</code>.</td></tr>
+<tr><td>Picture</td><td>A picture from the media library, with what it shows.</td></tr>
+<tr><td>Tags</td><td>Words a reader might look for it by, one on each line.</td></tr>
+<tr><td>Last changed</td><td>When it was changed in a way a reader should know. The post says when it was updated.</td></tr>
+</tbody></table></div>
+<h2 id="read">What readers see</h2>
+<p>A <strong>posts</strong> section can go on any page, in the page's editor or with <code>quilzo section add PAGE posts</code>. It shows the newest posts with when each went out, who wrote it and its summary, ten at a time unless you say otherwise. <strong>Older posts</strong> and <strong>Newer posts</strong> go back a page at a time to the first post ever written, at <code>/blog?page=2</code> and on.</p>
+<figure class="shot narrow"><img src="/images/blog/post.webp" alt="A post's page on a phone: Rye, at last, 27 October 2026 · Sam Baker, a summary, a picture of rye loaves, two paragraphs with a heading What changed and a list of three, tags rye and bread, Updated 28 October 2026, and a link to the older post"><figcaption>A post's own page.</figcaption></figure>
+<p>Each post has its own page, with its picture, its words, its tags, when it was updated, and links to the posts either side of it and back to the blog. Every post has its page however far back it is, and the sitemap lists each one, so a search engine finds them all.</p>
+<h2 id="follow">Feeds</h2>
+<p>When <code>site.feed</code> names the blog's listing, as it does after setup on a site with no feed, the newest posts are at <code>/feed.xml</code> (Atom) and <code>/feed.json</code> (JSON Feed), and the posts section links to it. Every page names the feed in its head, where a feed reader looks for it.</p>
+<h2 id="search">Search engines</h2>
+<p>Each post's page carries schema.org <code>BlogPosting</code> data: its headline, when it was published and last changed, who wrote it, its picture, its tags and the site that published it. To whoever shares it, it is an article, with its summary as the description.</p>
+<h2 id="agents">Agents</h2>
+<ul>
+<li><strong>Your site crew.</strong> Over MCP, an agent reads the posts with <code>run_listing</code> on <code>latest_posts</code>, writes one by writing a record to the <strong>posts</strong> collection with <code>write_record</code>, and sets a blog up on a site by proposing the package <code>quilzo blog example</code> prints, with <code>propose_feature</code>. A person installs it, and a person publishes.</li>
+<li><strong>From the command line.</strong> <code>quilzo blog list</code> shows the newest posts at the live site. Add <code>--json</code> for a program.</li>
+</ul>
+<h2 id="limits">What it is, and is not</h2>
+<p>One blog per site, and posts that are records. A post appears when the site is published, and a post you are not ready to show stays out of the live site until then, as every draft does. Posts take no comments yet. To send a post to subscribers, write it as a page and send that as an issue (see <a href="/newsletter/">Newsletter</a>).</p>
+<p>A site made before this version shows the posts section and each post's page only once it has the latest layout: choose your starter again under <strong>Design</strong>, or run <code>quilzo template use sections --force</code>. <code>quilzo blog setup</code> says so when it is needed.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/events/"><span class="card-icon"><icon name="event"></icon></span><h3 class="card-title">Events</h3><p>What is on, with a calendar visitors subscribe to.</p></a></li>
+<li><a class="card" href="/newsletter/"><span class="card-icon"><icon name="newsletter"></icon></span><h3 class="card-title">Newsletter</h3><p>A mailing list whose every reader asked for it.</p></a></li>
+</ul>
+</section>

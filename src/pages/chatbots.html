@@ -6,7 +6,7 @@ description: Add a chatbot that answers visitors from your published pages, cite
 lead: Answers from what you have published, a citation on every sentence, and a person when the visitor wants one.
 icon: assistants
 screens: Chatbots, Inbox
-updated: 2026-10-08
+updated: 2026-11-01
 -->
 
 <div class="definition"><p>A Quilzo <strong>chatbot</strong> is retrieval-augmented generation (RAG) over your own published pages. It retrieves passages by keywords and by meaning, answers only from them, and puts a citation on every sentence. With a model connected, each sentence is checked against the passage it cites and dropped if the passage does not support it. Without a model it answers extractively, quoting the passages. Nothing a visitor asks is stored.</p></div>
@@ -86,6 +86,10 @@ quilzo inbox close help/ID</code></pre>
 <p>A chatbot can offer a link or a form, and never more. It proposes, the visitor chooses, and the form's own checks apply:</p>
 <pre><code>quilzo assistant action help wholesale --kind form --target wholesale \
   --description "Ask about wholesale prices" --fields name,email,message</code></pre>
+<p>Only a chatbot that answers with a model offers an action; the actions panel, <code>quilzo assistant action</code> and an agent declaring one all say so when it never will. A form action is refused if the form does not exist or a field is not one of its fields. A field marked sensitive is never filled in, and a closed form is offered to nobody.</p>
+
+<h2 id="question-box">Put it on a page</h2>
+<p>A page's question box is an <em>ask</em> section that names the chatbot it opens; the editor offers the site's chatbots, public ones first, and a new box opens the first public one. Publishing, from any screen, the command line or a schedule, refuses a box that names a chatbot that does not exist or is not public, and says which page and which section. Removing a chatbot or making it private is refused while a box on the live site or in the draft opens it, naming the box, so a box never opens nothing.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>

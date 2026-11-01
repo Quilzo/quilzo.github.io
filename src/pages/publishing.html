@@ -6,7 +6,7 @@ description: Review what changed, let the accessibility and content gates run, p
 lead: Publishing moves a pointer, so it cannot half-complete and rolling back is instant.
 icon: publishing
 screens: Review, Publishing, History, Notes
-updated: 2026-10-20
+updated: 2026-11-01
 -->
 
 <ol class="steps">
@@ -32,4 +32,4 @@ quilzo scan</code></pre></li>
 <tr><td>Compare</td><td><code>quilzo env diff staging production</code></td></tr>
 <tr><td>Publish later</td><td><code>quilzo schedule add 48h</code></td></tr>
 <tr><td>Call it off</td><td><code>quilzo schedule cancel ID</code></td></tr>
-</tbody></table></div>
+</tbody></table></div><p>Promoting into production asks what a publish asks and waives nothing: whether you may publish each page it changes, the checks about the content, whether each page satisfies its type, provenance, accessibility (rendered through <code>--templates</code>, as a publish renders it) and the approvals given to those exact bytes. A version that needs an override is published instead, where the override is recorded.</p>

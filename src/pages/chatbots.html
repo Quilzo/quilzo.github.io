@@ -2,20 +2,20 @@
 title: A RAG chatbot that answers from your pages and cites its sources
 short: Chatbots
 seo: RAG chatbot for your website, with citations and no tracking
-description: Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and stores nothing a visitor asks.
+description: Add a chatbot that answers visitors from your published pages and records, cites a source for every sentence, hands off to a person, and stores nothing asked.
 lead: Answers from what you have published, a citation on every sentence, and a person when the visitor wants one.
 icon: assistants
 screens: Chatbots, Inbox
-updated: 2026-10-08
+updated: 2026-11-01
 -->
 
-<div class="definition"><p>A Quilzo <strong>chatbot</strong> is retrieval-augmented generation (RAG) over your own published pages. It retrieves passages by keywords and by meaning, answers only from them, and puts a citation on every sentence. With a model connected, each sentence is checked against the passage it cites and dropped if the passage does not support it. Without a model it answers extractively, quoting the passages. Nothing a visitor asks is stored.</p></div>
+<div class="definition"><p>A Quilzo <strong>chatbot</strong> is retrieval-augmented generation (RAG) over your own published pages, and the records they show, such as products and events, read exactly as each one's own page shows it. It retrieves passages by keywords and by meaning, answers only from them, and puts a citation on every sentence. With a model connected, each sentence is checked against the passage it cites and dropped if the passage does not support it. Without a model it answers extractively, quoting the passages. Nothing a visitor asks is stored.</p></div>
 
 <h2 id="create">Create a chatbot</h2>
 <ol class="steps">
 <li>
 <h3>Name it and choose what it reads</h3>
-<p>Open <span class="where">Content › Chatbots</span> and fill in <strong>New chatbot</strong>. By default a chatbot reads every published page. Limit it to the pages it should know about, so it cannot answer from a page you did not mean it to read.</p>
+<p>Open <span class="where">Content › Chatbots</span> and fill in <strong>New chatbot</strong>. By default a chatbot reads every page a visitor can open and every record shown on a page of its own; never a page for members, one outside its publish window, one a redirect sends elsewhere, or a field the record's page does not show. Limit it to the pages it should know about, so it cannot answer from a page you did not mean it to read.</p>
 <figure class="shot"><img src="/images/chatbots/chatbots.webp" alt="The Chatbots screen listing the Marginalia help chatbot and a form to create a new one"><figcaption>Your chatbots, and a new one.</figcaption></figure>
 <p>From the command line, the same chatbot with everything turned on:</p>
 <pre><code>quilzo assistant add help --title "Marginalia help" \

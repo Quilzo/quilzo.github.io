@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/visiting-agents/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-28">
+<meta property="article:modified_time" content="2026-11-01">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Make a website agent-ready with NLWeb and WebMCP">
 <meta name="twitter:description" content="How visitors&#39; AI agents use your site: ask it in plain words over NLWeb and MCP, and fill in its search, questions, forms and bookings with WebMCP.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-28","description":"How visitors' AI agents use your site: ask it in plain words over NLWeb and MCP, and fill in its search, questions, forms and bookings with WebMCP.","headline":"Agents visiting your site: asking it and using its forms","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/visiting-agents/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/visiting-agents/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Visiting agents","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-01","description":"How visitors' AI agents use your site: ask it in plain words over NLWeb and MCP, and fill in its search, questions, forms and bookings with WebMCP.","headline":"Agents visiting your site: asking it and using its forms","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/visiting-agents/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/visiting-agents/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Visiting agents","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -190,7 +190,7 @@
 <tr><td><code>query_id</code></td><td>Echoed back; made up when not given.</td></tr>
 </tbody></table></div>
 <p>Each result has its <code>url</code>, <code>name</code>, <code>site</code>, <code>score</code>, <code>description</code> and <code>schema_object</code>, the same structured data the page carries for search engines. The same is offered over MCP at <code>/mcp</code> on the public site, as one read-only tool called <code>ask</code>, so an agent that speaks MCP can connect to the site directly. This is not the admin's agent interface (see <a href="/agent-interface/">Connect AI apps</a>), which acts for your own people and is not on the public site. <code>/llms.txt</code> tells agents where both are.</p>
-<p>It answers only from what any visitor may read now: never a page for members, and nothing before or after its publish window. It changes nothing on the site. An answer in summarize or generate mode is the question box's own, with its limits and its refusal when your pages do not say.</p>
+<p>It answers only from what any visitor may read now: never a page for members, nothing before or after its publish window, and nothing at an address a redirect sends elsewhere. A product, an event or any other record with a page of its own is read as that page shows it. It changes nothing on the site. An answer in summarize or generate mode is the question box's own, with its limits and its refusal when your pages do not say.</p>
 <h2 id="forms">Using its forms<a class="anchor" href="#forms" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>WebMCP is a way for a page to say that a form is a tool: its name, what it does and what each field means. An agent in the visitor's browser then fills it in instead of guessing from a screenshot. Quilzo marks the forms itself, from what you declared:</p>
 <div class="table-wrap"><table>
@@ -214,7 +214,7 @@
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-28 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/visiting-agents.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-01 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/visiting-agents.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/shopping-agents/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Selling to shopping agents</span></a>
       <a class="pager-next" href="/transfer/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Import, export, replicas and the permanent web</span></a>

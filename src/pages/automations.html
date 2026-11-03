@@ -12,7 +12,7 @@ updated: 2026-11-03
 
 <h2 id="playbooks">Shield playbooks</h2>
 <p>A playbook is a response decided in advance: when a signal comes this many times within this long, take these steps, and take the next stage if it comes again. Every step is one of the <a href="/shield/">shield</a>'s own actions, from a fixed list, and every protection it puts in force ends by itself. There is no script and no expression in one, and a model never runs one.</p>
-<p>Quilzo ships its playbooks. Those that act on one source or one agent act from the start; those that reach many people at once, such as locking the whole admin, watch until two administrators turn them on.</p>
+<p>Quilzo ships its playbooks. Those that block one source or pause one agent act from the start. Most of those that would reach many people at once, such as locking the whole admin, only watch until two administrators turn them on.</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
@@ -25,7 +25,7 @@ updated: 2026-11-03
 </tbody></table></div>
 
 <h2 id="signins">Adaptive sign-in</h2>
-<p>A sign-in to the admin that does not look like its person, such as one from further than anybody could have travelled, through Tor, or with a session copied to another device, gets no session until its person confirms it with a passkey or a fresh single sign-on. Failed sign-ins lock out the places they come from, not the person. This is <code>signin.adaptive</code>, on by default; turning it off is a weaker setting, which takes two administrators. Name your offices and VPNs with <code>quilzo geo network add</code>, so sign-ins from them read as yours. See <a href="/signins/">Sign-ins</a>.</p>
+<p>A sign-in to the admin that does not look like its person, such as one from further than anybody could have travelled, through Tor, or with a session copied to another device, gets no session until its person confirms it with a passkey or a fresh single sign-on. Failed sign-ins lock out the places they come from, and the places the person usually signs in from keep working. This is <code>signin.adaptive</code>, on by default; turning it off is a weaker setting, which takes two administrators. Name your offices and VPNs with <code>quilzo geo network add</code>, so sign-ins from them read as yours. See <a href="/signins/">Sign-ins</a>.</p>
 
 <h2 id="decoys">Decoys</h2>
 <p>A decoy is a token that looks like any other and opens nothing. Plant it where a real secret is kept, such as a CI variable or a password manager: whoever presents it has a copy of what was kept there. The <code>decoy-touched</code> playbook shuts them out everywhere for a day, tells the security contact where the decoy had been planted, and asks for a case in the audit log. <code>decoy-lockdown</code>, which also locks the admin to passkeys and single sign-on, watches until two administrators decide it should act.</p>

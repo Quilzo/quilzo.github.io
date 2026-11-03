@@ -176,7 +176,7 @@
     <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Models</span></p>
   </header>
   <div class="prose">
-<div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, analyst triage, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much. AI agents built in any framework can use it too, with their memory (see <a href="#agents-anywhere">Agents built anywhere</a>).</p></div>
+<div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much. AI agents built in any framework can use it too, with their memory (see <a href="#agents-anywhere">Agents built anywhere</a>).</p></div>
 <h2 id="one-model">The quickest start: one model<a class="anchor" href="#one-model" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>With no routes declared, every call goes to the model in two environment variables. Any OpenAI-compatible endpoint works: Ollama, vLLM, LM Studio, llama.cpp, or a hosted provider.</p>
 <pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1

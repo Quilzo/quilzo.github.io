@@ -11,7 +11,7 @@ updated: 2026-11-03
 <div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Connectors that read your other systems, feeds they push, log collection, and searching and keeping those events belong to the SIEM or log pipeline your organisation already runs. Quilzo is one of its sources.</p></div></div>
 
 <h2 id="stream">Stream the audit log to your SIEM</h2>
-<p>Set <code>siem.stream.url</code> and <code>quilzo serve</code> pushes the <a href="/logging/">audit log</a> every fifteen seconds, as batches of OCSF records that each follow the last exactly. A batch carries a tree head signed with Ed25519 and ML-DSA, and each request is signed as an HTTP message (RFC 9421), so the receiver can prove it holds every record, unchanged.</p>
+<p>Set <code>siem.stream.url</code> and <code>quilzo serve</code> pushes the <a href="/logging/">audit log</a> every fifteen seconds, in batches of OCSF records, each starting exactly where the last one ended. A batch carries each record's Merkle leaf and a tree head signed with Ed25519 and ML-DSA, and each request is signed as an HTTP message (RFC 9421), so a receiver that keeps the leaves can prove it holds every record, unchanged.</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
@@ -22,8 +22,8 @@ updated: 2026-11-03
 </tbody></table></div>
 <p>Nothing is lost while the receiver is down: the stream waits and carries on from the last record it took, and the posture check <code>siem.stream-failing</code> reports a stream that has failed for an hour. Clearing the setting stops it, without a restart.</p>
 
-<h2 id="reveal">Names, and a receiver elsewhere</h2>
-<p>People are pseudonymous in the log, and they stay pseudonymous in what is sent. <code>siem.stream.reveal</code> sends their names instead, and <code>siem.stream.allow_remote</code> lets the stream reach a receiver that is not on this machine or its network. Each is a weaker setting, so each takes <a href="/people/#two-administrators">two administrators</a>: one asks, and another approves.</p>
+<h2 id="remote">Pseudonyms, and a receiver elsewhere</h2>
+<p>People are pseudonymous in the log, and the stream carries the same pseudonyms: only whoever holds the log's key can match one to a name. A receiver that is not on this machine or its network needs <code>siem.stream.allow_remote</code>. That is a weaker setting, so it takes <a href="/people/#two-administrators">two administrators</a>: one asks, and another approves.</p>
 
 <h2 id="files">Or hand it over as a file</h2>
 <p>A SIEM that takes files can be given an export instead, as OCSF, CEF or JSON Lines, with an envelope of every event's hash beside it so the receiving side can tell whether anything was added, removed or reordered:</p>

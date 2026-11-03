@@ -8,10 +8,10 @@ icon: detections
 updated: 2026-11-03
 -->
 
-<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Detection rules across your systems, correlating their events, hunting, and a queue of findings for analysts belong to the SIEM and security tooling your organisation already runs. Quilzo watches only for attacks on Quilzo, and sends that tooling its audit log as it is written.</p></div></div>
+<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Detection rules across your systems, correlating their events, hunting, and a queue of findings for analysts belong to the SIEM and security tooling your organisation already runs. Quilzo watches only for attacks on Quilzo, and can send that tooling its audit log as it is written.</p></div></div>
 
 <h2 id="signals">What the shield watches for</h2>
-<p>Quilzo's servers raise a <strong>signal</strong> the moment they see something, and the <a href="/shield/">shield</a> counts them. Signals come from the servers themselves, so nothing a model reads can make the shield act. Among them:</p>
+<p>Quilzo's servers raise a <strong>signal</strong> the moment they see something, and the <a href="/shield/">shield</a> counts them. Signals come from the servers themselves, so nothing a model reads can make the shield block anybody. Among them:</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Signal</th><th scope="col">Raised when</th></tr></thead>
 <tbody>
@@ -19,7 +19,7 @@ updated: 2026-11-03
 <tr><td><code>admin-hunt</code></td><td>The public site is asked for the admin's addresses</td></tr>
 <tr><td><code>foreign-probe</code></td><td>The public site is asked for software it does not run, such as WordPress, <code>.env</code> or <code>.git</code></td></tr>
 <tr><td><code>chatbot-injection</code></td><td>Prompt-injection phrases are sent to a chatbot</td></tr>
-<tr><td><code>decoy</code></td><td>A decoy token is presented</td></tr>
+<tr><td><code>decoy</code></td><td>A decoy token is tried, or a decoy address asked for</td></tr>
 <tr><td><code>agent-hijacked</code></td><td>An agent followed an instruction planted in what it read</td></tr>
 <tr><td><code>agent-misbehaving</code></td><td>An agent or a connected app keeps trying what it was refused</td></tr>
 <tr><td><code>secret-in-prompt</code></td><td>A credential was in a prompt on its way to a model, and was taken out</td></tr>
@@ -28,7 +28,7 @@ updated: 2026-11-03
 </tbody></table></div>
 
 <h2 id="playbooks">Playbooks answer at once</h2>
-<p>A playbook says: when this signal comes from one source, or from anywhere, this many times within this long, do these steps, and do the next stage if it comes again. Its steps are the shield's own: block or slow a source, turn a public feature down, lock the admin to passkeys and single sign-on, pause an agent, cut a model route, tell the security contact, or ask for a case. Every protection ends by itself. A playbook acts, watches and records what it would have done, or is off.</p>
+<p>A playbook says: when this signal comes from one source, or from anywhere, this many times within this long, do these steps, and do the next stage if it comes again. Its steps are the shield's own: block or slow a source, block its network or its provider, turn a public feature down, lock the admin to passkeys and single sign-on, stop publishing, pause an agent, cut a model route, tell the security contact, or ask for a case. Every protection ends by itself. A playbook acts, watches and records what it would have done, or is off.</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>

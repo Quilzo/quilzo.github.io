@@ -1,26 +1,32 @@
 <!--
-title: Workforce risk is Vaigil's now
-short: Workforce risk (Vaigil)
-seo: Workforce and estate risk moved to Vaigil
-description: People and their machines joined across your tools, scored with reasons, and reminders to fix what is theirs, are Vaigil's now. Quilzo keeps its own access.
-lead: Vaigil scores the people and machines across your tools; Quilzo governs who may do what here.
+title: Workforce risk and Quilzo
+short: Workforce risk
+seo: Workforce risk and Quilzo: its own people, sign-ins and SCIM
+description: Scoring people and machines across your organisation is not part of Quilzo. Quilzo knows its own people: their access, their sign-ins and SCIM.
+lead: What Quilzo knows about the people who use it, and nothing beyond them.
 icon: workforce
-updated: 2026-10-27
+updated: 2026-11-03
 -->
 
-<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> People and their machines joined across your tools, scored with reasons, and reminders sent to whoever can fix them are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/workforce/">Workforce risk</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. Who may do what in Quilzo is still Quilzo's: <a href="/people/">people and roles</a>, <a href="/provisioning/">provisioning from your identity provider</a>, and the <a href="/security/">posture checks</a> of how this deployment is set up.</p>
-<h2 id="send">Send Vaigil what happens here</h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Joining people and their machines across your tools, scoring their risk and reminding them to fix what is theirs belong to the identity and security tooling your organisation already runs. Quilzo knows only the people who use Quilzo.</p></div></div>
+
+<h2 id="people">Who may do what</h2>
+<p><span class="where">Administration › People</span> lists everybody with access and what each holds: roles on parts of the site, jobs that must end, permissions such as deciding one agent's runs, and denies, with their credentials, when each was last used and when it expires. <code>quilzo auth list</code> lists every grant, and <code>quilzo auth explain WHO</code> says why somebody can or cannot do a thing. Making somebody an administrator takes two administrators. See <a href="/people/">People and access</a>.</p>
+
+<h2 id="signins">How they sign in</h2>
+<p><span class="where">Protection › Sign-ins</span> shows every sign-in to the admin in the last thirty days: who, when, where from, the device, how risky it looked and why. Above them are the people waiting to confirm it is them, and the people locked out. <code>quilzo token stale</code> lists the credentials nobody has used for thirty days that still work, and <code>quilzo token revoke ID</code> ends one. See <a href="/signins/">Sign-ins</a> and <a href="/passkeys/">Passkeys and tokens</a>.</p>
+
+<h2 id="scim">Kept in step with your identity provider</h2>
+<p>With SCIM, Okta, Microsoft Entra or another identity provider creates, updates, suspends and deletes people here, and their groups mean roles and jobs:</p>
+<pre><code>quilzo scim token
+quilzo scim map Editors author
+quilzo scim status</code></pre>
+<p>Deactivation suspends a person at once: their sessions, tokens and connected apps stop, and so do the agents they sponsor. Only grants made by provisioning are changed by it; access granted by hand is left alone. <span class="where">Administration › Provisioning</span> shows the connection, what each group means and who was provisioned. See <a href="/provisioning/">Provisioning</a>.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/workforce/"><span class="card-icon"><icon name="workforce"></icon></span><h3 class="card-title">Workforce risk, in Vaigil</h3><p>People and their machines, joined across your tools.</p></a></li>
-<li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/people/"><span class="card-icon"><icon name="people"></icon></span><h3 class="card-title">People and access</h3><p>Who may do what, where, and until when.</p></a></li>
+<li><a class="card" href="/provisioning/"><span class="card-icon"><icon name="provisioning"></icon></span><h3 class="card-title">Provisioning</h3><p>People kept in step by the identity provider, including when they leave.</p></a></li>
 </ul>
 </section>

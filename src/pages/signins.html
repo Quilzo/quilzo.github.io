@@ -6,7 +6,7 @@ description: Every sign-in, where it came from and how risky it looked; a risky 
 lead: A sign-in that does not look like its person waits until they prove it is them.
 icon: automations
 screens: Sign-ins
-updated: 2026-10-27
+updated: 2026-11-03
 -->
 
 <figure class="shot"><img src="/images/signins/signins.webp" alt="The Sign-ins screen: nobody waiting to confirm, nobody locked out, and recent sign-ins with where each came from and its risk"><figcaption>Sign-ins, under Protection.</figcaption></figure>
@@ -40,7 +40,7 @@ updated: 2026-10-27
 quilzo geo network add 198.51.100.0/24 "Staff VPN" --kind vpn
 quilzo geo status</code></pre>
 <p>Other addresses are placed from a city database you download once: DB-IP's free IP to City Lite, in MMDB form, at <code>.quilzo/geo/city.mmdb</code>. Beside it, DB-IP's IP to ASN Lite names the network, so a hosting provider can be told from a home connection, and the Tor Project's exit list, refreshed daily, marks Tor. Quilzo never fetches any of them, and no lookup leaves the machine. <code>quilzo geo help</code> says where each comes from.</p>
-<p>Every decision is in the <a href="/logging/">audit log</a>. When Quilzo streams its log to <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, its rules raise a risky sign-in, one its person reported, and repeated failures and lockouts for the security team.</p>
+<p>Every decision is in the <a href="/logging/">audit log</a>. Stream the log to your SIEM as it is written (see <a href="/integrations/#stream">the audit log, streamed</a>), and a risky sign-in, one its person reported, and repeated failures and lockouts reach the security team's own tools as well.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>

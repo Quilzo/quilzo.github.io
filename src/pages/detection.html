@@ -1,26 +1,55 @@
 <!--
-title: Detection and findings are Vaigil's now
-short: Detection (Vaigil)
-seo: Detections, Sigma and the finding queue moved to Vaigil
-description: Detections, Sigma rules, correlations, the ranked finding queue and the analyst agent are Vaigil's now. Quilzo's audit log is one of Vaigil's sources.
-lead: Vaigil detects and ranks; Quilzo defends itself and reports what it did.
+title: Detection and Quilzo
+short: Detection
+seo: Detection and Quilzo: the shield's signals and risky sign-ins
+description: Detection across your systems is not part of Quilzo. Quilzo watches for attacks on itself: the shield's signals and playbooks, and risky sign-ins.
+lead: Quilzo notices attacks on itself and answers them at once; detection across your systems is your SIEM's.
 icon: detections
-updated: 2026-10-27
+updated: 2026-11-03
 -->
 
-<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> Detections with their fixtures, Sigma rules, correlations, hunting, the ranked finding queue and the analyst agent are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/detections/">Detections</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. Vaigil ships rules for Quilzo's own records (<code>quilzo.*</code>): a risky sign-in, or one its person reported, failures and lockouts, a decoy token touched, an administrator made or an administrator's token issued, a privileged change made alone, the audit log moved, break-glass, posture drifting, and the shield asking for a case. Quilzo's own response to an attack on itself is <a href="/shield/">the shield</a>, which acts without waiting for anybody.</p>
-<h2 id="send">Send Vaigil what happens here</h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Detection rules across your systems, correlating their events, hunting, and a queue of findings for analysts belong to the SIEM and security tooling your organisation already runs. Quilzo watches only for attacks on Quilzo, and can send that tooling its audit log as it is written.</p></div></div>
+
+<h2 id="signals">What the shield watches for</h2>
+<p>Quilzo's servers raise a <strong>signal</strong> the moment they see something, and the <a href="/shield/">shield</a> counts them. Signals come from the servers themselves, so nothing a model reads can make the shield block anybody. Among them:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Signal</th><th scope="col">Raised when</th></tr></thead>
+<tbody>
+<tr><td><code>signin-failures</code></td><td>Sign-ins fail again and again from one source</td></tr>
+<tr><td><code>admin-hunt</code></td><td>The public site is asked for the admin's addresses</td></tr>
+<tr><td><code>foreign-probe</code></td><td>The public site is asked for software it does not run, such as WordPress, <code>.env</code> or <code>.git</code></td></tr>
+<tr><td><code>chatbot-injection</code></td><td>Prompt-injection phrases are sent to a chatbot</td></tr>
+<tr><td><code>decoy</code></td><td>A decoy token is tried, or a decoy address asked for</td></tr>
+<tr><td><code>agent-hijacked</code></td><td>An agent followed an instruction planted in what it read</td></tr>
+<tr><td><code>agent-misbehaving</code></td><td>An agent or a connected app keeps trying what it was refused</td></tr>
+<tr><td><code>secret-in-prompt</code></td><td>A credential was in a prompt on its way to a model, and was taken out</td></tr>
+<tr><td><code>tool-changed</code></td><td>A tool server changed a tool after a person approved it</td></tr>
+<tr><td><code>self-exposure</code>, <code>self-flaw</code></td><td>A known flaw reaches this build (see <a href="/vulnerabilities/">Vulnerabilities and Quilzo</a>)</td></tr>
+</tbody></table></div>
+
+<h2 id="playbooks">Playbooks answer at once</h2>
+<p>A playbook says: when this signal comes from one source, or from anywhere, this many times within this long, do these steps, and do the next stage if it comes again. Its steps are the shield's own: block or slow a source, block its network or its provider, turn a public feature down, lock the admin to passkeys and single sign-on, stop publishing, pause an agent, cut a model route, tell the security contact, or ask for a case. Every protection ends by itself. A playbook acts, watches and records what it would have done, or is off.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See the playbooks and their modes</td><td><code>quilzo shield playbook list</code></td></tr>
+<tr><td>Read one, step by step</td><td><code>quilzo shield playbook show decoy-touched</code></td></tr>
+<tr><td>See what they would have done over a month</td><td><code>quilzo shield dry-run --days 30</code></td></tr>
+<tr><td>Change a playbook (a second administrator approves)</td><td><code>quilzo shield playbook mode NAME act --why "..."</code></td></tr>
+<tr><td>Say whether a response was right</td><td><code>quilzo shield judge ID mistake|right</code></td></tr>
+</tbody></table></div>
+<p><span class="where">Protection › Shield</span> shows the same, with what is in force now and what each playbook has done.</p>
+
+<h2 id="signins">Risky sign-ins</h2>
+<p>Each sign-in to the admin is judged against the person's own: travel nobody could have made, Tor or a hosting provider, a session copied to another device or country, an administrator in a country they have never signed in from. A risky one gets no session until its person confirms it with a passkey or a fresh single sign-on, and the security contact hears of the worst. This is <code>signin.adaptive</code>, on by default; turning it off is a weaker setting, which takes two administrators. See <a href="/signins/">Sign-ins</a>.</p>
+
+<h2 id="log">All of it in the audit log</h2>
+<p>Every response, every protection and every sign-in decision is written to the <a href="/logging/">audit log</a>. Stream it to your SIEM with <code>siem.stream.url</code>, and your own detections can use it alongside everything else they see (see <a href="/collect/">Collecting events and Quilzo</a>).</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/detections/"><span class="card-icon"><icon name="detections"></icon></span><h3 class="card-title">Detections, in Vaigil</h3><p>Rules with fixtures, Sigma, and correlations across sources.</p></a></li>
 <li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/signins/"><span class="card-icon"><icon name="automations"></icon></span><h3 class="card-title">Sign-ins</h3><p>A sign-in that does not look like its person waits until they prove it is them.</p></a></li>
 </ul>
 </section>

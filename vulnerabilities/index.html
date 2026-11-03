@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Vulnerability management moved to Vaigil | Quilzo</title>
-<meta name="description" content="Vulnerabilities across your systems, KEV, EPSS, SSVC, VEX, SARIF and dependency scans are Vaigil&#39;s now. Quilzo still checks its own binary for flaws.">
+<title>Vulnerabilities and Quilzo: known flaws in its own build | Quilzo</title>
+<meta name="description" content="Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.">
 <link rel="canonical" href="https://quilzo.github.io/vulnerabilities/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131314" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
-<meta property="og:title" content="Vulnerability management moved to Vaigil">
-<meta property="og:description" content="Vulnerabilities across your systems, KEV, EPSS, SSVC, VEX, SARIF and dependency scans are Vaigil&#39;s now. Quilzo still checks its own binary for flaws.">
+<meta property="og:title" content="Vulnerabilities and Quilzo: known flaws in its own build">
+<meta property="og:description" content="Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.">
 <meta property="og:url" content="https://quilzo.github.io/vulnerabilities/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-03">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Vulnerability management moved to Vaigil">
-<meta name="twitter:description" content="Vulnerabilities across your systems, KEV, EPSS, SSVC, VEX, SARIF and dependency scans are Vaigil&#39;s now. Quilzo still checks its own binary for flaws.">
+<meta name="twitter:title" content="Vulnerabilities and Quilzo: known flaws in its own build">
+<meta name="twitter:description" content="Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"Vulnerabilities across your systems, KEV, EPSS, SSVC, VEX, SARIF and dependency scans are Vaigil's now. Quilzo still checks its own binary for flaws.","headline":"Vulnerability management is Vaigil's now","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/vulnerabilities/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/vulnerabilities/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Vulnerabilities (Vaigil)","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-03","description":"Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.","headline":"Vulnerabilities and Quilzo","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/vulnerabilities/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/vulnerabilities/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Vulnerabilities","position":2}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -171,35 +171,48 @@
 <article class="guide">
   <header class="guide-head">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Manual</a><span aria-hidden="true">›</span><span>Reference</span></nav>
-    <h1>Vulnerability management is Vaigil&#39;s now</h1>
-    <p class="lead">Vaigil manages your systems&#39; flaws; Quilzo still checks its own.</p>
+    <h1>Vulnerabilities and Quilzo</h1>
+    <p class="lead">Quilzo checks its own build for known flaws, and contains one that is being exploited.</p>
   </header>
   <div class="prose">
-<div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>This guide moved to Vaigil.</strong> Vulnerabilities in your systems, ranked by KEV, EPSS and SSVC, with VEX, SARIF imports, dependency scans and reachability are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/vulnerabilities/">Vulnerabilities</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. Quilzo checks its own build: <code>quilzo self check</code> reads the Go vulnerability database for what this binary actually links, offline, and a flaw reachable through one feature turns that feature off. <code>quilzo self update vulndb.zip</code> brings the database up to date on a machine with no network.</p>
-<h2 id="send">Send Vaigil what happens here<a class="anchor" href="#send" aria-hidden="true" tabindex="-1">#</a></h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>Not part of Quilzo.</strong> Finding and ranking the flaws in your other systems, scanning their dependencies and following each fix to the end belong to the vulnerability management your organisation already runs. Quilzo answers one question in that area: what is known to be wrong with Quilzo itself.</p></div></div>
+<h2 id="check">Check this build<a class="anchor" href="#check" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Quilzo has no third-party dependencies, so every known flaw that can reach it is in the Go standard library it was built with. <code>quilzo self check</code> reads the Go vulnerability database against what is actually linked into the running binary, offline, and decides each advisory that concerns its Go:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Decision</th><th scope="col">When</th></tr></thead>
+<tbody>
+<tr><td>Not reachable</td><td>What the advisory names is not linked into this binary, so nothing can reach it.</td></tr>
+<tr><td>Contained</td><td>It is known to be exploited, and only features that can be turned off reach it.</td></tr>
+<tr><td>Upgrade Go</td><td>What every server runs uses it, or it is not known to be exploited: a person decides, and upgrades Go.</td></tr>
+</tbody></table></div>
+<p>The admin runs the same check every hour. <span class="where">Security › Inventory</span> shows it under <strong>Known flaws in this build</strong>, with the date of the database and whether the binary is the one it says it is, which <code>quilzo self verify</code> also answers. <code>quilzo self vex</code> writes an OpenVEX statement for each advisory.</p>
+<h2 id="offline">Keep the database current<a class="anchor" href="#offline" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A snapshot of the database is embedded at release, and nothing is fetched by itself. Download a newer one, and CISA's catalogue of Known Exploited Vulnerabilities, wherever you can, and give them to Quilzo:</p>
+<pre><code>quilzo self update vulndb.zip                          # from https://vuln.go.dev/vulndb.zip
+quilzo self kev known_exploited_vulnerabilities.json   # CISA's KEV catalogue, as JSON
+quilzo self check</code></pre>
+<p>Each is read on the machine and written to the audit log. A database more than a month old is flagged on Inventory and by <code>self check</code>, because a check against an old list is a clean bill of health that stopped being true.</p>
+<h2 id="contained">When a flaw turns a feature off<a class="anchor" href="#contained" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>When the catalogue says a flaw is being exploited, and only features a site can do without reach it, such as uploads, forms, import, the chatbots or the API, the <a href="/shield/">shield</a>'s <code>self-exposure</code> playbook turns those features off for a day. It tells the security contact, and writes a request to open a case into the audit log. Any other flaw that reaches this build is one to upgrade Go for: the <code>self-flaw</code> playbook tells the security contact and asks for a case, then reminds them each day until Go is upgraded. <code>quilzo shield lift</code> ends a protection early.</p>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/vulnerabilities/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-120q-65 0-120.5-32T272-240h-72q-17 0-28.5-11.5T160-280q0-17 11.5-28.5T200-320h44q-3-20-3.5-40t-.5-40h-40q-17 0-28.5-11.5T160-440q0-17 11.5-28.5T200-480h40q0-20 .5-40t3.5-40h-44q-17 0-28.5-11.5T160-600q0-17 11.5-28.5T200-640h72q14-23 31.5-43t40.5-35l-37-38q-11-11-11-27.5t12-28.5q11-11 28-11t28 11l58 58q28-9 57-9t57 9l60-59q11-11 27.5-11t28.5 12q11 11 11 28t-11 28l-38 38q23 15 41.5 34.5T688-640h72q17 0 28.5 11.5T800-600q0 17-11.5 28.5T760-560h-44q3 20 3.5 40t.5 40h40q17 0 28.5 11.5T800-440q0 17-11.5 28.5T760-400h-40q0 20-.5 40t-3.5 40h44q17 0 28.5 11.5T800-280q0 17-11.5 28.5T760-240h-72q-32 56-87.5 88T480-120Zm0-80q66 0 113-47t47-113v-160q0-66-47-113t-113-47q-66 0-113 47t-47 113v160q0 66 47 113t113 47Zm-40-120h80q17 0 28.5-11.5T560-360q0-17-11.5-28.5T520-400h-80q-17 0-28.5 11.5T400-360q0 17 11.5 28.5T440-320Zm0-160h80q17 0 28.5-11.5T560-520q0-17-11.5-28.5T520-560h-80q-17 0-28.5 11.5T400-520q0 17 11.5 28.5T440-480Zm40 40Z"/></svg></span><h3 class="card-title">Vulnerabilities, in Vaigil</h3><p>What to work on, not sorted by severity alone.</p></a></li>
 <li><a class="card" href="/shield/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-164q97-30 162-118.5T718-480H480v-315l-240 90v207q0 7 2 18h238v316Zm0 80q-7 0-13-1t-12-3q-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 140-80 261.5T505-88q-6 2-12 3t-13 1Z"/></svg></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/isolated/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M762-84 414-434q-31 7-59.5 19T301-386q-21 14-46.5 14.5T212-389q-18-18-16.5-43.5T217-473q23-17 48.5-31t52.5-26l-90-90q-26 14-50.5 29.5T130-557q-20 16-45.5 16T42-559q-18-18-17-43t21-41q22-18 45-34.5t49-30.5l-56-56q-11-11-11-28t11-28q11-11 28-11t28 11l679 679q12 12 12 28.5T819-84q-12 11-28.5 11.5T762-84Zm-282-36q-42 0-71-29.5T380-220q0-42 29-71t71-29q42 0 71 29t29 71q0 41-29 70.5T480-120Zm273-275q-16 16-37.5 15.5T678-396l-10-10-10-10-96-96q-13-13-5-27t28-9q45 11 85.5 31t75.5 47q18 14 20.5 36.5T753-395Zm165-164q-17 18-42 18.5T831-556q-72-59-161.5-91.5T480-680q-21 0-40.5 1.5T400-674q-25 4-45-10.5T331-724q-4-25 11-45t40-24q24-4 48.5-5.5T480-800q125 0 235.5 41.5T914-644q20 17 21 42t-17 43Z"/></svg></span><h3 class="card-title">Isolated networks</h3><p>Run it, and keep its checks current, with no network.</p></a></li>
 </ul>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/vulnerabilities.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-03 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/vulnerabilities.html">Edit this page on GitHub</a></p>
   </footer>
 </article>
 </main>
 <aside class="toc" aria-label="On this page">
   <h2>On this page</h2>
   <ul>
-    <li><a href="#send">Send Vaigil what happens here</a></li>
+    <li><a href="#check">Check this build</a></li>
+    <li><a href="#offline">Keep the database current</a></li>
+    <li><a href="#contained">When a flaw turns a feature off</a></li>
     <li><a href="#next">Next</a></li>
   </ul>
 </aside>

@@ -6,7 +6,7 @@ description: Give AI agents tools on MCP servers you approve, refuse a tool whos
 lead: Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.
 icon: integrations
 screens: Integrations
-updated: 2026-10-28
+updated: 2026-11-03
 -->
 
 <div class="definition"><p>An <strong>MCP gateway</strong> sits between AI agents and MCP servers and decides each tool call: who may call which tool, how often, whether a person approves it first, and with which credential. Quilzo is one for its own agents, and offers the same to other vendors' agents at <code>/mcp/gateway/NAME</code>.</p></div>
@@ -168,7 +168,7 @@ quilzo siem verify audit.jsonl --envelope evidence.json</code></pre>
 <tr><td>See how far it has got, and why it is failing</td><td><code>quilzo siem stream status</code></td></tr>
 <tr><td>Send what is waiting now</td><td><code>quilzo siem stream send</code></td></tr>
 </tbody></table></div>
-<p>The receiver answers 2xx for a batch it took, or 409 with <code>{"holds": N}</code> when it holds a different last record; the stream carries on from there. Nothing is lost while the receiver is down: the stream waits, and posture reports one failing for an hour. People stay pseudonymous unless <code>siem.stream.reveal</code> is set. A receiver off this network needs <code>siem.stream.allow_remote</code>. Both are weaker settings, so each takes <a href="/people/#two-administrators">two administrators</a>.</p>
+<p>The receiver answers 2xx for a batch it took, or 409 with <code>{"holds": N}</code> when it holds a different last record; the stream carries on from there. Nothing is lost while the receiver is down: the stream waits, and posture reports one failing for an hour. People appear as the pseudonyms the log keeps for them, which are all it holds from its first record. A receiver off this network needs <code>siem.stream.allow_remote</code>. Both are weaker settings, so each takes <a href="/people/#two-administrators">two administrators</a>.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>

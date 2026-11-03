@@ -6,7 +6,7 @@ description: Playbooks decided in advance block, slow, lock down or pause the mo
 lead: Decided beforehand, acting at once, and every protection ends by itself.
 icon: shield
 screens: Shield
-updated: 2026-10-31
+updated: 2026-11-03
 -->
 
 <div class="definition"><p>The <strong>shield</strong> is Quilzo protecting itself: playbooks that watch signals such as failed sign-ins, prompt injection against a chatbot or an agent following a planted instruction, and respond at once with protections that always end.</p></div><figure class="shot"><img src="/images/shield/shield.webp" alt="The Shield screen: what is in force, and the playbooks with their modes"><figcaption>What is in force, and the playbooks.</figcaption></figure><div class="table-wrap"><table>
@@ -28,5 +28,5 @@ updated: 2026-10-31
 <tr><td>Plant a decoy token</td><td><code>quilzo shield decoy add --where "CI variable"</code></td></tr>
 <tr><td>Check this build for known flaws</td><td><code>quilzo self check</code></td></tr>
 </tbody></table></div>
-<p>A playbook step that <em>opens a case</em> does not keep one here. It writes the request into the <a href="/logging/">audit log</a>, with the playbook, the signal, what it was about and a summary, for the security team's tools that read the log: <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, whose rule <code>quilzo.shield-asked-for-a-case</code> puts it in its finding queue, or another SIEM (see <a href="/integrations/#stream">the audit log, streamed as it is written</a>).</p>
+<p>A playbook step that <em>opens a case</em> does not keep one here. It writes the request into the <a href="/logging/">audit log</a>, with the playbook, the signal, what it was about and a summary, for the security team's own tools to open the case from, such as a SIEM the log is streamed to (see <a href="/integrations/#stream">the audit log, streamed as it is written</a>). <a href="/cases/">Incident cases and Quilzo</a> says what the record holds.</p>
 <p>It never acts against this machine itself, or a network added with <code>quilzo shield trust add</code>: an administrator's own address keeps the admin, a lockdown nobody could get past is not applied, and the command line on the machine always works. Any other machine, on a private network or not, is blocked like any other, and <code>quilzo shield lift</code> on this machine ends a block.</p>

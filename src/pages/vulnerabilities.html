@@ -1,26 +1,40 @@
 <!--
-title: Vulnerability management is Vaigil's now
-short: Vulnerabilities (Vaigil)
-seo: Vulnerability management moved to Vaigil
-description: Vulnerabilities across your systems, KEV, EPSS, SSVC, VEX, SARIF and dependency scans are Vaigil's now. Quilzo still checks its own binary for flaws.
-lead: Vaigil manages your systems' flaws; Quilzo still checks its own.
+title: Vulnerabilities and Quilzo
+short: Vulnerabilities
+seo: Vulnerabilities and Quilzo: known flaws in its own build
+description: Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.
+lead: Quilzo checks its own build for known flaws, and contains one that is being exploited.
 icon: vulns
-updated: 2026-10-27
+updated: 2026-11-03
 -->
 
-<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> Vulnerabilities in your systems, ranked by KEV, EPSS and SSVC, with VEX, SARIF imports, dependency scans and reachability are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/vulnerabilities/">Vulnerabilities</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. Quilzo checks its own build: <code>quilzo self check</code> reads the Go vulnerability database for what this binary actually links, offline, and a flaw reachable through one feature turns that feature off. <code>quilzo self update vulndb.zip</code> brings the database up to date on a machine with no network.</p>
-<h2 id="send">Send Vaigil what happens here</h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Finding and ranking the flaws in your other systems, scanning their dependencies and following each fix to the end belong to the vulnerability management your organisation already runs. Quilzo answers one question in that area: what is known to be wrong with Quilzo itself.</p></div></div>
+
+<h2 id="check">Check this build</h2>
+<p>Quilzo has no third-party dependencies, so every known flaw that can reach it is in the Go standard library it was built with. <code>quilzo self check</code> reads the Go vulnerability database against what is actually linked into the running binary, offline, and decides each advisory that concerns its Go:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Decision</th><th scope="col">When</th></tr></thead>
+<tbody>
+<tr><td>Not reachable</td><td>What the advisory names is not linked into this binary, so nothing can reach it.</td></tr>
+<tr><td>Contained</td><td>It is known to be exploited, and only features that can be turned off reach it.</td></tr>
+<tr><td>Upgrade Go</td><td>What every server runs uses it, or it is not known to be exploited: a person decides, and upgrades Go.</td></tr>
+</tbody></table></div>
+<p>The admin runs the same check every hour. <span class="where">Security › Inventory</span> shows it under <strong>Known flaws in this build</strong>, with the date of the database and whether the binary is the one it says it is, which <code>quilzo self verify</code> also answers. <code>quilzo self vex</code> writes an OpenVEX statement for each advisory.</p>
+
+<h2 id="offline">Keep the database current</h2>
+<p>A snapshot of the database is embedded at release, and nothing is fetched by itself. Download a newer one, and CISA's catalogue of Known Exploited Vulnerabilities, wherever you can, and give them to Quilzo:</p>
+<pre><code>quilzo self update vulndb.zip                          # from https://vuln.go.dev/vulndb.zip
+quilzo self kev known_exploited_vulnerabilities.json   # CISA's KEV catalogue, as JSON
+quilzo self check</code></pre>
+<p>Each is read on the machine and written to the audit log. A database more than a month old is flagged on Inventory and by <code>self check</code>, because a check against an old list is a clean bill of health that stopped being true.</p>
+
+<h2 id="contained">When a flaw turns a feature off</h2>
+<p>A flaw that the catalogue says is being exploited, and that only features a site can do without reach, such as uploads, forms, import, the chatbots or the API, sets off the <a href="/shield/">shield</a>'s <code>self-exposure</code> playbook. It turns those features off for a day, tells the security contact, and writes a request to open a case into the audit log. A flaw in what every server runs cannot be turned off: the <code>self-flaw</code> playbook tells the security contact and asks for a case, then reminds them each day until Go is upgraded. <code>quilzo shield lift</code> ends a protection early.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/vulnerabilities/"><span class="card-icon"><icon name="vulns"></icon></span><h3 class="card-title">Vulnerabilities, in Vaigil</h3><p>What to work on, not sorted by severity alone.</p></a></li>
 <li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/isolated/"><span class="card-icon"><icon name="wifi_off"></icon></span><h3 class="card-title">Isolated networks</h3><p>Run it, and keep its checks current, with no network.</p></a></li>
 </ul>
 </section>

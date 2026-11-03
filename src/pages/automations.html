@@ -1,26 +1,43 @@
 <!--
-title: Security automations are Vaigil's now
-short: Automations (Vaigil)
-seo: Security automations and access reviews moved to Vaigil
-description: Security automations, canaries across the estate, access reviews, vendor checks and breach notices are Vaigil's now. Sign-ins stay in Quilzo.
-lead: Vaigil automates the security team's work; Quilzo keeps its own sign-ins safe.
+title: Security automations and Quilzo
+short: Security automations
+seo: Security automations and Quilzo: playbooks, sign-ins, decoys
+description: Security automation across your tools is not part of Quilzo. Quilzo automates its own defence: shield playbooks, adaptive sign-in and decoy tokens.
+lead: What Quilzo does by itself to protect itself, decided in advance.
 icon: automations
-updated: 2026-10-27
+updated: 2026-11-03
 -->
 
-<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> Automations that watch, ask or act, canaries planted across your systems, access reviews, vendor checks and notices to people about a breach are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/automations/">Automations</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. What protects Quilzo itself stays here and is on by default. A risky sign-in has to confirm it is its person (see <a href="/signins/">Sign-ins</a>), and the <a href="/shield/">shield</a>'s playbooks respond to attacks on the admin, the site, the chatbots and the agents. Its decoy tokens are <code>quilzo shield decoy add</code>.</p>
-<h2 id="send">Send Vaigil what happens here</h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Automations that act across your security tools and other systems belong to the security automation your organisation already runs. What Quilzo automates is its own defence, and it is on from the start.</p></div></div>
+
+<h2 id="playbooks">Shield playbooks</h2>
+<p>A playbook is a response decided in advance: when a signal comes this many times within this long, take these steps, and take the next stage if it comes again. Every step is one of the <a href="/shield/">shield</a>'s own actions, from a fixed list, and every protection it puts in force ends by itself. There is no script and no expression in one, and a model never runs one.</p>
+<p>Quilzo ships its playbooks. Those that act on one source or one agent act from the start; those that reach many people at once, such as locking the whole admin, watch until two administrators turn them on.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See them, and whether each acts, watches or is off</td><td><code>quilzo shield playbook list</code></td></tr>
+<tr><td>Start your own from one that exists, then give it a new name</td><td><code>quilzo shield playbook show decoy-touched &gt; mine.json</code></td></tr>
+<tr><td>Propose it (a second administrator approves)</td><td><code>quilzo shield playbook propose --file mine.json --why "..."</code></td></tr>
+<tr><td>Approve or decline another administrator's change</td><td><code>quilzo shield playbook approve ID</code>, <code>quilzo shield playbook decline ID</code></td></tr>
+<tr><td>See what they would have done first</td><td><code>quilzo shield dry-run --days 30</code></td></tr>
+<tr><td>Every playbook to watching, and back</td><td><code>quilzo shield hold --why "..."</code>, <code>quilzo shield release --why "..."</code></td></tr>
+</tbody></table></div>
+
+<h2 id="signins">Adaptive sign-in</h2>
+<p>A sign-in to the admin that does not look like its person, such as one from further than anybody could have travelled, through Tor, or with a session copied to another device, gets no session until its person confirms it with a passkey or a fresh single sign-on. Failed sign-ins lock out the places they come from, not the person. This is <code>signin.adaptive</code>, on by default; turning it off is a weaker setting, which takes two administrators. Name your offices and VPNs with <code>quilzo geo network add</code>, so sign-ins from them read as yours. See <a href="/signins/">Sign-ins</a>.</p>
+
+<h2 id="decoys">Decoys</h2>
+<p>A decoy is a token that looks like any other and opens nothing. Plant it where a real secret is kept, such as a CI variable or a password manager: whoever presents it has a copy of what was kept there. The <code>decoy-touched</code> playbook shuts them out everywhere for a day, tells the security contact where the decoy had been planted, and asks for a case in the audit log. <code>decoy-lockdown</code>, which also locks the admin to passkeys and single sign-on, watches until two administrators decide it should act.</p>
+<pre><code>quilzo shield decoy add --where "CI variable"
+quilzo shield decoy list
+quilzo shield decoy remove ID</code></pre>
+<p>The token is shown once. <span class="where">Protection › Shield</span> plants and removes decoys too, under <strong>Decoys</strong>.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/automations/"><span class="card-icon"><icon name="automations"></icon></span><h3 class="card-title">Automations, in Vaigil</h3><p>When this happens, do this: watch, ask, or act.</p></a></li>
 <li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/signins/"><span class="card-icon"><icon name="automations"></icon></span><h3 class="card-title">Sign-ins</h3><p>A sign-in that does not look like its person waits until they prove it is them.</p></a></li>
 </ul>
 </section>

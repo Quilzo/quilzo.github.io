@@ -3,23 +3,23 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Detections, Sigma and the finding queue moved to Vaigil | Quilzo</title>
-<meta name="description" content="Detections, Sigma rules, correlations, the ranked finding queue and the analyst agent are Vaigil&#39;s now. Quilzo&#39;s audit log is one of Vaigil&#39;s sources.">
+<title>Detection and Quilzo: the shield&#39;s signals and risky sign-ins | Quilzo</title>
+<meta name="description" content="Detection across your systems is not part of Quilzo. Quilzo watches for attacks on itself: the shield&#39;s signals and playbooks, and risky sign-ins.">
 <link rel="canonical" href="https://quilzo.github.io/detection/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
 <meta name="theme-color" content="#131314" media="(prefers-color-scheme: dark)">
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
-<meta property="og:title" content="Detections, Sigma and the finding queue moved to Vaigil">
-<meta property="og:description" content="Detections, Sigma rules, correlations, the ranked finding queue and the analyst agent are Vaigil&#39;s now. Quilzo&#39;s audit log is one of Vaigil&#39;s sources.">
+<meta property="og:title" content="Detection and Quilzo: the shield&#39;s signals and risky sign-ins">
+<meta property="og:description" content="Detection across your systems is not part of Quilzo. Quilzo watches for attacks on itself: the shield&#39;s signals and playbooks, and risky sign-ins.">
 <meta property="og:url" content="https://quilzo.github.io/detection/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-03">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="Detections, Sigma and the finding queue moved to Vaigil">
-<meta name="twitter:description" content="Detections, Sigma rules, correlations, the ranked finding queue and the analyst agent are Vaigil&#39;s now. Quilzo&#39;s audit log is one of Vaigil&#39;s sources.">
+<meta name="twitter:title" content="Detection and Quilzo: the shield&#39;s signals and risky sign-ins">
+<meta name="twitter:description" content="Detection across your systems is not part of Quilzo. Quilzo watches for attacks on itself: the shield&#39;s signals and playbooks, and risky sign-ins.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"Detections, Sigma rules, correlations, the ranked finding queue and the analyst agent are Vaigil's now. Quilzo's audit log is one of Vaigil's sources.","headline":"Detection and findings are Vaigil's now","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/detection/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/detection/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Detection (Vaigil)","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-03","description":"Detection across your systems is not part of Quilzo. Quilzo watches for attacks on itself: the shield's signals and playbooks, and risky sign-ins.","headline":"Detection and Quilzo","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/detection/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/detection/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Detection","position":2}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -171,35 +171,63 @@
 <article class="guide">
   <header class="guide-head">
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Manual</a><span aria-hidden="true">›</span><span>Reference</span></nav>
-    <h1>Detection and findings are Vaigil&#39;s now</h1>
-    <p class="lead">Vaigil detects and ranks; Quilzo defends itself and reports what it did.</p>
+    <h1>Detection and Quilzo</h1>
+    <p class="lead">Quilzo notices attacks on itself and answers them at once; detection across your systems is your SIEM&#39;s.</p>
   </header>
   <div class="prose">
-<div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>This guide moved to Vaigil.</strong> Detections with their fixtures, Sigma rules, correlations, hunting, the ranked finding queue and the analyst agent are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/detections/">Detections</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. Vaigil ships rules for Quilzo's own records (<code>quilzo.*</code>): a risky sign-in, or one its person reported, failures and lockouts, a decoy token touched, an administrator made or an administrator's token issued, a privileged change made alone, the audit log moved, break-glass, posture drifting, and the shield asking for a case. Quilzo's own response to an attack on itself is <a href="/shield/">the shield</a>, which acts without waiting for anybody.</p>
-<h2 id="send">Send Vaigil what happens here<a class="anchor" href="#send" aria-hidden="true" tabindex="-1">#</a></h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>Not part of Quilzo.</strong> Detection rules across your systems, correlating their events, hunting, and a queue of findings for analysts belong to the SIEM and security tooling your organisation already runs. Quilzo watches only for attacks on Quilzo, and sends that tooling its audit log as it is written.</p></div></div>
+<h2 id="signals">What the shield watches for<a class="anchor" href="#signals" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Quilzo's servers raise a <strong>signal</strong> the moment they see something, and the <a href="/shield/">shield</a> counts them. Signals come from the servers themselves, so nothing a model reads can make the shield act. Among them:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Signal</th><th scope="col">Raised when</th></tr></thead>
+<tbody>
+<tr><td><code>signin-failures</code></td><td>Sign-ins fail again and again from one source</td></tr>
+<tr><td><code>admin-hunt</code></td><td>The public site is asked for the admin's addresses</td></tr>
+<tr><td><code>foreign-probe</code></td><td>The public site is asked for software it does not run, such as WordPress, <code>.env</code> or <code>.git</code></td></tr>
+<tr><td><code>chatbot-injection</code></td><td>Prompt-injection phrases are sent to a chatbot</td></tr>
+<tr><td><code>decoy</code></td><td>A decoy token is presented</td></tr>
+<tr><td><code>agent-hijacked</code></td><td>An agent followed an instruction planted in what it read</td></tr>
+<tr><td><code>agent-misbehaving</code></td><td>An agent or a connected app keeps trying what it was refused</td></tr>
+<tr><td><code>secret-in-prompt</code></td><td>A credential was in a prompt on its way to a model, and was taken out</td></tr>
+<tr><td><code>tool-changed</code></td><td>A tool server changed a tool after a person approved it</td></tr>
+<tr><td><code>self-exposure</code>, <code>self-flaw</code></td><td>A known flaw reaches this build (see <a href="/vulnerabilities/">Vulnerabilities and Quilzo</a>)</td></tr>
+</tbody></table></div>
+<h2 id="playbooks">Playbooks answer at once<a class="anchor" href="#playbooks" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A playbook says: when this signal comes from one source, or from anywhere, this many times within this long, do these steps, and do the next stage if it comes again. Its steps are the shield's own: block or slow a source, turn a public feature down, lock the admin to passkeys and single sign-on, pause an agent, cut a model route, tell the security contact, or ask for a case. Every protection ends by itself. A playbook acts, watches and records what it would have done, or is off.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See the playbooks and their modes</td><td><code>quilzo shield playbook list</code></td></tr>
+<tr><td>Read one, step by step</td><td><code>quilzo shield playbook show decoy-touched</code></td></tr>
+<tr><td>See what they would have done over a month</td><td><code>quilzo shield dry-run --days 30</code></td></tr>
+<tr><td>Change a playbook (a second administrator approves)</td><td><code>quilzo shield playbook mode NAME act --why "..."</code></td></tr>
+<tr><td>Say whether a response was right</td><td><code>quilzo shield judge ID mistake|right</code></td></tr>
+</tbody></table></div>
+<p><span class="where">Protection › Shield</span> shows the same, with what is in force now and what each playbook has done.</p>
+<h2 id="signins">Risky sign-ins<a class="anchor" href="#signins" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Each sign-in to the admin is judged against the person's own: travel nobody could have made, Tor or a hosting provider, a session copied to another device or country, an administrator in a country they have never signed in from. A risky one gets no session until its person confirms it with a passkey or a fresh single sign-on, and the security contact hears of the worst. This is <code>signin.adaptive</code>, on by default; turning it off is a weaker setting, which takes two administrators. See <a href="/signins/">Sign-ins</a>.</p>
+<h2 id="log">All of it in the audit log<a class="anchor" href="#log" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Every response, every protection and every sign-in decision is written to the <a href="/logging/">audit log</a>. Stream it to your SIEM with <code>siem.stream.url</code>, and your own detections can use it alongside everything else they see (see <a href="/collect/">Collecting events and Quilzo</a>).</p>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/detections/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-80q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q56 0 105.5-17.5T676-227l-57-57q-29 21-64.5 32.5T480-240q-100 0-170-70t-70-170q0-100 70-170t170-70q100 0 170 70t70 170q0 39-12 75t-33 65l57 57q32-41 50-91t18-106q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-160q22 0 42.5-5.5T561-342l-61-61q-5 2-10 2.5t-10 .5q-33 0-56.5-23.5T400-480q0-33 23.5-56.5T480-560q33 0 56.5 23.5T560-480q0 6-.5 11.5T557-458l60 60q11-18 17-38.5t6-43.5q0-66-47-113t-113-47q-66 0-113 47t-47 113q0 66 47 113t113 47Z"/></svg></span><h3 class="card-title">Detections, in Vaigil</h3><p>Rules with fixtures, Sigma, and correlations across sources.</p></a></li>
 <li><a class="card" href="/shield/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-164q97-30 162-118.5T718-480H480v-315l-240 90v207q0 7 2 18h238v316Zm0 80q-7 0-13-1t-12-3q-135-45-215-166.5T160-516v-189q0-25 14.5-45t37.5-29l240-90q14-5 28-5t28 5l240 90q23 9 37.5 29t14.5 45v189q0 140-80 261.5T505-88q-6 2-12 3t-13 1Z"/></svg></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/signins/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m422-232 207-248H469l29-227-185 267h139l-30 208Zm-62-128H236q-24 0-35.5-21.5T203-423l299-430q10-14 26-19.5t33 .5q17 6 25 21t6 32l-32 259h155q26 0 36.5 23t-6.5 43L416-100q-11 13-27 17t-31-3q-15-7-23.5-21.5T328-139l32-221Zm111-110Z"/></svg></span><h3 class="card-title">Sign-ins</h3><p>A sign-in that does not look like its person waits until they prove it is them.</p></a></li>
 </ul>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/detection.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-03 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/detection.html">Edit this page on GitHub</a></p>
   </footer>
 </article>
 </main>
 <aside class="toc" aria-label="On this page">
   <h2>On this page</h2>
   <ul>
-    <li><a href="#send">Send Vaigil what happens here</a></li>
+    <li><a href="#signals">What the shield watches for</a></li>
+    <li><a href="#playbooks">Playbooks answer at once</a></li>
+    <li><a href="#signins">Risky sign-ins</a></li>
+    <li><a href="#log">All of it in the audit log</a></li>
     <li><a href="#next">Next</a></li>
   </ul>
 </aside>

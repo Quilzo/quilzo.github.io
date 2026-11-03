@@ -1,26 +1,36 @@
 <!--
-title: Cases and incidents are Vaigil's now
-short: Cases (Vaigil)
-seo: Cases, incidents and regulatory clocks moved to Vaigil
-description: Incidents, the reporting clocks each law starts, playbooks and two-person actions on other tools are Vaigil's now, and Quilzo's shield asks it for cases.
-lead: Vaigil keeps the incidents and their clocks; Quilzo asks it to open them.
+title: Incident cases and Quilzo
+short: Cases
+seo: Incident cases and Quilzo: the shield's requests for a case
+description: Cases and incidents are not part of Quilzo. When the shield wants a person to follow something up, it writes a request for a case into the audit log.
+lead: Quilzo keeps no cases; its shield asks for one in the audit log.
 icon: cases
-updated: 2026-10-27
+updated: 2026-11-03
 -->
 
-<div class="note"><icon name="info"></icon><div><p><strong>This guide moved to Vaigil.</strong> Incidents with the NIS2, GDPR, DORA, SEC, CIRCIA and HIPAA clocks they start, playbooks, and actions on other tools that a second person approves are part of <a href="https://github.com/Vaigil/vaigil">Vaigil</a>, the security team's own tools, which began as this half of Quilzo. Its guide is <a href="https://vaigil.github.io/cases/">Cases and incidents</a>.</p></div></div>
-<p>Quilzo keeps what it needs to defend itself, and hands the rest of the record to whoever watches it. A shield playbook whose step is <em>open a case</em> writes that request into the audit log, with the title, the signal, what it was about and a summary. Vaigil's rule <code>quilzo.shield-asked-for-a-case</code> puts it in the finding queue there; another SIEM can do the same with the record.</p>
-<h2 id="send">Send Vaigil what happens here</h2>
-<p>Point the stream at Vaigil's feed, and <code>quilzo serve</code> pushes the audit log every fifteen seconds as signed OCSF batches that Vaigil can prove complete and unchanged:</p>
-<pre><code>quilzo config set siem.stream.url https://vaigil.example.org/feeds/quilzo
-quilzo siem stream key --json &gt; quilzo-stream-keys.json   # give these to Vaigil
-quilzo siem stream status</code></pre>
-<p>People stay pseudonymous in what is sent unless <code>siem.stream.reveal</code> is set, which takes two administrators. See <a href="/integrations/#stream">the audit log, streamed as it is written</a>.</p>
+<div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> A queue of cases and incidents, the reporting deadlines each law starts, and actions taken on other systems belong to the incident tooling your organisation already runs. Quilzo keeps no cases of its own.</p></div></div>
+
+<h2 id="request">The shield's request for a case</h2>
+<p>Some of the <a href="/shield/">shield</a>'s playbooks end with a step that opens a case: a decoy was touched, a credential was in a prompt, a flaw reaches this build, the binary is not the one it says it is, a tool server redefined a tool somebody approved, or an agent keeps trying what it was refused, among others. That step keeps nothing here. It writes a record into the <a href="/logging/">audit log</a>, made by the service <code>shield</code>, with the action <code>shield.open-case</code> and what a case needs:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Detail</th><th scope="col">What it holds</th></tr></thead>
+<tbody>
+<tr><td><code>playbook</code>, <code>title</code></td><td>The playbook that asked, and its title</td></tr>
+<tr><td><code>signal</code></td><td>What raised it, such as <code>decoy</code> or <code>secret-in-prompt</code></td></tr>
+<tr><td><code>subject</code></td><td>What it was about, such as an agent, a feature, a decoy or an advisory</td></tr>
+<tr><td><code>severity</code></td><td><code>high</code></td></tr>
+<tr><td><code>summary</code></td><td>What happened and what the shield did, in a sentence or two; for a decoy, where it had been planted</td></tr>
+</tbody></table></div>
+<p>The same playbooks usually tell the security contact too, by mail, at the <code>mailto:</code> address in <code>security.contact</code>. A playbook that is watching rather than acting records that it would have opened a case, and asks for none.</p>
+
+<h2 id="open">Open the case where you keep them</h2>
+<p>Stream the log to your SIEM with <code>siem.stream.url</code> (see <a href="/collect/">Collecting events and Quilzo</a>), and have it open a case from each <code>shield.open-case</code> record. In the OCSF it is sent, the action is <code>activity_name</code>, and the details are under <code>unmapped</code> as <code>detail_title</code>, <code>detail_summary</code> and the rest.</p>
+<p>What the shield did in the meantime is on <span class="where">Protection › Shield</span>, and <code>quilzo shield list --all</code> includes what has already ended. A protection that was a mistake ends with <code>quilzo shield lift ID --mistake</code>.</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">
-<li><a class="card" href="https://vaigil.github.io/cases/"><span class="card-icon"><icon name="cases"></icon></span><h3 class="card-title">Cases and incidents, in Vaigil</h3><p>Incidents with the clocks each law starts.</p></a></li>
 <li><a class="card" href="/shield/"><span class="card-icon"><icon name="shield"></icon></span><h3 class="card-title">The shield</h3><p>How Quilzo defends itself.</p></a></li>
+<li><a class="card" href="/integrations/#stream"><span class="card-icon"><icon name="feeds"></icon></span><h3 class="card-title">The audit log, streamed</h3><p>Signed OCSF batches to your SIEM, as the log is written.</p></a></li>
 </ul>
 </section>

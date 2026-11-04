@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/newsletter/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-28">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Double opt-in newsletter with one-click unsubscribe">
 <meta name="twitter:description" content="A mailing list on your site: sign-ups confirmed by mail, issues sent from published pages, one-click unsubscribe, and lists moved in and out as CSV.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-28","description":"A mailing list on your site: sign-ups confirmed by mail, issues sent from published pages, one-click unsubscribe, and lists moved in and out as CSV.","headline":"A newsletter whose every reader asked for it","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/newsletter/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/newsletter/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Newsletter","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"A mailing list on your site: sign-ups confirmed by mail, issues sent from published pages, one-click unsubscribe, and lists moved in and out as CSV.","headline":"A newsletter whose every reader asked for it","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/newsletter/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/newsletter/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Newsletter","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -191,7 +191,7 @@
 <figure class="shot"><img src="/images/newsletter/confirm.webp" alt="A page on a phone headed Get Crumb's newsletter: Press the button to say yes. Until you do, nothing is sent to this address. A button reads Yes, send it to me" width="780" height="600" loading="lazy" decoding="async"><figcaption>The page the link opens.</figcaption></figure>
 <ul>
 <li>An address that never presses it is forgotten after a week.</li>
-<li>One address is mailed a link at most once an hour, and the whole site at most 200 an hour, so the form cannot be used to fill somebody's inbox.</li>
+<li>One inbox is mailed a link at most once an hour, however its address is spelled: with a <code>+tag</code>, or with dots moved about in a Gmail address. The whole site mails at most 200 an hour, so the form cannot be used to fill somebody's inbox.</li>
 <li>The page says the same thing whether or not the address was already subscribed, so the form tells nobody who is on the list.</li>
 </ul>
 <h2 id="send">Sending an issue<a class="anchor" href="#send" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -213,9 +213,12 @@ quilzo newsletter send october --yes</code></pre>
 <tr><td>Take the list to any other service</td><td><strong>Download the list</strong></td><td><code>quilzo newsletter export</code></td></tr>
 <tr><td>Ask one person, who joins when they say yes</td><td><strong>Ask somebody</strong></td><td><code>quilzo newsletter add ADDRESS</code></td></tr>
 </tbody></table></div>
-<p>An import finds the columns by their names, as each service writes them. People it adds count as having said yes, and where they agreed is kept as the record of it, so say truthfully where that was. Anybody the file marks as unsubscribed, bounced or complained is kept as having left, and never sent anything. Somebody already subscribed here is never taken off by an older list. The export is plain CSV: address, name, when they joined, when they confirmed, and what they agreed to.</p>
+<p>An import finds the columns by their names, as each service writes them. People it adds count as having said yes, and where they agreed is kept as the record of it, so say truthfully where that was. Anybody the file marks as unsubscribed, bounced or complained is kept as having left, and never sent anything. Somebody already subscribed here is never taken off by an older list. The export is plain CSV: address, name, when they joined, when they confirmed, and what they agreed to. It goes through the one guard every CSV Quilzo writes goes through, the address included, so a value that begins like a formula is not run by the spreadsheet that opens it. Importing the file again takes the guard back off.</p>
 <h2 id="privacy">Who can see the addresses<a class="anchor" href="#privacy" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>The public site writes a sign-up, writes that it was confirmed, and deletes an address that leaves. It never reads an address back. The links in mail are keyed with a secret the public site can read and cannot change, so checking a link reads nothing either. The addresses are read on the <strong>Newsletter</strong> screen and with <code>quilzo newsletter list</code>, by whoever may read what forms collect. Sending an issue and importing a list take whoever may publish.</p>
+<p>The shield can turn sign-ups off for a while, and a visitor is told that signing up is not available and to try again later:</p>
+<pre><code>quilzo shield feature newsletter --for 1h --reason "a flood of sign-ups from one network"</code></pre>
+<p>Sign-ups are judged by the same bot check as forms and bookings (see <a href="/forms/#checks">Forms</a>).</p>
 <p>The audit log records that somebody signed up, confirmed or left, and that an issue was sent and to how many, never which address. Webhooks can be told <code>subscribed</code> and <code>unsubscribed</code> (see <a href="/integrations/">Integrations</a>), with no address.</p>
 <h2 id="agents">Agents<a class="anchor" href="#agents" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
@@ -234,7 +237,7 @@ quilzo newsletter send october --yes</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-28 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/newsletter.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/newsletter.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/bookings/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Take bookings on your site, with who booked kept off it</span></a>
       <a class="pager-next" href="/media/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Media: images, video and provenance</span></a>

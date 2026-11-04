@@ -2,19 +2,46 @@
 title: Single sign-on with OIDC and SAML
 short: Single sign-on
 seo: Single sign-on: Okta, Entra ID, Google Workspace, SAML, OIDC
-description: Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.
+description: Sign in to the Quilzo admin through Okta, Entra ID, Google, Keycloak or any OIDC or SAML provider, and end its sessions here when the provider says so.
 lead: Sign in through the identity provider you already run.
 icon: sso
 screens: Single sign-on
-updated: 2026-10-21
+updated: 2026-11-04
 -->
 
-<figure class="shot"><img src="/images/sso/sso.webp" alt="The Single sign-on screen"><figcaption>Identity providers.</figcaption></figure><h2 id="oidc">OpenID Connect</h2><pre><code>quilzo oidc configure --provider google --domain example.com
+<figure class="shot"><img src="/images/sso/sso.webp" alt="The Single sign-on screen: a Keycloak provider for northwind.example whose Addresses row reads only those it says are verified, in email_verified, and below it the Rules of the Add one form with the box Take addresses as the provider sends them, verified or not"><figcaption>A Keycloak provider, and the Rules at the foot of <strong>Add one</strong>.</figcaption></figure><h2 id="oidc">OpenID Connect</h2><pre><code>quilzo oidc configure --provider google --domain example.com
 quilzo oidc configure --provider microsoft --tenant TENANT
 quilzo oidc configure --issuer https://idp.example.com --client-id ID
 quilzo oidc check</code></pre><p>A sign-in finishes only in the browser that started it: starting one sets a cookie the provider's answer must come back with, so a sign-in somebody else began cannot be completed in your browser to put you in their account.</p><h2 id="saml">SAML</h2><pre><code>quilzo saml presets
 quilzo saml add okta --metadata metadata.xml --url https://quilzo.example.com --preset okta
 quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have checked it</code></pre><p>Presets: Okta, Microsoft Entra, Google, JumpCloud, OneLogin, PingOne, AD FS and Keycloak. Single sign-on can be required, with named break-glass accounts that keep working when the provider does not. A requirement holds on every request, not only at the sign-in form: a session that did not come through the provider is refused, whichever way it was made.</p>
+
+<h3 id="verified">Only addresses the provider verified</h3>
+<p>SAML has no word of its own for an address the provider has checked. Name the attribute the provider says it in, and a sign-in as an address it does not say <code>true</code> about is refused:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Refuse an address the provider has not verified</td><td><code>quilzo saml add NAME --metadata F --url U --preset keycloak --verified-attribute email_verified</code></td></tr>
+<tr><td>Take addresses as the provider sends them, verified or not</td><td><code>quilzo saml add NAME ... --allow-unverified-email</code></td></tr>
+</tbody></table></div>
+<ul>
+<li>Give one or the other. With neither, a provider that sends <code>email_verified</code> saying anything but true is still believed, and the sign-in is refused; one that says nothing is taken as sent.</li>
+<li>Only an address is asked about. A provider that signs people in by a username (<code>--principal attribute:uid</code>) or an opaque NameID is not.</li>
+<li>A Keycloak user can change their own address and leave it unverified, so the Keycloak preset asks for <code>email_verified</code> by itself. Keycloak sends it only when a mapper does: in the client, add a User Property mapper, property <code>emailVerified</code>, SAML attribute name <code>email_verified</code>. <code>quilzo saml presets</code> says where.</li>
+<li>On the screen, each provider's card says under <strong>Addresses</strong> which it takes, and <span class="where">Add one › Rules</span> has <strong>Take addresses as the provider sends them, verified or not</strong>.</li>
+</ul>
+<p>A provider added before its preset asked for the attribute goes on taking addresses as sent, because asking for it unannounced would refuse everybody until the provider sends it. The security posture names it (<code>sso.unverified-addresses</code>). Once the provider sends the attribute, add it again: <code>quilzo saml add NAME ... --replace --verified-attribute email_verified</code>.</p>
+
+<h2 id="own-network">An identity provider on your own network</h2>
+<p>An OIDC issuer and a SAML metadata address are fetched by this server, so they are held to the rule for every address somebody chose: public, never this machine or the network it is on. An identity provider on the organisation's own network, such as Keycloak, AD FS or Authentik, is reached only where <code>sso.reach</code> names its range:</p>
+<pre><code>quilzo config set sso.reach 10.20.0.0/16 --accept-risk "Keycloak runs on the internal network"</code></pre>
+<ul>
+<li>Name the smallest range that holds it, or its one address. Only private ranges and this machine can be named: never link-local, where cloud metadata lives, and never a public range.</li>
+<li>It opens sign-in's own connections, its discovery, keys, token exchange and SAML metadata, and nothing else.</li>
+<li>It is a weaker setting, so it takes a reason, which is recorded, and a second administrator approves it. <code>quilzo posture scan</code> reports it until it is changed back or renewed.</li>
+<li>An address refused by <code>oidc configure</code>, <code>saml add</code> or the metadata address on the Single sign-on screen says how to reach it.</li>
+</ul>
+
 <h2 id="second-factor">When a sign-in counts as two factors</h2>
 <p>A single sign-on counts as two factors only when the identity provider says so, about a sign-in no older than <code>session.max</code>. Anything else is one factor: the session waits at <strong>Confirm it's you</strong> for the person's passkey. Somebody without a passkey here is given a <a href="/passkeys/#enrolment">link that adds one</a>.</p>
 <div class="table-wrap"><table>
@@ -30,3 +57,50 @@ quilzo saml add okta ... --fingerprint SHA256   # trust its key, once you have c
 <tr><td>Google Workspace, SAML</td><td>never: Google does not say</td><td>Nothing; every sign-in is confirmed with a passkey here</td></tr>
 </tbody></table></div>
 <p>A SAML sign-in asks the provider for nothing: one that cannot meet a requested context refuses the sign-in. An OIDC sign-in asks for one no older than <code>session.max</code> (<code>max_age</code>), and for <code>amr</code> and <code>auth_time</code> by name where the provider reads the claims parameter. <code>quilzo oidc check</code> says whether it does, and <code>quilzo oidc status</code> what your provider needs.</p>
+
+<h2 id="sign-out">Signing out, and refusals</h2>
+<p>Signing out ends the session here. The session at the identity provider is its own and goes on, so signing in through it again may not ask for a password, and the sign-in page says so afterwards. For an OIDC sign-in whose provider has a sign-out address, it offers to sign out there too, and the <strong>Sign out?</strong> page (see <a href="/passkeys/#sessions">how long a sign-in lasts</a>) offers <strong>Sign out here and at PROVIDER</strong> beside <strong>Sign out</strong>. A SAML sign-in is offered neither: Quilzo sends no SAML sign-out, so sign out at the provider.</p>
+<p>A refusal says why:</p>
+<ul>
+<li>Plain http is refused in the words of what the connection is for: an identity provider's metadata and keys decide who signs in, and over plain http anyone on the path chooses them.</li>
+<li>A SAML response that was refused is said once, naming the provider: <em>The response from Keycloak was refused</em>, and the reason.</li>
+<li><code>quilzo oidc status</code> says whether <code>QUILZO_OIDC_SECRET</code> is set in this shell. <code>quilzo serve</code> reads it from its own environment and does not start without it, so set it where the server starts.</li>
+</ul>
+
+<h2 id="signals">When the identity provider ends a session</h2>
+<p>A session made by single sign-on is Quilzo's own: the provider vouches once, and the hours after that are local. So when the provider ends somebody's session, sees their password stolen or disables their account, nothing reaches the session already open here unless the provider says so. Its security event stream (OpenID Shared Signals: CAEP and RISC) is how it says so, and Quilzo receives it at <code>POST /sso/signals</code> on the admin.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Give the stream client's secret, which is never stored</td><td><code>export QUILZO_SIGNALS_SECRET=...</code></td></tr>
+<tr><td>Connect a provider that publishes a stream API</td><td><code>quilzo signals connect --provider oidc --client-id quilzo-stream</code></td></tr>
+<tr><td>Connect a stream made in the provider's own console</td><td><code>quilzo signals connect --provider oidc --jwks URL</code></td></tr>
+<tr><td>Connect one for a SAML provider</td><td><code>quilzo signals connect --provider saml:NAME --issuer URL ...</code></td></tr>
+<tr><td>See whether it works</td><td><code>quilzo signals status</code>, or <a href="/signins/#identity-provider">Sign-ins</a></td></tr>
+<tr><td>Turn it off</td><td><code>quilzo signals off</code></td></tr>
+</tbody></table></div>
+<ul>
+<li>The stream is bound to one way of signing in, <code>oidc</code> or <code>saml:NAME</code>, and its events reach only the sessions that provider signed in, unless it disables an account outright.</li>
+<li>The provider pushes to <code>/sso/signals</code> at the origin of the OIDC redirect URI, or at the SAML provider's <code>--url</code>. That address has to be https and one the provider can reach.</li>
+<li>With <code>--client-id</code>, Quilzo asks the provider for the stream through its API, gives it a push secret it never shows, and asks it to verify. With <code>--jwks</code>, for a stream made in the provider's console, it prints the push address, the audience, the authorization and the events to ask for. The authorization is shown once and kept only as a digest.</li>
+<li><code>--issuer</code> is the OIDC issuer unless given, and is required for <code>saml:NAME</code>.</li>
+<li><code>quilzo signals off</code> refuses anything pushed after it and asks the provider to delete the stream, or says to delete it in the provider's console. The denies it added stay until the account is enabled or a person lifts them.</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">The provider says</th><th scope="col">Quilzo does</th></tr></thead>
+<tbody>
+<tr><td>session-revoked, sessions-revoked; credential-change (update, revoke, delete)</td><td>Ends that provider's sessions for them opened before the event was issued</td></tr>
+<tr><td>credential-compromise, account-credential-change-required</td><td>The same; every other session they had open then must confirm it is them; the security contact is told</td></tr>
+<tr><td>account-disabled, account-purged</td><td>Suspends them as SCIM does: every token, every app they connected, and a deny over the whole site that passkeys and single sign-on refuse</td></tr>
+<tr><td>account-enabled</td><td>Lifts the deny it added, and no other</td></tr>
+</tbody></table></div>
+<p>What keeps the stream from being turned against the site:</p>
+<ul>
+<li>Every event is a token signed by the provider's published key, for this receiver, and pushed with a bearer only the provider was given. Who it is about has to be somebody the access policy already knows; anything else is counted as unmatched and nothing is done.</li>
+<li>The last person who can grant access is never suspended this way: their sessions end and the security contact is told.</li>
+<li>At most twenty people an hour are acted on. An event about anybody else is answered 503 with a <code>Retry-After</code> of when the hour is up, and is acted on when the provider sends it again.</li>
+<li>An account-enabled or account-disabled older than what was last done about that person, or a copy of one already acted on, is refused and recorded as <code>signals.stale</code>, so a replay cannot lift a newer suspension or suspend again somebody the provider has enabled since.</li>
+<li>Once a day the server asks the provider to verify the stream, with <code>QUILZO_SIGNALS_SECRET</code> from its own environment: set it wherever <code>quilzo serve</code> starts. The posture finding <code>signals.stream-silent</code> reports a stream that has not answered for a day, and one made in the console, which cannot be asked.</li>
+<li>The <a href="/shield/">shield</a>'s <code>signals</code> feature turns the endpoint off. It answers 503 with a time to come back, so a provider that retries sends the event again later.</li>
+</ul>
+<p>One administrator connects it, with the authority to grant access: there is no rule to write, and every event only takes access away. Each act is in the <a href="/logging/">audit log</a> as <code>signals.sessions-ended</code>, <code>signals.step-up</code>, <code>signals.suspended</code>, <code>signals.restored</code> and the like.</p>

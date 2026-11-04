@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/growth/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Cookieless analytics, A/B testing and personalisation">
 <meta name="twitter:description" content="Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.","headline":"Analytics, A/B tests and personalisation","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/growth/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/growth/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Analytics and experiments","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Count views, visitors, referrers and conversions without a cookie, run A/B tests that give a verdict only when there is one, and personalise by what a request says.","headline":"Analytics, A/B tests and personalisation","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/growth/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/growth/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#release","name":"Release","position":2},{"@type":"ListItem","name":"Analytics and experiments","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -176,7 +176,7 @@
     <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Analytics</span><span class="chip">Experiments</span><span class="chip">Personalisation</span></p>
   </header>
   <div class="prose">
-<figure class="shot"><img src="/images/growth/analytics.webp" alt="The Analytics screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Analytics, counted with no cookie and no script.</figcaption></figure><div class="table-wrap"><table>
+<p>Analytics are counted at the server, with no cookie and no script on your pages. A visitor is recognised for one day only, and no address is kept.</p><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
 <tr><td>Views, visitors, referrers, conversions</td><td><code>quilzo analytics --days 30</code></td></tr>
@@ -185,9 +185,28 @@
 <tr><td>Personalise by campaign, language or device</td><td><code>quilzo personalise add NAME --page P --variant V --when campaign=X</code></td></tr>
 <tr><td>Test a rule</td><td><code>quilzo personalise test PAGE --campaign X</code></td></tr>
 </tbody></table></div><figure class="shot"><img src="/images/growth/experiments.webp" alt="The Experiments screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Starting an experiment.</figcaption></figure>
+<h2 id="missing">Looked for and not found<a class="anchor" href="#missing" aria-hidden="true" tabindex="-1">#</a></h2>
+<figure class="shot"><img src="/images/growth/analytics.webp" alt="The Analytics screen: Looked for and not found lists /hours.html asked 47 times and /old-site/hours 15 times, each probably meaning /hours with a Redirect it button, and three addresses with no close page; below it, Searches that found nothing lists gift vouchers, parking and vegan croissants" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Addresses people asked for, the page each most likely meant, and what searches found nothing.</figcaption></figure>
+<p>On the <strong>Analytics</strong> screen, <strong>Looked for and not found</strong> lists the addresses people asked for that are not on the site: a link somebody else has wrong, or a page that moved. Beside each is the page it most likely meant, and <strong>Redirect it</strong> sends it there. Below it, <strong>Searches that found nothing</strong> lists what readers searched for in their words, with addresses and numbers masked: each is a page somebody could write.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>List the site's redirects</td><td><code>quilzo redirect list</code></td></tr>
+<tr><td>Send an old address to where its page is now</td><td><code>quilzo redirect add FROM TO [--temporary]</code></td></tr>
+<tr><td>Take one away</td><td><code>quilzo redirect remove FROM</code></td></tr>
+</tbody></table></div>
+<p>A redirect is served before any page and changes the live site at once, with no draft to review, so it takes whoever may publish. The running site reads a change within a second, with no restart.</p>
+<h2 id="search-engines">Search engines and agents<a class="anchor" href="#search-engines" aria-hidden="true" tabindex="-1">#</a></h2>
+<ul>
+<li>Once the site has an address (<code>site.base_url</code>), every page names its own address with <code>rel=canonical</code>, so the same page reached with a query string or a trailing slash is one page.</li>
+<li>In a page's editor, under <strong>Search engines</strong>, <strong>Leave this page out of search results</strong> marks it <code>noindex</code> and leaves it out of the sitemap. <strong>Published first at</strong> names the address a page copies, which becomes its canonical address.</li>
+<li>Every published page has a Markdown copy at <code>/NAME.md</code>, its words in order, for a reader's agent. <code>llms.txt</code> lists them, and each copy names its page as canonical.</li>
+<li>With <code>site.indexnow</code> on (it is off by default), each publish tells the search engines that take IndexNow which pages changed, and nothing else. The key is served at <code>/KEY.txt</code>. It goes out under the network purpose <code>indexnow</code>, so an offline deployment refuses it (see <a href="/settings/#network">Settings</a>).</li>
+<li>Site search scores its results over the pages the visitor may read, so a page they cannot see does not shape how the others rank.</li>
+</ul>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/growth.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/growth.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/publishing/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Review, publish, schedule and roll back</span></a>
       <a class="pager-next" href="/selling/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Sell through the provider&#39;s own checkout</span></a>
@@ -195,6 +214,13 @@
   </footer>
 </article>
 </main>
+<aside class="toc" aria-label="On this page">
+  <h2>On this page</h2>
+  <ul>
+    <li><a href="#missing">Looked for and not found</a></li>
+    <li><a href="#search-engines">Search engines and agents</a></li>
+  </ul>
+</aside>
 </div>
 <footer class="foot">
   <div class="foot-inner">

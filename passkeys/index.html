@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/passkeys/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Passkeys, API tokens and session limits">
 <meta name="twitter:description" content="Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.","headline":"Passkeys, tokens and sessions","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/passkeys/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/passkeys/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#administration","name":"Administration","position":2},{"@type":"ListItem","name":"Passkeys and tokens","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.","headline":"Passkeys, tokens and sessions","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/passkeys/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/passkeys/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#administration","name":"Administration","position":2},{"@type":"ListItem","name":"Passkeys and tokens","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -192,6 +192,8 @@
 <li>With nobody using the page for <code>session.idle</code>, it ends: an hour by default, between five minutes and an hour, and never switched off. Anybody who can grant access is signed out after fifteen minutes at most.</li>
 <li>Typing, clicking and scrolling count as use. The page warns a minute before the end, and afterwards offers to sign in again with your passkey without leaving it, so nothing you were writing is lost. Only your own passkey carries on with your page.</li>
 <li>A site member signs in again after thirty days, or after two weeks unused.</li>
+<li><code>/signout</code> reached from a link you did not follow from here, an image or a frame asks <strong>Sign out?</strong> instead of signing you out, so a page elsewhere cannot end your session. The menu's <strong>Sign out</strong> still signs out at once.</li>
+<li>A break-glass recovery at the store's machine (<code>quilzo auth recover</code>) is told to the security contact, as well as written to the audit log.</li>
 </ul>
 <h2 id="two-factors">Two factors on every request<a class="anchor" href="#two-factors" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Every request a person makes to the admin carries two factors (NIST SP 800-63B-4, AAL2). A passkey is two on its own, and a sign-in through single sign-on counts as two when the identity provider says it used two (see <a href="/sso/#second-factor">when a sign-in counts as two factors</a>); otherwise it waits for your passkey. A token is one: anybody holding a copy has it.</p>
@@ -212,6 +214,8 @@
 <li>Only its hash is kept. Giving it, using it and ending it are recorded, with who gave it.</li>
 <li>Guessing at links is throttled, and none works while the admin is locked down.</li>
 <li><code>quilzo auth enrol dana --revoke</code> ends a link nobody has used.</li>
+<li>A link for somebody who administers anything waits for a second administrator, because whoever opens it signs in as them from then on. Once approved, it is received once, within a day, by whoever asked for it: <strong>Receive the link</strong> under <span class="where">Administration › People</span>, or <code>quilzo pending redeem ID</code>.</li>
+<li><code>quilzo init --admin NAME</code> in an empty directory that already exists, such as a volume mounted for the store, makes a new store with two factors from its first day, rather than the fourteen days an upgraded installation is given.</li>
 </ul>
 <p>A passkey belongs to the address it was made on, and a browser refuses an IP address as one, so open the admin as <code>http://localhost:8080</code> rather than <code>127.0.0.1</code>, or set <code>admin.base_url</code> and links carry it.</p>
 <h2 id="lockout">Too many failed sign-ins<a class="anchor" href="#lockout" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -220,7 +224,10 @@
 <li>Ten failures from places the account is not used from lock those places out of it for thirty minutes, and each lockout after that doubles, up to a day.</li>
 <li>A hundred failures in a row, from anywhere, turn passkey sign-in to the account off until you sign in with a single sign-on that says it used two factors, or another administrator unlocks it.</li>
 <li>Each lockout is recorded and raises the <code>account-locked</code> sign-in signal. At your next sign-in you are told how many failures came before it.</li>
-<li>Every other way in is slowed per address as well: the delay doubles after five failures in an hour, up to fifteen minutes, and nothing is accepted past a hundred. Throttling cannot be switched off. Its settings (<code>auth.throttle.after</code>, <code>.ceiling</code>, <code>.base</code>, <code>.max</code> and <code>auth.lockout.alert</code>) are held between bounds: at most ten free failures, a ceiling of 10 to 100, delays of a second to an hour, and an alert by twenty failures.</li>
+<li>A passkey whose signature counter went back exists in two places. Its sign-in is refused, recorded as <code>passkey.counter-refused</code>, and raises the <code>passkey-cloned</code> sign-in signal, rated high, which tells the security contact to have the key removed and registered again. The key is not removed by itself. A member's passkey is refused and recorded the same way (see <a href="/members/">Members</a>).</li>
+<li>Every way in is slowed per address as well: after five failures in an hour each one doubles the delay, up to fifteen minutes, and past a hundred in the hour every failure is refused until the hour is up.</li>
+<li>Only failures are slowed. From a throttled address a failure is answered 429 and not counted, and a valid token, passkey or enrolment link still gets in: at <code>/mcp</code> and <code>/a2a</code>, token exchange, the passkey ceremony, the sign-in box, enrolment links and the studio's sign-in, as at the API and the admin's screens. So somebody behind the same NAT or proxy as a guesser is not locked out with them.</li>
+<li>Throttling cannot be switched off. Its settings (<code>auth.throttle.after</code>, <code>.ceiling</code>, <code>.base</code>, <code>.max</code> and <code>auth.lockout.alert</code>) are held between bounds: at most ten free failures, a ceiling of 10 to 100, delays of a second to an hour, and an alert by twenty failures.</li>
 </ul>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Do</th></tr></thead>
@@ -232,7 +239,7 @@
 <p>Nobody unlocks themselves on the Sign-ins screen, and somebody who administers the whole site is unlocked only by another administrator of the whole site.</p>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/passkeys.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/passkeys.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/provisioning/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">SCIM provisioning from Okta and Entra</span></a>
       <a class="pager-next" href="/credentials/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Credentials for programs and CI jobs</span></a>

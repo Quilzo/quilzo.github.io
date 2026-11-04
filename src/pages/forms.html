@@ -6,7 +6,7 @@ description: Collect form submissions the public server cannot read back, keep t
 lead: Forms the public site can write and never read back, kept only as long as declared.
 icon: forms
 screens: Forms
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/forms/forms.webp" alt="The Forms screen listing the restock and wholesale forms with their retention"><figcaption>Forms, and how long each keeps what it receives.</figcaption></figure>
@@ -17,4 +17,41 @@ updated: 2026-10-08
 <tr><td>List forms, held submissions and retention</td><td><code>quilzo form list</code></td></tr>
 <tr><td>Remove what is past retention</td><td><code>quilzo form expire</code></td></tr>
 <tr><td>Erase everything matching a value, such as an email</td><td><code>quilzo form erase VALUE</code></td></tr>
-</tbody></table></div><p>A chatbot can offer a form as an action (see <a href="/chatbots/#actions">Chatbots</a>), and the form's own checks still apply.</p>
+</tbody></table></div>
+<h2 id="declare">Declare a form</h2>
+<p>On the <strong>Forms</strong> screen, <strong>Declare a form, or add a field</strong> names the form, its privacy notice, what the answers are for, its lawful basis and how many days it keeps them, then adds one field at a time. A form is kept in the store's <code>forms.json</code>. To show one on a page, choose it under <strong>Form on this page</strong> in the page's editor (see <a href="/pages/#write">Pages</a>).</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A field that</th><th scope="col">Has the kind</th></tr></thead>
+<tbody>
+<tr><td>Takes one line, or several</td><td><code>line</code>, <code>para</code></td></tr>
+<tr><td>Takes an email address, shape-checked and never sent to</td><td><code>email</code></td></tr>
+<tr><td>Takes a number</td><td><code>number</code></td></tr>
+<tr><td>Offers one of a list</td><td><code>choice</code></td></tr>
+<tr><td>Is a box to tick</td><td><code>agree</code></td></tr>
+<tr><td>Takes a file</td><td><code>file</code></td></tr>
+</tbody></table></div>
+<h2 id="when">Ask a question only when it applies</h2>
+<p>A field can be asked only when an earlier choice was answered one way, or an earlier box was ticked. In the form builder, fill in <strong>Asked only when</strong> and <strong>is answered</strong>; in <code>forms.json</code>, give the field <code>"when": {"field": "topic", "is": "Returns"}</code>, leaving out <code>is</code> for a box.</p>
+<p>The server decides what was asked from what arrived, and keeps nothing for a question it did not ask, whatever was sent for it. The form's stylesheet, <code>/form/NAME.css</code>, hides the question until the answer that asks it is given, with no script. A browser that cannot do that shows every question, each saying when it applies.</p>
+<h2 id="files">Take files</h2>
+<p>A field of kind <code>file</code> takes a CV, a photograph of the damage or a signed letter. <strong>Takes, for a file</strong> says which: image, document, text, audio or video, and images and documents when it is left empty.</p>
+<ul>
+<li>A file is taken by what its bytes are, never by its name or the type the browser claimed, and checked as the media library checks an upload.</li>
+<li>One file may be at most 10 MB, and one submission's files 20 MB together. The files every form keeps come to at most 1 GiB; a submission that would go past it is refused, and the form says it cannot take any more files just now.</li>
+<li>A CSV is refused when any cell a spreadsheet would run holds a formula, whichever separator the spreadsheet reads it by.</li>
+<li>A file is kept with its submission and deleted with it: when it expires, when it is erased and when the form is purged.</li>
+<li>Staff download it from <strong>Forms</strong>; it is never shown inside the admin's own pages. Every download is recorded in the audit log as <code>form.file.read</code>. A file in a field marked sensitive takes whoever may erase it.</li>
+</ul>
+<h2 id="staff">Hear about submissions</h2>
+<p>Staff are told when a form is sent, through <code>notify.staff</code> (see <a href="/settings/#staff">Telling staff</a>). The notice says which form and how many, never who or what they wrote. A submission that arrives through the share sheet of a device that installed the site is recorded in the audit log and alerts staff as the form's own route does.</p>
+<h2 id="checks">Spam and spreadsheets</h2>
+<p>Forms, bookings and the newsletter's sign-up judge a visitor with one bot check: a field only a script fills in, and how long ago the page was opened. A form opened more than a day ago asks to be reloaded and sent again. The shield can turn forms off for a while, every form or one by name (see <a href="/shield/#features">the shield</a>).</p>
+<p>Every CSV Quilzo writes, the form export included, goes through one guard, so a value that begins like a formula is written so a spreadsheet does not run it.</p>
+<p>A chatbot can offer a form as an action (see <a href="/chatbots/#actions">Chatbots</a>), and the form's own checks still apply.</p>
+<section class="see-also">
+<h2 id="next">Next</h2>
+<ul class="cards">
+<li><a class="card" href="/bookings/"><span class="card-icon"><icon name="bookings"></icon></span><h3 class="card-title">Bookings</h3><p>Appointments on your site, with who booked kept off it.</p></a></li>
+<li><a class="card" href="/newsletter/"><span class="card-icon"><icon name="newsletter"></icon></span><h3 class="card-title">Newsletter</h3><p>Sign-ups that each confirm from their own inbox.</p></a></li>
+</ul>
+</section>

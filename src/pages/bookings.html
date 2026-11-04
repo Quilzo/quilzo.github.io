@@ -6,7 +6,7 @@ description: Appointments on your site: hours in your time zone, services, free 
 lead: Say when you are open and what can be booked. Any page can offer the free times, and a visitor books, adds it to their calendar and can cancel, with no script and no account.
 icon: bookings
 screens: Bookings
-updated: 2026-10-28
+updated: 2026-11-04
 -->
 
 <div class="definition"><p><strong>Bookings</strong> are appointments taken on the site: one calendar, its hours each week in its own time zone, the dates it is closed, and the services it offers, each with how long it takes and how long to leave after it. A <strong>booking</strong> section on any page offers the free times for one service.</p></div>
@@ -41,13 +41,15 @@ quilzo booking setup bookings.json</code></pre>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
 <tbody>
-<tr><td>Cancel a booking, and tell them yourself, since the site sends no mail</td><td><strong>Cancel</strong> on its row</td><td><code>quilzo booking cancel ID</code></td></tr>
+<tr><td>Cancel a booking, and tell them yourself, since nothing is sent to the person who booked</td><td><strong>Cancel</strong> on its row</td><td><code>quilzo booking cancel ID</code></td></tr>
 <tr><td>Cancel it and forget who made it, for somebody asking to be forgotten</td><td><strong>Forget who booked it too</strong></td><td><code>quilzo booking cancel ID --erase</code></td></tr>
 <tr><td>Stop taking new bookings; those made stand</td><td><strong>Pause new bookings</strong></td><td><code>quilzo booking pause</code>, then <code>resume</code></td></tr>
 <tr><td>Take the bookings into your calendar, names and all</td><td><strong>Download them as a calendar file</strong></td><td>On the screen only; <code>quilzo booking list</code> lists them</td></tr>
 <tr><td>Subscribe your phone to the times</td><td><strong>A calendar address for your phone</strong></td><td><code>quilzo booking feed</code></td></tr>
 </tbody></table></div>
 <p>The calendar address is shown once and kept only as a hash; making another ends it, and <code>quilzo booking feed --off</code> turns it off. It shows when each booking is and for what, never who, because the address is a secret your calendar app holds and sends over the internet.</p>
+<p>Nothing is ever sent to the person who booked, but staff can be told of bookings made and cancelled: add <code>booking.made</code> and <code>booking.cancelled</code> to <code>notify.events</code>, beside the addresses in <code>notify.staff</code> (see <a href="/settings/#staff">Telling staff</a>). A notice says which service and how many, never who.</p>
+<p>The shield can turn new bookings off for a while, and a visitor is told booking is not available and to try again later: <code>quilzo shield feature bookings --for 2h --reason "..."</code>. Bookings are judged by the same bot check as forms (see <a href="/forms/#checks">Forms</a>).</p>
 <p>Webhooks can be told <code>booked</code> and <code>booking-cancelled</code> (see <a href="/integrations/">Integrations</a>). Each says which service, and nothing about when or who.</p>
 <h2 id="agents">Agents</h2>
 <ul>

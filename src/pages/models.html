@@ -6,7 +6,7 @@ description: One gateway for every AI agent's model calls, built here or in any 
 lead: One gateway for every model call: which model answers, what each caller may spend, and what may leave in a prompt.
 icon: models
 screens: Models
-updated: 2026-11-03
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>The <strong>model gateway</strong> is where every model call from Quilzo goes: agents, chatbots, the writing assistant, and agents' own programs. It tries routes in order, charges each call to a caller at that route's prices, holds callers to their budgets, and masks personal data before a prompt reaches a route that may not receive it. Prompts are never recorded, only who asked, which route answered, and how much. AI agents built in any framework can use it too, with their memory (see <a href="#agents-anywhere">Agents built anywhere</a>).</p></div>
@@ -14,16 +14,24 @@ updated: 2026-11-03
 <h2 id="one-model">The quickest start: one model</h2>
 <p>With no routes declared, every call goes to the model in two environment variables. Any OpenAI-compatible endpoint works: Ollama, vLLM, LM Studio, llama.cpp, or a hosted provider.</p>
 <pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1
-export QUILZO_MODEL=llama3.1</code></pre>
-<p>A key, if the endpoint needs one, goes in <code>QUILZO_MODEL_KEY</code>. Quilzo sends a key only over https, or to a model on this machine.</p>
+export QUILZO_MODEL=MODEL</code></pre>
+<p><code>MODEL</code> is the name the endpoint gives the model you chose. A key, if the endpoint needs one, goes in <code>QUILZO_MODEL_KEY</code>. Quilzo sends a key only over https, or to a model on this machine.</p>
 
 <h2 id="routes">Add routes, in fallback order</h2>
 <ol class="steps">
 <li>
 <h3>Add each model as a route</h3>
-<p>Open <span class="where">Administration › Models</span> and fill in <strong>Add a route</strong>: a name, the address, the model name, the environment variable holding its key (never the key itself), and what a million tokens cost there. Or:</p>
+<p>Open <span class="where">Administration › Models</span> and fill in <strong>Add a route</strong>: a name, the provider, the model name, the sealed credential holding its key (never the key itself), and what a million tokens cost there.</p>
+<p>Quilzo knows more than forty providers by profile: runtimes on this machine or your network, model makers, open-model hosts, routers to many providers, cloud platforms and regional providers. Each profile gives the provider's address, how it takes its key, and what it says it does with what it is sent: whether it trains on it, how long it keeps it, and where it is processed. The <strong>Provider</strong> list on the Models screen offers the same profiles.</p>
+<pre><code>quilzo gateway providers
+quilzo gateway providers mistral-eu</code></pre>
+<p>A route that names a provider takes the profile's address and the way it sends its key, and reaches that provider's host and nothing else. A route given another host fails every call, so a typo or a planted address cannot carry a key off. Keep the key sealed and name it with <code>--key-secret</code>; the profile suggests the name:</p>
 <pre><code>quilzo gateway currency GBP
-quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model llama3.1 \
+quilzo secret set mistral &lt; keyfile
+quilzo gateway route add hosted-eu --provider mistral-eu --model MODEL --key-secret mistral \
+  --price-in 2.50 --price-out 10.00</code></pre>
+<p>A <code>providers.json</code> in the store's <code>.quilzo</code> folder adds the operator's own profiles, and one with a built-in profile's id replaces it. Any OpenAI-compatible endpoint also works by its address, with its key in an environment variable:</p>
+<pre><code>quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model MODEL \
   --personal --price-in 0.05 --price-out 0.20 --first
 quilzo gateway route add hosted --url https://models.example.com/v1 --model example-large \
   --key-env EXAMPLE_API_KEY --price-in 2.50 --price-out 10.00</code></pre>
@@ -33,13 +41,21 @@ quilzo gateway route add hosted --url https://models.example.com/v1 --model exam
 <thead><tr><th scope="col">Option</th><th scope="col">Sends</th></tr></thead>
 <tbody>
 <tr><td><code>--max-tokens-field max_completion_tokens</code></td><td>The output limit under that name, for OpenAI's reasoning models. The default is <code>max_tokens</code>.</td></tr>
-<tr><td><code>--temperature T</code>, <code>--top-p P</code></td><td>That sampling on every call. Claude's current models refuse both.</td></tr>
+<tr><td><code>--temperature T</code>, <code>--top-p P</code></td><td>That sampling on every call. Anthropic's Messages API refuses both on every model, so a route to it with either is refused where the route is made.</td></tr>
 <tr><td><code>--timeout 300s</code></td><td>Nothing; it lets one call take that long, for a model that reasons at length. The default is two minutes.</td></tr>
 <tr><td><code>--auto-tool-choice</code></td><td><code>auto</code> where a caller forces a tool, for a model that refuses a forced choice.</td></tr>
+<tr><td><code>--effort low|medium|high|xhigh|max</code></td><td>How hard the model thinks (<strong>How hard it thinks</strong>).</td></tr>
+<tr><td><code>--geo us</code></td><td>That the model runs in the US only (<strong>Where it may run</strong>). <code>global</code> is the provider's default.</td></tr>
+<tr><td><code>--server-fallback</code></td><td>That a request the model declines may be answered by another of the provider's models, for the models that take it.</td></tr>
 </tbody>
 </table>
 <pre><code>quilzo gateway route add reasoning --url https://models.example.com/v1 --model example-reasoner \
   --key-env EXAMPLE_API_KEY --max-tokens-field max_completion_tokens --timeout 300s</code></pre>
+<p>The last three are for a provider spoken to in its own Messages API, and are refused for any other. <code>quilzo gateway providers anthropic</code> says that its profile speaks it:</p>
+<pre><code>quilzo secret set anthropic &lt; keyfile
+quilzo gateway route add careful --provider anthropic --model MODEL --key-secret anthropic \
+  --effort high --geo us --server-fallback</code></pre>
+<p>A request the model's safeguards decline goes back to whoever asked, with the provider's reason when it gives one. It is not sent to the next route and rests nothing: routing round a provider's safeguard is not a fallback.</p>
 </li>
 <li>
 <h3>Check the order</h3>
@@ -61,13 +77,29 @@ quilzo gateway budget '*' --money-per-day 20.00</code></pre>
 <figure class="shot"><img src="/images/models/spend.webp" alt="Today's spending by caller: person dana, agent help-desk and agent returns-editor, with tokens and money, and the budgets table below"><figcaption>Spending by caller, against their budgets.</figcaption></figure>
 <pre><code>quilzo gateway status</code></pre>
 <pre class="out"><code>routes, in fallback order
-  on-premises  http://127.0.0.1:11434/v1 llama3.1  no key needed; may receive personal data
+  on-premises  http://127.0.0.1:11434/v1 MODEL  no key needed; may receive personal data
   hosted  https://models.example.com/v1 example-large  key in $EXAMPLE_API_KEY; personal data masked
 today
   agent:returns-editor  4463 characters no daily limit, 3 call(s), 0 failed, 0 refused
     1112 tokens, 0.000067 GBP today of 5.00, 0.000067 this month of 60.00</code></pre>
 </li>
 </ol>
+
+<h3 id="route-kinds">Routes for pictures, embeddings, voice and video</h3>
+<p>A route answers in words unless it is added as one of these. Each is used for its one job and nothing else, under the callers' budgets and in the same record as words:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Option</th><th scope="col">On the Models screen</th><th scope="col">What uses it</th></tr></thead>
+<tbody>
+<tr><td><code>--draws</code>, priced with <code>--price-picture</code></td><td><strong>It draws pictures</strong>, <strong>Price of a picture</strong></td><td><code>quilzo media generate</code>. Add <code>--ask-base64</code> (<strong>Ask it for the picture itself</strong>) for an endpoint that otherwise answers with a link, which is never fetched.</td></tr>
+<tr><td><code>--embeds</code></td><td><strong>It makes embeddings</strong></td><td>Chatbots that find passages by meaning, once it is named in <code>chatbot.embeddings</code> (see <a href="/chatbots/#embeddings">Chatbots</a>).</td></tr>
+<tr><td><code>--speaks</code></td><td><strong>It reads text aloud</strong></td><td><code>quilzo media speak</code>. Text holding personal data goes only to a route that may receive it, since a voice cannot leave it out.</td></tr>
+<tr><td><code>--transcribes</code>, priced with <code>--price-minute</code></td><td><strong>It transcribes recordings</strong>, <strong>Price of a minute of recording</strong></td><td><code>quilzo media transcribe</code>. Voices cannot be masked, so it is sent a recording only when it is marked <code>--personal</code>.</td></tr>
+<tr><td><code>--films</code>, priced with <code>--price-video</code></td><td>The command line only</td><td><code>quilzo media film</code>, through a provider that makes video: <code>google-veo</code> or <code>fal</code>.</td></tr>
+</tbody></table></div>
+<pre><code>quilzo gateway route add pictures --provider openai --model MODEL --key-secret openai \
+  --draws --price-picture 0.04
+quilzo gateway route add meaning --provider openai --model MODEL --key-secret openai \
+  --embeds --price-in 0.02</code></pre>
 
 <h2 id="privacy-guard">The privacy guard</h2>
 <p>Before a prompt leaves for a route that may not receive personal data, Quilzo replaces each personal value with a placeholder such as <code>&lt;quilzo:email:1&gt;</code>. The same value gets the same placeholder every time, so the model can still tell one customer from another. The placeholders are swapped back in the answer, so it reads as if nothing was taken out. The model never sees a value, and the record of what was masked holds only counts by kind.</p>

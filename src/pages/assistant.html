@@ -6,7 +6,7 @@ description: Ask a model to draft pages that every publishing check still applie
 lead: A model that proposes pages for a person to accept, and one that answers fixed questions and hands the uncertain ones to a person.
 icon: assist
 screens: Assistant, Decisions
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>The <strong>writing assistant</strong> drafts pages from a request: nothing is written until a person accepts it, and every page it touches is marked as AI-generated. <strong>Decisions</strong> are typed questions a model answers about some state, such as which queue a message goes to, each with a confidence. Below the threshold, a person decides.</p></div>
@@ -29,13 +29,14 @@ updated: 2026-10-08
 </ol>
 <p>From the command line, <code>quilzo assist</code> writes into the draft directly; add <code>--dry-run</code> to see the proposal first:</p>
 <pre><code>quilzo assist "Add a page about gift wrapping, with the price" --author dana --dry-run</code></pre>
-<pre class="out"><code>asking local-model...
+<pre class="out"><code>asking gateway:assist...
 
 proposed
   add      gift-wrapping
 
   Added a Gift wrapping page with the price and the handwritten note.</code></pre>
 <p><code>--author</code> names the person accountable for the change. Templates the model proposes go to <code>--templates DIR</code>, in Quilzo's template language, which cannot execute anything.</p>
+<p>The assistant, on the Assistant screen and as <code>quilzo assist</code>, asks through the <a href="/models/">model gateway</a>: its routes and fallbacks, charged to the caller <code>assist</code> and to the person asking, each against its own budget, and with personal data masked as for every call. In a store with no gateway declared, it asks the one configured model, behind the same privacy guard.</p>
 
 <h2 id="decisions">Typed decisions with a confidence gate</h2>
 <p>Most of what software asks a model is not "write me something". It is a bounded judgement: which queue does this ticket go to, is this comment abusive, how urgent is it. A typed decision gets one of the declared options, yes or no, or a score from 0 to 1, with a confidence, and the threshold decides what happens to an uncertain answer.</p>
@@ -76,6 +77,8 @@ urgent  a person decides — confidence 0.55 is under the 0.80 threshold</code><
 <h3 id="confidence">Why the confidence can be trusted</h3>
 <p>A model asked how confident it is gives a badly calibrated number: large models are systematically overconfident. So Quilzo asks each question <code>samples</code> times and measures agreement (self-consistency), and the confidence it reports is the lower of the two. A model that says 0.95 and changes its answer between samples is not 95% sure.</p>
 <p>The state is data, fenced in the prompt as untrusted text, since a ticket is written by whoever sent it. An answer outside the declared options is refused whatever the model says. With no model configured everything escalates, which is the right failure: a decision nobody could make is one a person makes.</p>
+<h3 id="decide-step">Decisions inside an agent's run</h3>
+<p>An agent asks a decider as one step of its run. The step's state can be text, an object or a list, such as a whole ticket with its fields, and it reaches the decider in the characters it was written in: a ticket from AT&amp;T is read as AT&amp;T. Each sample is charged to the run. When an answer is under the threshold, the run asks a person that question, in its own shape, and goes on with their answer. What the decider was sure of goes with the question, so the person's answer keeps what the decider settled (see <a href="/agents/#questions">Questions it cannot answer alone</a>).</p>
 
 <section class="see-also">
 <h2 id="next">Next</h2>

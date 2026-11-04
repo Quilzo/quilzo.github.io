@@ -2,10 +2,10 @@
 title: Install and run Quilzo in production
 short: Install and run it
 seo: Install Quilzo: build from source or a container, run it
-description: Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
+description: Build Quilzo from source or as a container, run it with Docker Compose or by hand: admin on loopback, TLS, a separate log writer, encrypted backups.
 lead: Get the program, check it came from this project, and run it the way it is meant to be run.
 icon: download
-updated: 2026-10-27
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>Quilzo is <strong>one static binary</strong> with no dependencies to install. It runs as two processes from the same store: <code>quilzo serve</code>, the admin, which belongs on loopback; and <code>quilzo site</code>, the public site, which has no editing surface at all.</p></div>
@@ -15,16 +15,18 @@ updated: 2026-10-27
 <li><h3>Build it</h3><p>Go 1.27 and nothing else: <code>go.mod</code> requires no module.</p>
 <pre><code>git clone https://github.com/Quilzo/Quilzo &amp;&amp; cd Quilzo
 go build -o quilzo ./cmd/quilzo
-sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre></li>
-<li><h3>Or build the container</h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager.</p>
-<pre><code>docker build -t quilzo .
-docker run --rm -v quilzo:/srv quilzo --root /srv/store init
-docker run -p 8081:8081 -v quilzo:/srv quilzo --root /srv/store site --addr 0.0.0.0:8081</code></pre></li>
+sudo install -m 0755 quilzo /usr/local/bin/quilzo</code></pre><p>Once a release is tagged, <code>go install github.com/quilzo/quilzo/cmd/quilzo@vX.Y.Z</code> makes a binary that says <code>vX.Y.Z</code> to <code>quilzo version</code>.</p></li>
+<li><h3>Or build the container</h3><p>Built on <code>gcr.io/distroless/static-debian12:nonroot</code>: the binary, CA certificates and a passwd entry. No shell and no package manager. It runs as nonroot (uid 65532).</p>
+<pre><code>docker build --build-arg VERSION=v0.3.0 -t quilzo .
+docker run --rm -v quilzo:/srv quilzo init
+docker run --rm -v quilzo:/srv quilzo demo
+docker run -p 8081:8081 -v quilzo:/srv quilzo site --addr 0.0.0.0:8081</code></pre><p>The image's entrypoint is <code>quilzo --root /srv/store</code>, so any command given to it runs against <code>/srv/store</code>; a <code>--root</code> given after it still wins. Mount the volume at <code>/srv</code>, not at the store, because the templates <code>demo</code> writes live under <code>/srv</code> too. A command that would make a store in the container's own layer says it would go with the container. <code>--build-arg VERSION</code> is what <code>quilzo version</code> says; without it, <code>dev</code>.</p></li>
 </ol>
 <p>Each release will publish signed binaries for Linux, macOS and Windows on amd64 and arm64, and a container image. <a href="https://github.com/Quilzo/Quilzo/blob/main/INSTALL">INSTALL</a> says how to check them: the checksum, and the build provenance that proves this project's release workflow built the file from a tag.</p>
 <h2 id="production">Run it for real</h2>
 <ol class="steps">
-<li><h3>Keep the admin on loopback</h3><p><code>quilzo serve</code> listens on <code>127.0.0.1:8080</code> by default. Reach it through your own authenticating proxy or a VPN, and set its public address so sign-in flows and connected apps know where they are:</p><pre><code>quilzo config set admin.base_url https://quilzo.example.com</code></pre></li>
+<li><h3>Make the first administrator</h3><pre><code>quilzo init --admin dana</code></pre><p>It says to start the admin, and prints the link that adds dana's passkey, to be opened once. The account that owns the store, or root, starts <code>quilzo serve</code> and <code>quilzo site</code> without a token; anybody else needs publish, and is told whose store it is.</p></li>
+<li><h3>Keep the admin on loopback</h3><p><code>quilzo serve</code> listens on <code>127.0.0.1:8080</code> by default. Reach it through your own authenticating proxy or a VPN, and set its public address so sign-in flows and connected apps know where they are:</p><pre><code>quilzo config set admin.base_url https://quilzo.example.com</code></pre><p>Provisioning and the identity provider's security events are sent by the provider to the admin, so publish those two paths through the proxy and nothing else: <code>/scim/v2/</code> and <code>/sso/signals</code>. The repository's <code>deploy/Caddyfile</code> has the block, commented out (see <a href="/sso/#signals">when the identity provider ends a session</a>).</p></li>
 <li><h3>Put the site on the internet, behind TLS</h3><pre><code>quilzo site --addr 0.0.0.0:8081 --base-url https://example.org</code></pre><p>Terminate TLS in front of both processes. <code>--base-url</code> is needed for the sitemap and feeds.</p><p>The site is the one process facing the internet, so on Linux it confines itself with Landlock: it reads the store as before, and writes only its own state (form submissions, boards, members, analytics, the shield, the model ledger, webhook deliveries, the audit log and a temporary directory of its own). A flaw in it cannot write the policy, the tokens or the settings. It checks this before it serves, and a kernel without Landlock runs it as before and says so. Under systemd, the unit in the repository's <code>deploy/</code> makes the store read-only for it too, and <code>quilzo site --prepare</code> makes and lists what it writes.</p></li>
 <li><h3>Write the audit log as its own account</h3><p><code>quilzo logd</code> runs the log writer as a separate user the content platform cannot impersonate; <code>quilzo logd status</code> says whether the separation is in force.</p></li>
 <li><h3>Encrypt what is stored</h3><pre><code>quilzo vault enable     # prints the key once
@@ -32,8 +34,49 @@ quilzo vault rotate     # a new key from now on
 quilzo vault rewrap     # move existing objects onto it</code></pre><p>The key comes from <code>QUILZO_KEY</code>, <code>QUILZO_KEY_FILE</code> or <code>QUILZO_KEY_COMMAND</code>.</p></li>
 <li><h3>Read the posture scan</h3><p><span class="where">Assurance › Security</span> or <code>quilzo posture scan</code> reads this deployment and lists what is thin, with the reason and the fix (see <a href="/security/">Security posture</a>).</p></li>
 </ol>
+<h2 id="compose">With Docker Compose</h2>
+<p><code>deploy/compose.yaml</code> in the repository is a reference stack over one store:</p>
+<ul>
+<li>the admin, over HTTPS from a Caddy of its own (<code>admin-proxy</code>), on this machine's loopback at <code>https://localhost:8443</code> (the port is <code>QUILZO_ADMIN_PORT</code>);</li>
+<li>the published site, behind Caddy, which gets and renews its certificate;</li>
+<li><code>logd</code>, which holds the only writable copy of the audit log.</li>
+</ul>
+<p>Every Quilzo container is read-only, holds no capability and does not run as root. In <code>deploy/</code>, run these in this order; <code>deploy/README.md</code> says what each is for:</p>
+<pre><code>cp compose.env.example .env    # then set QUILZO_DOMAIN in .env
+set -a; . ./.env; set +a
+docker compose run --rm admin init
+docker compose run --rm admin auditlog dir /srv/audit
+docker compose run --rm admin config set network.trusted_proxies "$QUILZO_PROXY_ADDRESS"
+docker compose run --rm admin config set admin.behind_tls_proxy true
+docker compose run --rm admin config set admin.base_url "https://localhost:$QUILZO_ADMIN_PORT"
+docker compose run --rm admin config set site.base_url "https://$QUILZO_DOMAIN:$QUILZO_HTTPS_PORT"
+docker compose run --rm admin demo --examples /srv/templates/examples
+docker compose run --rm admin init --admin you
+docker compose run --rm admin token issue first --principal you   # shown once: keep it
+docker compose up -d</code></pre>
+<p><code>demo</code> gives the site a design and pages to serve from the start; for a site of your own, run <code>docker compose run --rm admin template use sections</code> in its place. <code>init --admin you</code> prints the link that adds your passkey, naming the published address:</p>
+<pre class="out"><code>The first administrator is you. Start the admin (quilzo serve) and open this, once, to add their passkey:
+https://localhost:8443/enrol/&lt;redacted&gt;</code></pre>
+<p>The first token is issued before the admin starts, because a store issues a token without being shown one only while it holds none, and signing in to the admin makes one. Then:</p>
+<ul>
+<li>Trust <code>admin-proxy</code>'s certificate authority on the computer you sign in from, because a browser will not use a passkey on a page whose certificate it does not trust: <code>docker compose cp admin-proxy:/data/caddy/pki/authorities/local/root.crt quilzo-admin-ca.crt</code>, and add it to that computer's trusted certificates.</li>
+<li>From another computer, forward the port over SSH and open the same address there: <code>ssh -N -L 8443:127.0.0.1:8443 you@your-server</code>.</li>
+<li>Give a command your token through the environment, never on its command line: <code>export QUILZO_TOKEN=...</code>, then <code>docker compose run --rm -e QUILZO_TOKEN admin logd status</code>.</li>
+<li>An agent that runs a program needs a host outside the containers, or a backend that runs its box elsewhere: <code>quilzo agent backends</code> says which.</li>
+<li><code>docker compose down</code> stops the stack and keeps every volume, the store's included; <code>docker compose down -v</code> deletes them.</li>
+</ul>
 <h2 id="backups">Back up and upgrade</h2>
-<p>The store directory is the only state Quilzo has. Back it up and you have backed up content, history, policy, credentials, agents and the audit log; <code>quilzo verify</code> re-hashes every object after a restore. To upgrade, replace the binary and restart both processes. The full operations guide is <a href="https://github.com/Quilzo/Quilzo/blob/main/INSTALL">INSTALL</a>.</p>
+<p>The store directory is the only state Quilzo has: content, history, policy, credentials, agents and the audit log. <code>quilzo backup</code> keeps it, encrypted with a key of its own:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Make the backup key, shown once and kept nowhere here</td><td><code>quilzo backup key</code>, then give it as <code>QUILZO_BACKUP_KEY</code> or in the file <code>QUILZO_BACKUP_KEY_FILE</code> names</td></tr>
+<tr><td>Back up the store and its layouts</td><td><code>quilzo backup create FILE</code></td></tr>
+<tr><td>Check a backup without restoring it</td><td><code>quilzo backup verify FILE</code></td></tr>
+<tr><td>Restore one into an empty directory</td><td><code>quilzo backup restore FILE --into DIR</code></td></tr>
+<tr><td>A backup a day, the last seven kept</td><td><code>quilzo config set backup.dir /mnt/backups</code>, and <code>backup.keep</code> for how many</td></tr>
+</tbody></table></div>
+<p>A backup is encrypted with AES-256-GCM in numbered chunks, and read back whole and checked against its manifest before it counts as made. With <code>backup.dir</code> set, best on another disk, the admin server makes one a day with the key in its environment, and keeps <code>backup.keep</code> of them (seven by default). A restore checks the history object by object, and says where the store and the layouts are to move into place. Keep the key where the backups are not: without it no backup can be read. <code>quilzo verify</code> re-hashes every object in a store. To upgrade, replace the binary and restart both processes. The full operations guide is <a href="https://github.com/Quilzo/Quilzo/blob/main/INSTALL">INSTALL</a>.</p>
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">

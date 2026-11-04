@@ -8,7 +8,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 - [Get started with Quilzo in ten minutes](https://quilzo.github.io/start/): Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.
 - [Today, the first screen after signing in](https://quilzo.github.io/today/): The first screen after signing in: what waits for you, a brief whose every figure is a link, counts, and questions answered as views you keep.
-- [Install and run Quilzo in production](https://quilzo.github.io/install/): Build Quilzo from source or as a container, and run it safely: admin on loopback, TLS, a separate log writer, encrypted storage.
+- [Install and run Quilzo in production](https://quilzo.github.io/install/): Build Quilzo from source or as a container, run it with Docker Compose or by hand: admin on loopback, TLS, a separate log writer, encrypted backups.
 - [Glossary: AI agents, MCP, A2A and the words Quilzo uses](https://quilzo.github.io/concepts/): What an AI agent control plane, an MCP gateway, A2A, prompt injection, human in the loop, earned autonomy and the other terms in this manual mean, in one place.
 
 ## AI agents
@@ -26,7 +26,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 ## Models and chatbots
 
 - [LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent](https://quilzo.github.io/models/): One gateway for every AI agent's model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.
-- [A RAG chatbot that answers from your pages and cites its sources](https://quilzo.github.io/chatbots/): Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and stores nothing a visitor asks.
+- [A RAG chatbot that answers from your pages and cites its sources](https://quilzo.github.io/chatbots/): Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and shows what it could not answer.
 - [Stop prompt injection in RAG: screening, guardrails and poisoned pages](https://quilzo.github.io/chatbot-safety/): Keep planted instructions out of what a RAG chatbot reads, add Lakera Guard or Google Model Armor as a second check, and catch a poisoned page early.
 - [The writing assistant, and typed AI decisions with a confidence gate](https://quilzo.github.io/assistant/): Ask a model to draft pages that every publishing check still applies to, and let it answer typed questions with a confidence threshold below which a person decides.
 
@@ -46,7 +46,7 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 - [Make features as packages](https://quilzo.github.io/make/): Declare a feature as one package of types, records, pages, forms, agents, webhooks and roles, read what it can do, and install it or take it back as one decision.
 - [Research projects with claims you can check: numbers linked to code, real citations](https://quilzo.github.io/research/): Research projects for people and AI agents: a plan registered before the data, numbers only from code, and citations that must exist and support their claim.
 - [Evolve: search over programs with a sealed evaluator](https://quilzo.github.io/evolve/): Let a model improve a program generation by generation, scored by an evaluator in its own box that the programs cannot read, with a test set and a journal.
-- [Pages, sections and the editor](https://quilzo.github.io/pages/): Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.
+- [Pages, sections and the editor](https://quilzo.github.io/pages/): Write pages in the admin or as JSON, build them from sections and reusable blocks, share a draft by link, and see what differs from live, every version kept.
 - [Content types and records](https://quilzo.github.io/types/): Define content types every surface enforces, bind pages to them, and keep structured records in collections, from the admin, the command line, the API or an agent.
 - [Structure, listings, menus and vocabularies](https://quilzo.github.io/structure/): Declare listings that show records on pages, menus that refuse a broken target, and controlled vocabularies, all checked before they publish.
 - [Forms with retention and erasure](https://quilzo.github.io/forms/): Collect form submissions the public server cannot read back, keep them only as long as their stated purpose needs, and erase what a person asks you to.
@@ -84,8 +84,8 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 ## Administration
 
-- [People, roles and permissions for working with agents](https://quilzo.github.io/people/): Grant roles on any part of the site, give jobs and agent permissions such as approve on one agent, deny where it must win, and explain why anybody can act.
-- [Single sign-on with OIDC and SAML](https://quilzo.github.io/sso/): Sign in to the Quilzo admin with Google Workspace, Microsoft Entra ID, Okta, or any OIDC or SAML provider, required per domain, with break-glass accounts.
+- [People, roles and permissions for working with agents](https://quilzo.github.io/people/): Grant roles on any part of the site, give jobs and agent permissions, deny where it must win, explain why anybody can act, and review who has access.
+- [Single sign-on with OIDC and SAML](https://quilzo.github.io/sso/): Sign in to the Quilzo admin through Okta, Entra ID, Google, Keycloak or any OIDC or SAML provider, and end its sessions here when the provider says so.
 - [SCIM provisioning from Okta and Entra](https://quilzo.github.io/provisioning/): Let Okta, Microsoft Entra or another identity provider create, update, suspend and delete people through SCIM, with their groups mapped to Quilzo roles and jobs.
 - [Passkeys, tokens and sessions](https://quilzo.github.io/passkeys/): Sign in with passkeys and no password, issue API tokens scoped below their holder, exchange a token for a short session, and set session limits.
 - [Credentials for programs and CI jobs](https://quilzo.github.io/credentials/): Let CI jobs exchange their platform's identity token for a short Quilzo token, narrow any token with RFC 8693, and bind tokens to a key with DPoP.

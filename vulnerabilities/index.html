@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/vulnerabilities/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-11-03">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Vulnerabilities and Quilzo: known flaws in its own build">
 <meta name="twitter:description" content="Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-03","description":"Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.","headline":"Vulnerabilities and Quilzo","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/vulnerabilities/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/vulnerabilities/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Vulnerabilities","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.","headline":"Vulnerabilities and Quilzo","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/vulnerabilities/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/vulnerabilities/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Vulnerabilities","position":2}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -185,13 +185,14 @@
 <tr><td>Contained</td><td>It is known to be exploited, and only features that can be turned off reach it.</td></tr>
 <tr><td>Upgrade Go</td><td>What every server runs uses it, or it is not known to be exploited: a person decides, and upgrades Go.</td></tr>
 </tbody></table></div>
-<p>The admin runs the same check every hour. <span class="where">Security › Inventory</span> shows it under <strong>Known flaws in this build</strong>, with the date of the database and whether the binary is the one it says it is, which <code>quilzo self verify</code> also answers. <code>quilzo self vex</code> writes an OpenVEX statement for each advisory.</p>
+<p>The admin runs the same check every hour, and a flaw it finds in this build is told once a day, not at every check. <span class="where">Security › Inventory</span> shows it under <strong>Known flaws in this build</strong>, with the date of the database and whether the binary is the one it says it is, which <code>quilzo self verify</code> also answers. <code>quilzo self vex</code> writes an OpenVEX statement for each advisory.</p>
 <h2 id="offline">Keep the database current<a class="anchor" href="#offline" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>A snapshot of the database is embedded at release, and nothing is fetched by itself. Download a newer one, and CISA's catalogue of Known Exploited Vulnerabilities, wherever you can, and give them to Quilzo:</p>
 <pre><code>quilzo self update vulndb.zip                          # from https://vuln.go.dev/vulndb.zip
 quilzo self kev known_exploited_vulnerabilities.json   # CISA's KEV catalogue, as JSON
 quilzo self check</code></pre>
 <p>Each is read on the machine and written to the audit log. A database more than a month old is flagged on Inventory and by <code>self check</code>, because a check against an old list is a clean bill of health that stopped being true.</p>
+<p>Only the catalogue says a flaw is being exploited, and only then is it contained at once. So <code>self check</code> says when no catalogue has been given, when it cannot be read and when it is more than a month old, and the security posture reports the same as <code>self.kev-missing</code>. Without it, such a flaw waits for a person to upgrade Go.</p>
 <h2 id="contained">When a flaw turns a feature off<a class="anchor" href="#contained" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>When the catalogue says a flaw is being exploited, and only features a site can do without reach it, such as uploads, forms, import, the chatbots or the API, the <a href="/shield/">shield</a>'s <code>self-exposure</code> playbook turns those features off for a day. It tells the security contact, and writes a request to open a case into the audit log. Any other flaw that reaches this build is one to upgrade Go for: the <code>self-flaw</code> playbook tells the security contact and asks for a case, then reminds them each day until Go is upgraded. <code>quilzo shield lift</code> ends a protection early.</p>
 <section class="see-also">
@@ -203,7 +204,7 @@ quilzo self check</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-11-03 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/vulnerabilities.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/vulnerabilities.html">Edit this page on GitHub</a></p>
   </footer>
 </article>
 </main>

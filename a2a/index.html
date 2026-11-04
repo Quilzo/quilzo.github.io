@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/a2a/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="A2A protocol: agent cards and tasks for governed AI agents">
 <meta name="twitter:description" content="Publish an A2A agent card that states each agent&#39;s capabilities, budget and oversight, and accept A2A 1.0 tasks from other agents, run under your declarations.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Publish an A2A agent card that states each agent's capabilities, budget and oversight, and accept A2A 1.0 tasks from other agents, run under your declarations.","headline":"A2A: agent cards and tasks from other vendors' agents","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/a2a/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/a2a/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"A2A","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Publish an A2A agent card that states each agent's capabilities, budget and oversight, and accept A2A 1.0 tasks from other agents, run under your declarations.","headline":"A2A: agent cards and tasks from other vendors' agents","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/a2a/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/a2a/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"A2A","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -186,6 +186,19 @@
 </ol>
 <h2 id="other-agents">Register other vendors' agents<a class="anchor" href="#other-agents" aria-hidden="true" tabindex="-1">#</a></h2>
 <pre><code>quilzo fleet add https://agents.example.com/.well-known/agent-card.json</code></pre><p>You answer for an agent you register. It appears on the <a href="/fleet/">Fleet</a> map, and <code>quilzo fleet check</code> reads every card again and says which changed.</p>
+<h3 id="call-other-agents">Let your agents call one<a class="anchor" href="#call-other-agents" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>For your agents to hand work to another vendor's agent, declare it as an integration of kind <code>a2a</code>, from its agent card. Like every declaration, it arrives switched off:</p>
+<pre><code>quilzo integrations import agent-card.json                    # what it offers
+quilzo integrations import agent-card.json --uses translate   # declare one skill</code></pre>
+<pre class="out"><code>declared translator (a2a) reaching agents.example.com, switched off
+  may call translate</code></pre>
+<p>Its card is read again from the host each time. Read its skills, pin them, and turn it on under <span class="where">Integrations</span>.</p>
+<p>Each skill on the card is a tool, pinned, allowed and approved as an MCP server's tools are (see <a href="/integrations/">Tools and the MCP gateway</a>). The card's own words describe the skill to the model, as words from somebody else. A call sends one message naming the skill (<code>message/send</code>), and a task the far agent takes on is followed (<code>tasks/get</code>) until it finishes or ninety seconds pass.</p>
+<ul>
+<li>A card whose service address is off the declared host is refused, so a card cannot send your credential somewhere else.</li>
+<li>The message's ID is the step's idempotency key, so a step tried again is not done twice by an agent that keeps them.</li>
+<li>Where a card offers A2A 1.0, Quilzo's client speaks 1.0 to it (<code>SendMessage</code> and <code>GetTask</code>, with <code>A2A-Version</code>), so one Quilzo's agents can call another's.</li>
+</ul>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
@@ -195,7 +208,7 @@
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/a2a.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/a2a.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/frameworks/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK</span></a>
       <a class="pager-next" href="/fleet/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">AI agent inventory and shadow AI detection</span></a>

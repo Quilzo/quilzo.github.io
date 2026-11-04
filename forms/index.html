@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/forms/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Website forms with retention, erasure and spam protection">
 <meta name="twitter:description" content="Collect form submissions the public server cannot read back, keep them only as long as their stated purpose needs, and erase what a person asks you to.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Collect form submissions the public server cannot read back, keep them only as long as their stated purpose needs, and erase what a person asks you to.","headline":"Forms with retention and erasure","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/forms/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/forms/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Forms","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Collect form submissions the public server cannot read back, keep them only as long as their stated purpose needs, and erase what a person asks you to.","headline":"Forms with retention and erasure","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/forms/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/forms/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Forms","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -184,10 +184,47 @@
 <tr><td>List forms, held submissions and retention</td><td><code>quilzo form list</code></td></tr>
 <tr><td>Remove what is past retention</td><td><code>quilzo form expire</code></td></tr>
 <tr><td>Erase everything matching a value, such as an email</td><td><code>quilzo form erase VALUE</code></td></tr>
-</tbody></table></div><p>A chatbot can offer a form as an action (see <a href="/chatbots/#actions">Chatbots</a>), and the form's own checks still apply.</p>
+</tbody></table></div>
+<h2 id="declare">Declare a form<a class="anchor" href="#declare" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>On the <strong>Forms</strong> screen, <strong>Declare a form, or add a field</strong> names the form, its privacy notice, what the answers are for, its lawful basis and how many days it keeps them, then adds one field at a time. A form is kept in the store's <code>forms.json</code>. To show one on a page, choose it under <strong>Form on this page</strong> in the page's editor (see <a href="/pages/#write">Pages</a>).</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">A field that</th><th scope="col">Has the kind</th></tr></thead>
+<tbody>
+<tr><td>Takes one line, or several</td><td><code>line</code>, <code>para</code></td></tr>
+<tr><td>Takes an email address, shape-checked and never sent to</td><td><code>email</code></td></tr>
+<tr><td>Takes a number</td><td><code>number</code></td></tr>
+<tr><td>Offers one of a list</td><td><code>choice</code></td></tr>
+<tr><td>Is a box to tick</td><td><code>agree</code></td></tr>
+<tr><td>Takes a file</td><td><code>file</code></td></tr>
+</tbody></table></div>
+<h2 id="when">Ask a question only when it applies<a class="anchor" href="#when" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A field can be asked only when an earlier choice was answered one way, or an earlier box was ticked. In the form builder, fill in <strong>Asked only when</strong> and <strong>is answered</strong>; in <code>forms.json</code>, give the field <code>"when": {"field": "topic", "is": "Returns"}</code>, leaving out <code>is</code> for a box.</p>
+<p>The server decides what was asked from what arrived, and keeps nothing for a question it did not ask, whatever was sent for it. The form's stylesheet, <code>/form/NAME.css</code>, hides the question until the answer that asks it is given, with no script. A browser that cannot do that shows every question, each saying when it applies.</p>
+<h2 id="files">Take files<a class="anchor" href="#files" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A field of kind <code>file</code> takes a CV, a photograph of the damage or a signed letter. <strong>Takes, for a file</strong> says which: image, document, text, audio or video, and images and documents when it is left empty.</p>
+<ul>
+<li>A file is taken by what its bytes are, never by its name or the type the browser claimed, and checked as the media library checks an upload.</li>
+<li>One file may be at most 10 MB, and one submission's files 20 MB together. The files every form keeps come to at most 1 GiB; a submission that would go past it is refused, and the form says it cannot take any more files just now.</li>
+<li>A CSV is refused when any cell a spreadsheet would run holds a formula, whichever separator the spreadsheet reads it by.</li>
+<li>A file is kept with its submission and deleted with it: when it expires, when it is erased and when the form is purged.</li>
+<li>Staff download it from <strong>Forms</strong>; it is never shown inside the admin's own pages. Every download is recorded in the audit log as <code>form.file.read</code>. A file in a field marked sensitive takes whoever may erase it.</li>
+</ul>
+<h2 id="staff">Hear about submissions<a class="anchor" href="#staff" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Staff are told when a form is sent, through <code>notify.staff</code> (see <a href="/settings/#staff">Telling staff</a>). The notice says which form and how many, never who or what they wrote. A submission that arrives through the share sheet of a device that installed the site is recorded in the audit log and alerts staff as the form's own route does.</p>
+<h2 id="checks">Spam and spreadsheets<a class="anchor" href="#checks" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Forms, bookings and the newsletter's sign-up judge a visitor with one bot check: a field only a script fills in, and how long ago the page was opened. A form opened more than a day ago asks to be reloaded and sent again. The shield can turn forms off for a while, every form or one by name (see <a href="/shield/#features">the shield</a>).</p>
+<p>Every CSV Quilzo writes, the form export included, goes through one guard, so a value that begins like a formula is written so a spreadsheet does not run it.</p>
+<p>A chatbot can offer a form as an action (see <a href="/chatbots/#actions">Chatbots</a>), and the form's own checks still apply.</p>
+<section class="see-also">
+<h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
+<ul class="cards">
+<li><a class="card" href="/bookings/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M200-80q-33 0-56.5-23.5T120-160v-560q0-33 23.5-56.5T200-800h40v-40q0-17 11.5-28.5T280-880q17 0 28.5 11.5T320-840v40h320v-40q0-17 11.5-28.5T680-880q17 0 28.5 11.5T720-840v40h40q33 0 56.5 23.5T840-720v560q0 33-23.5 56.5T760-80H200Zm0-80h560v-400H200v400Zm0-480h560v-80H200v80Zm0 0v-80 80Zm280 240q-17 0-28.5-11.5T440-440q0-17 11.5-28.5T480-480q17 0 28.5 11.5T520-440q0 17-11.5 28.5T480-400Zm-160 0q-17 0-28.5-11.5T280-440q0-17 11.5-28.5T320-480q17 0 28.5 11.5T360-440q0 17-11.5 28.5T320-400Zm320 0q-17 0-28.5-11.5T600-440q0-17 11.5-28.5T640-480q17 0 28.5 11.5T680-440q0 17-11.5 28.5T640-400ZM480-240q-17 0-28.5-11.5T440-280q0-17 11.5-28.5T480-320q17 0 28.5 11.5T520-280q0 17-11.5 28.5T480-240Zm-160 0q-17 0-28.5-11.5T280-280q0-17 11.5-28.5T320-320q17 0 28.5 11.5T360-280q0 17-11.5 28.5T320-240Zm320 0q-17 0-28.5-11.5T600-280q0-17 11.5-28.5T640-320q17 0 28.5 11.5T680-280q0 17-11.5 28.5T640-240Z"/></svg></span><h3 class="card-title">Bookings</h3><p>Appointments on your site, with who booked kept off it.</p></a></li>
+<li><a class="card" href="/newsletter/"><span class="card-icon"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M160-160q-33 0-56.5-23.5T80-240v-480q0-33 23.5-56.5T160-800h640q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H160Zm640-480L501-453q-5 3-10.5 4.5T480-447q-5 0-10.5-1.5T459-453L160-640v400h640v-400ZM480-520l320-200H160l320 200ZM160-640v10-59 1-32 32-.5 58.5-10 400-400Z"/></svg></span><h3 class="card-title">Newsletter</h3><p>Sign-ups that each confirm from their own inbox.</p></a></li>
+</ul>
+</section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/forms.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/forms.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/structure/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Structure, listings, menus and vocabularies</span></a>
       <a class="pager-next" href="/blog/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">A blog where every post keeps its address</span></a>
@@ -195,6 +232,17 @@
   </footer>
 </article>
 </main>
+<aside class="toc" aria-label="On this page">
+  <h2>On this page</h2>
+  <ul>
+    <li><a href="#declare">Declare a form</a></li>
+    <li><a href="#when">Ask a question only when it applies</a></li>
+    <li><a href="#files">Take files</a></li>
+    <li><a href="#staff">Hear about submissions</a></li>
+    <li><a href="#checks">Spam and spreadsheets</a></li>
+    <li><a href="#next">Next</a></li>
+  </ul>
+</aside>
 </div>
 <footer class="foot">
   <div class="foot-inner">

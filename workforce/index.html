@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/workforce/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-11-03">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Workforce risk and Quilzo: its own people, sign-ins and SCIM">
 <meta name="twitter:description" content="Scoring people and machines across your organisation is not part of Quilzo. Quilzo knows its own people: their access, their sign-ins and SCIM.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-03","description":"Scoring people and machines across your organisation is not part of Quilzo. Quilzo knows its own people: their access, their sign-ins and SCIM.","headline":"Workforce risk and Quilzo","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/workforce/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/workforce/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Workforce risk","position":2}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Scoring people and machines across your organisation is not part of Quilzo. Quilzo knows its own people: their access, their sign-ins and SCIM.","headline":"Workforce risk and Quilzo","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/workforce/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/workforce/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","name":"Workforce risk","position":2}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -177,13 +177,14 @@
   <div class="prose">
 <div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>Not part of Quilzo.</strong> Joining people and their machines across your tools, scoring their risk and reminding them to fix what is theirs belong to the identity and security tooling your organisation already runs. Quilzo knows only the people who use Quilzo.</p></div></div>
 <h2 id="people">Who may do what<a class="anchor" href="#people" aria-hidden="true" tabindex="-1">#</a></h2>
-<p><span class="where">Administration › People</span> lists everybody with access and what each holds: roles on parts of the site, jobs that must end, permissions such as deciding one agent's runs, and denies, with their credentials, when each was last used and when it expires. <code>quilzo auth list</code> lists every grant, and <code>quilzo auth explain WHO</code> says why somebody can or cannot do a thing. Making somebody an administrator takes two administrators. See <a href="/people/">People and access</a>.</p>
+<p><span class="where">Administration › People</span> lists everybody with access and what each holds: roles on parts of the site, jobs, permissions such as deciding one agent's runs, and denies, with their credentials, when each was last used and when it expires. <code>quilzo auth list</code> lists every grant to whoever may grant access, and a reader their own, and <code>quilzo auth explain WHO</code> says why somebody can or cannot do a thing. Making somebody an administrator takes two administrators, and every ninety days by default an administrator reviews the access Quilzo grants and keeps or revokes each part of it (see <a href="/people/#access-review">Review who has access</a>). See <a href="/people/">People and access</a>.</p>
 <h2 id="signins">How they sign in<a class="anchor" href="#signins" aria-hidden="true" tabindex="-1">#</a></h2>
 <p><span class="where">Protection › Sign-ins</span> shows every sign-in to the admin in the last thirty days: who, when, where from, the device, how risky it looked and why. Above them are the people waiting to confirm it is them, and the people locked out. <code>quilzo token stale</code> lists the credentials nobody has used for thirty days that still work, and <code>quilzo token revoke ID</code> ends one. See <a href="/signins/">Sign-ins</a> and <a href="/passkeys/">Passkeys and tokens</a>.</p>
 <h2 id="scim">Kept in step with your identity provider<a class="anchor" href="#scim" aria-hidden="true" tabindex="-1">#</a></h2>
-<p>With SCIM, Okta, Microsoft Entra or another identity provider creates, updates, suspends and deletes people here, and their groups mean roles and jobs:</p>
+<p>With SCIM, Okta, Microsoft Entra or another identity provider creates, updates, suspends and deletes people here, and their groups mean roles and jobs; a job granted for a time, such as auditor, is mapped until a day:</p>
 <pre><code>quilzo scim token
 quilzo scim map Editors author
+quilzo scim map Auditors auditor --until 2026-12-31
 quilzo scim status</code></pre>
 <p>Deactivation suspends a person at once: their sessions, tokens and connected apps stop, and so do the agents they sponsor. Only grants made by provisioning are changed by it; access granted by hand is left alone. <span class="where">Administration › Provisioning</span> shows the connection, what each group means and who was provisioned. See <a href="/provisioning/">Provisioning</a>.</p>
 <section class="see-also">
@@ -195,7 +196,7 @@ quilzo scim status</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-11-03 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/workforce.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/workforce.html">Edit this page on GitHub</a></p>
   </footer>
 </article>
 </main>

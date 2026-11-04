@@ -6,7 +6,7 @@ description: AI agents built with ADK, Agent Framework, LangChain, CrewAI or Ope
 lead: AI agents built in any framework reach your tools and your models through Quilzo, and only as your declarations allow.
 icon: integrations
 screens: Integrations
-updated: 2026-10-14
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>Every major agent framework speaks MCP. Point its MCP client at Quilzo's <strong>governed gateway</strong> instead of at your tool server, and the agent gets only the tools a person pinned, at the role and daily limit you set, with Quilzo's credential injected, calls you chose held for a person, and every call recorded in the signed log. Their models can go through Quilzo too: point the framework's model client at Quilzo's <a href="#models">model gateway</a>, and each call is budgeted, masked and recorded, with the agent's memory. Nothing changes in the agent's code except the address and a token.</p></div>
@@ -18,6 +18,7 @@ quilzo integrations gateway tracker --role author --daily 200 --ask create_issue
 quilzo token issue support-agent --principal dana --role author</code></pre>
 <p>The agent then connects to <code>https://YOUR-ADMIN/mcp/gateway/tracker</code> with the token as a bearer credential, or through OAuth 2.1 (see <a href="/agent-interface/">Connect AI apps</a>). The token acts for the person it was issued to, with their access and no more. Each example below reads it from <code>QUILZO_TOKEN</code>.</p>
 <p>The same clients reach Quilzo's own operations at <code>/mcp</code>, or over stdio with <code>quilzo mcp</code>.</p>
+<p>In each example, <code>MODEL</code> is the model the agent talks to, which you fill in: its provider's own, or <code>quilzo</code> or <code>agent/NAME</code> served through Quilzo's <code>/v1</code>, with the model clients under <a href="#models">Their models, through the gateway</a>.</p>
 <h2 id="adk">Google ADK</h2>
 <pre><code>pip install "google-adk[mcp]"</code></pre>
 <pre><code>import os
@@ -27,7 +28,7 @@ from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
 
 root_agent = Agent(
-    model="gemini-flash-latest",
+    model="MODEL",
     name="support_agent",
     instruction="Help the support team find and file issues in the tracker.",
     tools=[
@@ -55,7 +56,7 @@ async def main():
         static_headers={"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
     ) as tracker:
         agent = Agent(
-            client=OpenAIChatClient(model="gpt-5"),
+            client=OpenAIChatClient(model="MODEL"),
             instructions="Help the support team find and file issues in the tracker.",
             tools=tracker,
         )
@@ -82,7 +83,7 @@ async def main():
         }
     })
     tools = await client.get_tools()
-    agent = create_agent("openai:gpt-5", tools)
+    agent = create_agent("openai:MODEL", tools)
     print(await agent.ainvoke({"messages": "Is the checkout timeout already reported?"}))
 
 

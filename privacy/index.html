@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/privacy/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Privacy by design: personal data, retention and erasure">
 <meta name="twitter:description" content="What Quilzo keeps about visitors, members, staff and customers, how long, and how each is erased: forms, chatbot questions, analytics, memory, prompts and notices.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"What Quilzo keeps about visitors, members, staff and customers, how long, and how each is erased: forms, chatbot questions, analytics, memory, prompts and notices.","headline":"Privacy: what Quilzo keeps about people","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/privacy/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/privacy/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#compliance-and-audit","name":"Compliance and audit","position":2},{"@type":"ListItem","name":"Privacy","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"What Quilzo keeps about visitors, members, staff and customers, how long, and how each is erased: forms, chatbot questions, analytics, memory, prompts and notices.","headline":"Privacy: what Quilzo keeps about people","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/privacy/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/privacy/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#compliance-and-audit","name":"Compliance and audit","position":2},{"@type":"ListItem","name":"Privacy","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -177,18 +177,22 @@
   <div class="prose">
 <div class="table-wrap"><table><thead><tr><th scope="col">What</th><th scope="col">Kept</th><th scope="col">How it goes</th></tr></thead><tbody>
 <tr><td>Questions to a chatbot</td><td>Not stored</td><td>Nothing to erase</td></tr>
+<tr><td>Questions a chatbot could not answer, or whose answer did not help, when <code>chatbot.gaps</code> is on</td><td>Masked first, with nobody named, for <code>chatbot.gaps_days</code> (30 by default)</td><td>Each day is a file of its own, deleted whole once it is older than that, the next time the questions are read or asked again (see <a href="/chatbots/#gaps">What it could not answer</a>)</td></tr>
+<tr><td>Whether a chatbot's answer helped</td><td>A count a day, with nothing about who said so</td><td>Deleted with the questions above, by day</td></tr>
 <tr><td>A conversation handed to a person</td><td>30 days after it last moves by default, 90 at most</td><td><code>quilzo inbox close</code>; deleted on expiry</td></tr>
 <tr><td>Form submissions</td><td>As long as the form declares</td><td><code>quilzo form expire</code>, <code>quilzo form erase VALUE</code></td></tr>
+<tr><td>Files sent with a form</td><td>With their submission; each download by staff is in the audit log</td><td>Deleted with the submission: when it expires, when it is erased, and when the form is purged</td></tr>
 <tr><td>Analytics</td><td>Counts, with no cookie</td><td>Nothing identifies a visitor</td></tr>
 <tr><td>What agents remember</td><td>As declared, 90 days at most; held memories two weeks</td><td><a href="/memory/">Memory</a>: edit, delete, forget, with a receipt</td></tr>
 <tr><td>Prompts to models</td><td>Never recorded</td><td>Personal data is masked before it leaves (see <a href="/models/#privacy-guard">the privacy guard</a>)</td></tr>
 <tr><td>Member accounts</td><td>Until removed</td><td><code>quilzo member remove ID</code> erases the record, passkeys, recovery codes and sessions</td></tr>
 <tr><td>Identifiers in the audit log</td><td>Pseudonymised</td><td>The log cannot forget, so it records counts and ids, never what was said</td></tr>
 </tbody></table></div>
+<p>Exporting the form fields marked sensitive, or downloading a file sent in one, takes what purging them takes: the authority to erase them, through the session asking, so an administrator signed in with a session capped at author is refused.</p>
 <p>When the identity provider deletes somebody through <a href="/provisioning/">SCIM</a>, what agents remember about them goes too. The published site is checked for personal data before it publishes (<code>quilzo compliance site</code>).</p>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/privacy.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/privacy.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/logging/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Tamper-evident audit log with signed heads and proofs</span></a>
       <a class="pager-next" href="/people/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">People, roles and permissions for working with agents</span></a>

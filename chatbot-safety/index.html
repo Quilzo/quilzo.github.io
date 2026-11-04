@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/chatbot-safety/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Prevent indirect prompt injection in RAG chatbots">
 <meta name="twitter:description" content="Keep planted instructions out of what a RAG chatbot reads, add Lakera Guard or Google Model Armor as a second check, and catch a poisoned page early.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Keep planted instructions out of what a RAG chatbot reads, add Lakera Guard or Google Model Armor as a second check, and catch a poisoned page early.","headline":"Stop prompt injection in RAG: screening, guardrails and poisoned pages","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/chatbot-safety/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/chatbot-safety/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#models-and-chatbots","name":"Models and chatbots","position":2},{"@type":"ListItem","name":"Prompt injection in RAG","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Keep planted instructions out of what a RAG chatbot reads, add Lakera Guard or Google Model Armor as a second check, and catch a poisoned page early.","headline":"Stop prompt injection in RAG: screening, guardrails and poisoned pages","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/chatbot-safety/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/chatbot-safety/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#models-and-chatbots","name":"Models and chatbots","position":2},{"@type":"ListItem","name":"Prompt injection in RAG","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -177,7 +177,7 @@
   </header>
   <div class="prose">
 <div class="definition"><p><strong>Indirect prompt injection</strong> is an instruction hidden in content an AI reads rather than typed by its user: a sentence in a page, a document or a review that says "ignore your previous instructions". It is number one on OWASP's Top 10 for LLM applications, and a <strong>poisoned document</strong> in a knowledge base (OWASP LLM08) is how it reaches a RAG chatbot.</p></div>
-<p>Quilzo's chatbots already limit the damage: they can only answer and offer the actions you declared, every sentence must cite a passage, and with a model each sentence is checked against that passage. The layers on this page stop planted text from reaching the model in the first place, and tell you where it came from.</p>
+<p>Quilzo's chatbots already limit the damage: they can only answer and offer the actions you declared, every sentence must cite a passage, and with a model each sentence is checked against that passage (see <a href="#verified">What verified means</a>). Credentials in a passage are masked before any model sees it, Quilzo's own secrets included: its tokens, and the secrets it makes for provisioning, security events, apps and enrolment links (the rules <code>secret.quilzo-token</code> and <code>secret.quilzo-secret</code>). The layers on this page stop planted text from reaching the model in the first place, and tell you where it came from.</p>
 <h2 id="invisible-text">1. Text nobody can see is removed<a class="anchor" href="#invisible-text" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Before any model reads text, characters that draw nothing are taken out: the Unicode tag block, zero-width characters and bidirectional controls. They are a known way to hide an instruction from the person reviewing a page while a model still reads it. This is always on.</p>
 <h2 id="screening">2. Passages that speak to an AI are left out<a class="anchor" href="#screening" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -205,7 +205,7 @@
 <tbody>
 <tr><td><code>lakera</code></td><td>Lakera Guard (<code>/v2/guard</code>). The address defaults to Lakera's.</td></tr>
 <tr><td><code>model-armor</code></td><td>Google Cloud Model Armor (<code>sanitizeUserPrompt</code>). Set its address in <code>guardrail.url</code>.</td></tr>
-<tr><td><code>generic</code></td><td>A classifier on your own network that takes <code>{"text"}</code> and answers <code>{"flagged"}</code>, such as Llama Prompt Guard 2 behind a small HTTP wrapper.</td></tr>
+<tr><td><code>generic</code></td><td>A classifier on your own network that takes <code>{"text"}</code> and answers <code>{"flagged"}</code>, such as an open prompt-injection classifier behind a small HTTP wrapper.</td></tr>
 </tbody></table></div>
 <pre><code>quilzo config set guardrail.kind lakera
 export QUILZO_GUARDRAIL_KEY=…        # read from the environment, never stored in a setting</code></pre>
@@ -214,6 +214,18 @@ export QUILZO_GUARDRAIL_KEY=…        # read from the environment, never stored
 <h2 id="poisoned-pages">4. A new page that answers everything<a class="anchor" href="#poisoned-pages" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>A poisoned page is written to be retrieved for every question. So Quilzo watches for its shape: a page that entered a chatbot's knowledge in the last seven days and becomes the source it cites first for ten different questions within an hour. When that happens, the shield's <code>knowledge-takeover</code> playbook tells the security contact and opens a case. A popular new page can look the same, so nothing is refused: somebody reads the page.</p>
 <p>Questions that look like injection attempts are counted too. The <code>chatbot-injection</code> playbook acts on repeated attempts from one source, and <code>chatbot-flood</code> watches for attempts arriving from everywhere at once. See <a href="/shield/">The shield</a>.</p>
+<h2 id="verified">What verified means<a class="anchor" href="#verified" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>With a model, a sentence is shown only when it says what its passage says. It must cite a passage it was given. Every figure in it must be in that passage, in digits or in words, and count the same thing there: the same half of the day for a time, the same unit for a duration, the same currency for a price. Most of its informative words must be there too. And it must not drop a "not" the passage says, add one the passage does not, or say the opposite word, "open" where the passage says "closed".</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">The passage says</th><th scope="col">Removed, because it turns the passage around</th></tr></thead>
+<tbody>
+<tr><td>We open at 9am now.</td><td>We open at 9pm.</td></tr>
+<tr><td>Orders ship within 2 working days.</td><td>Orders ship within 2 weeks.</td></tr>
+<tr><td>Delivery to the EU costs £12.</td><td>Delivery to the EU costs €12.</td></tr>
+<tr><td>We do not sell gluten-free bread.</td><td>We sell gluten-free bread.</td></tr>
+<tr><td>We are closed on Sundays.</td><td>We are open on Sundays.</td></tr>
+</tbody></table></div>
+<p>A sentence that fails is removed before the visitor sees it, and listed with the reason under <strong>Removed before a visitor would see it</strong> when you try the chatbot. Each of these kept enough of its passage's words to pass a test of overlap alone. Research reports are held to their sources the same way (see <a href="/research/#literature">Research</a>), and the chatbot and research find a sentence's figures with one detector, so neither knows a figure the other does not.</p>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
@@ -223,7 +235,7 @@ export QUILZO_GUARDRAIL_KEY=…        # read from the environment, never stored
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/chatbot-safety.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/chatbot-safety.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/chatbots/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">A RAG chatbot that answers from your pages and cites its sources</span></a>
       <a class="pager-next" href="/assistant/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">The writing assistant, and typed AI decisions with a confidence gate</span></a>
@@ -238,6 +250,7 @@ export QUILZO_GUARDRAIL_KEY=…        # read from the environment, never stored
     <li><a href="#screening">2. Passages that speak to an AI are left out</a></li>
     <li><a href="#guardrail">3. A second look by an outside classifier</a></li>
     <li><a href="#poisoned-pages">4. A new page that answers everything</a></li>
+    <li><a href="#verified">What verified means</a></li>
     <li><a href="#next">Next</a></li>
   </ul>
 </aside>

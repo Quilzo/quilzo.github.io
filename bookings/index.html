@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/bookings/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-28">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Appointment booking that keeps visitors&#39; details private">
 <meta name="twitter:description" content="Appointments on your site: hours in your time zone, services, free times on any page, calendar files, and names that never reach the public site.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-28","description":"Appointments on your site: hours in your time zone, services, free times on any page, calendar files, and names that never reach the public site.","headline":"Take bookings on your site, with who booked kept off it","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/bookings/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/bookings/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Bookings","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Appointments on your site: hours in your time zone, services, free times on any page, calendar files, and names that never reach the public site.","headline":"Take bookings on your site, with who booked kept off it","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/bookings/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/bookings/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Bookings","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -208,13 +208,15 @@ quilzo booking setup bookings.json</code></pre>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
 <tbody>
-<tr><td>Cancel a booking, and tell them yourself, since the site sends no mail</td><td><strong>Cancel</strong> on its row</td><td><code>quilzo booking cancel ID</code></td></tr>
+<tr><td>Cancel a booking, and tell them yourself, since nothing is sent to the person who booked</td><td><strong>Cancel</strong> on its row</td><td><code>quilzo booking cancel ID</code></td></tr>
 <tr><td>Cancel it and forget who made it, for somebody asking to be forgotten</td><td><strong>Forget who booked it too</strong></td><td><code>quilzo booking cancel ID --erase</code></td></tr>
 <tr><td>Stop taking new bookings; those made stand</td><td><strong>Pause new bookings</strong></td><td><code>quilzo booking pause</code>, then <code>resume</code></td></tr>
 <tr><td>Take the bookings into your calendar, names and all</td><td><strong>Download them as a calendar file</strong></td><td>On the screen only; <code>quilzo booking list</code> lists them</td></tr>
 <tr><td>Subscribe your phone to the times</td><td><strong>A calendar address for your phone</strong></td><td><code>quilzo booking feed</code></td></tr>
 </tbody></table></div>
 <p>The calendar address is shown once and kept only as a hash; making another ends it, and <code>quilzo booking feed --off</code> turns it off. It shows when each booking is and for what, never who, because the address is a secret your calendar app holds and sends over the internet.</p>
+<p>Nothing is ever sent to the person who booked, but staff can be told of bookings made and cancelled: add <code>booking.made</code> and <code>booking.cancelled</code> to <code>notify.events</code>, beside the addresses in <code>notify.staff</code> (see <a href="/settings/#staff">Telling staff</a>). A notice says which service and how many, never who.</p>
+<p>The shield can turn new bookings off for a while, and a visitor is told booking is not available and to try again later: <code>quilzo shield feature bookings --for 2h --reason "..."</code>. Bookings are judged by the same bot check as forms (see <a href="/forms/#checks">Forms</a>).</p>
 <p>Webhooks can be told <code>booked</code> and <code>booking-cancelled</code> (see <a href="/integrations/">Integrations</a>). Each says which service, and nothing about when or who.</p>
 <h2 id="agents">Agents<a class="anchor" href="#agents" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
@@ -233,7 +235,7 @@ quilzo booking setup bookings.json</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-28 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/bookings.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/bookings.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/events/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Events that leave the page when they are over</span></a>
       <a class="pager-next" href="/newsletter/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">A newsletter whose every reader asked for it</span></a>

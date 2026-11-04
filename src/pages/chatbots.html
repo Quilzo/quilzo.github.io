@@ -2,14 +2,14 @@
 title: A RAG chatbot that answers from your pages and cites its sources
 short: Chatbots
 seo: RAG chatbot for your website, with citations and no tracking
-description: Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and stores nothing a visitor asks.
+description: Add a chatbot that answers visitors from your published pages, cites a source for every sentence, hands off to a person, and shows what it could not answer.
 lead: Answers from what you have published, a citation on every sentence, and a person when the visitor wants one.
 icon: assistants
 screens: Chatbots, Inbox
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
-<div class="definition"><p>A Quilzo <strong>chatbot</strong> is retrieval-augmented generation (RAG) over your own published pages. It retrieves passages by keywords and by meaning, answers only from them, and puts a citation on every sentence. With a model connected, each sentence is checked against the passage it cites and dropped if the passage does not support it. Without a model it answers extractively, quoting the passages. Nothing a visitor asks is stored.</p></div>
+<div class="definition"><p>A Quilzo <strong>chatbot</strong> is retrieval-augmented generation (RAG) over your own published pages. It retrieves passages by keywords and by meaning, answers only from them, and puts a citation on every sentence. With a model connected, each sentence is checked against the passage it cites and dropped if the passage does not support it. Without a model it answers extractively, quoting the passages. Nothing a visitor asks is stored, unless you choose to keep what it <a href="#gaps">could not answer</a>.</p></div>
 
 <h2 id="create">Create a chatbot</h2>
 <ol class="steps">
@@ -29,7 +29,10 @@ updated: 2026-10-08
 <tbody>
 <tr><td><code>--pages</code>, <code>--exclude</code></td><td>Page prefixes it may, and may not, read.</td></tr>
 <tr><td><code>--documents</code></td><td>Files from the media library it may also read, such as PDFs.</td></tr>
+<tr><td><code>--collections</code></td><td>Record collections it answers from too, such as <code>products,events</code> (<strong>Answers from these records too</strong>). Published records only, and never a field named for a person: an email address, a telephone number, an address.</td></tr>
 <tr><td><code>--model</code></td><td>Answer with the configured model, every sentence checked against its source. Without it, answers are extractive.</td></tr>
+<tr><td><code>--route</code></td><td>With <code>--model</code>, the gateway route that answers first (<strong>Model that answers first</strong>): a route on the <a href="/models/">Models</a> screen, or the model one serves. The others stand behind it.</td></tr>
+<tr><td><code>--route-only</code></td><td>Keep visitors' words to that route and no other (<strong>Only that one</strong>). When it cannot answer, the chatbot quotes your pages instead.</td></tr>
 <tr><td><code>--public</code></td><td>Serve it on the site at <code>/ask/NAME</code>.</td></tr>
 <tr><td><code>--launcher</code></td><td>Put a button on the site's pages that opens it beside the page. Style it with <code>--launcher-style</code>, <code>--launcher-side</code> and <code>--panel</code>.</td></tr>
 <tr><td><code>--embed</code></td><td>Other sites allowed to show it in a frame.</td></tr>
@@ -41,7 +44,7 @@ updated: 2026-10-08
 </li>
 <li>
 <h3>Try it before anybody else does</h3>
-<p>On the chatbot's page, ask something under <strong>Try it</strong>. You see the answer, every passage it retrieved with its keyword, vector and heading rank, and anything it was not allowed to read. Or:</p>
+<p>On the chatbot's page, ask something under <strong>Try it</strong>. You see the answer, every passage it retrieved with its keyword, vector, heading and meaning rank, and anything it was not allowed to read. Or:</p>
 <pre><code>quilzo assistant ask help "Can I return an opened bottle of ink?"</code></pre>
 <pre class="out"><code>Thirty days, unused, and we pay the postage back. [1] Ink is the exception: once a bottle is opened we cannot resell it, so we cannot take it back. [1] …
   [1] Returns (returns)
@@ -67,6 +70,12 @@ updated: 2026-10-08
 </li>
 </ol>
 
+<h3 id="embeddings">Find passages by meaning</h3>
+<p>By default a chatbot finds passages by their words, here, and nothing is sent anywhere to do it. Name a route added with <code>--embeds</code> (see <a href="/models/#route-kinds">Models</a>) in <code>chatbot.embeddings</code>, and chatbots that answer with a model find passages by what they mean too: "can I send back opened ink" finds the passage about returns that never says "send back".</p>
+<pre><code>quilzo config set chatbot.embeddings meaning --accept-risk "returns questions are worded every way"
+quilzo assistant embed help</code></pre>
+<p>The admin server embeds the site's published passages after each publish, and <code>quilzo assistant embed [NAME]</code> does it now. Each question to such a chatbot is embedded as it is asked, with personal data masked first. A chatbot that only quotes its pages, or is kept to one route, never sends either. A passage that shares too few of a question's words is answered from only when it is at least <code>chatbot.embeddings_floor</code> percent alike, 55 by default. Under <strong>Try it</strong>, the <strong>Meaning rank</strong> column shows each passage's rank and how alike it is to the question, which is what to look at before changing the floor.</p>
+
 <h2 id="on-the-site">Put it on the site</h2>
 <p>A public chatbot has its own page at <code>/ask/NAME</code>. Every sentence links to its source, and the page tells visitors they are talking to an automated assistant, as Article 50 of the EU AI Act requires.</p>
 <figure class="shot"><img src="/images/chatbots/answer.webp" alt="The public chatbot page answering whether opened ink can be returned, each sentence with a citation to the Returns page"><figcaption>An answer on the site, with its source.</figcaption></figure>
@@ -81,11 +90,45 @@ updated: 2026-10-08
 <pre><code>quilzo inbox list
 quilzo inbox reply help/ID "Sorry about that. A new bottle goes out today."
 quilzo inbox close help/ID</code></pre>
+<p>A visitor asking for a person also tells staff, through <code>notify.staff</code>: an email address or a chat channel (see <a href="/settings/#staff">Telling staff</a>). The notice says which chatbot and how many are waiting, never who or what they wrote.</p>
+
+<h2 id="gaps">What it could not answer</h2>
+<p>A question the chatbot could not answer is the page your site is missing. With <code>chatbot.gaps</code> on (it is off by default), those questions are kept, for <code>chatbot.gaps_days</code>, 30 by default. Email addresses, telephone numbers, card, bank and national identity numbers, and any other run of eight digits or more are masked before anything is written, and nobody is named.</p>
+<pre><code>quilzo config set chatbot.gaps true --accept-risk "find what the help pages do not say"</code></pre>
+<p>The chatbot's page groups them by what they are about, under <strong>What it could not answer</strong>, each group with <strong>Write the page</strong>, which starts a page for it, and <strong>Needs no page</strong>, which closes it. Or:</p>
+<pre><code>quilzo assistant gaps help</code></pre>
+<pre class="out"><code>  visitors said 5 answers helped and 2 did not, in the last 30 days
+
+Is there a student discount?  asked 2 times, last 4 Nov  [open]
+    Do you do discounts for students?
+    group de3461ce80
+My email is [email], can I change the delivery address on my order?  asked 2 times, last 4 Nov  [open]
+    Can I change the delivery address after I have ordered?
+    group b6dea193cd
+Can I pay with PayPal?  asked once, last 4 Nov  [open; 1 said the answer did not help]
+    group 261e0173e9</code></pre>
+<p>Once the site is published, the admin server asks the chatbot each open group's questions again, at most 25 questions in one go, and closes a group it now answers, naming the page it answered from. <strong>Ask them again now</strong>, or <code>quilzo assistant gaps help --check</code>, does the same at once; <code>--close KEY</code> closes a group that needs no page. A group asked about again after it was closed opens again.</p>
+<figure class="shot"><img src="/images/chatbots/gaps.webp" alt="The Marginalia help chatbot's page: 5 answers helped and 2 did not, and eight groups of questions it could not answer, with an email address and a telephone number masked, each with Write the page and Needs no page"><figcaption>What visitors said, and what the site does not say yet.</figcaption></figure>
+<p>An agent can draft those pages. With <code>chatbot.gaps_agents</code> on, an agent holding <code>list_chatbot_gaps</code> reads the groups, masked, and its model's provider sees them too; what it drafts goes to a person for review, and publishing it closes the group as any page does.</p>
+
+<h2 id="ratings">Whether its answers helped</h2>
+<p>Under each answer on the site, the visitor is asked <strong>Did this answer help?</strong> with <strong>Yes</strong> and <strong>No</strong>. Each is counted with nothing about who said so, and the chatbot's page shows how many helped in the days questions are kept. With <code>chatbot.gaps</code> on, a question whose answer did not help joins what it could not answer, marked so. Asking it again shows nothing about whether the answer helps now, so it waits for a person to close it.</p>
 
 <h2 id="actions">Let it offer to do something</h2>
-<p>A chatbot can offer a link or a form, and never more. It proposes, the visitor chooses, and the form's own checks apply:</p>
+<p>A chatbot can offer a link, a form, or one of your agents, and never more. It proposes, and the visitor chooses. A form is pre-filled, the visitor sends it, and the form's own checks apply:</p>
 <pre><code>quilzo assistant action help wholesale --kind form --target wholesale \
   --description "Ask about wholesale prices" --fields name,email,message</code></pre>
+<p>An agent action asks one of your agents to do something for the visitor, such as finding where an order is. The visitor sees what will be asked, corrects anything wrong, and presses <strong>Ask</strong>:</p>
+<pre><code>quilzo secret set marginalia-visitors &lt; visitor-key
+quilzo assistant action help order-status --kind agent --target order-desk \
+  --description "Check where an order is" --fields order_ref,postcode \
+  --identity --identity-secret marginalia-visitors</code></pre>
+<ul>
+<li>The agent runs on its sponsor's authority, and never more than an author's. It runs as a reader, changing nothing, unless the action says <code>--writes</code>. Then it may draft and propose, and anything it asks of a person waits for one.</li>
+<li>What the visitor typed is somebody else's words. It reaches the agent as data, not instructions, and the run is tainted from its first step (see <a href="/agent-limits/#taint">Know what it read</a>).</li>
+<li>Who the visitor is comes only from the host site, never from what they type. With <code>--identity</code>, the action is offered only to a visitor whose page carries a token the host site signed with HMAC-SHA256, using the key sealed as <code>--identity-secret</code>. The token is <code>base64url(JSON claims)</code>, a dot, and <code>base64url(HMAC-SHA256(key, first part))</code>, with <code>exp</code> no more than a day ahead, and goes on the chatbot's address as <code>?v=TOKEN</code>.</li>
+<li>The visitor sees the agent's answer only when the run read nothing private and waits for nobody. Otherwise they are told that a person needs to look at it, and will.</li>
+</ul>
 
 <section class="see-also">
 <h2 id="next">Next</h2>

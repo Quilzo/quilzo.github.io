@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/compliance/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="OSCAL SSP, NIST 800-53 controls, FedRAMP 20x KSIs and SBOM">
 <meta name="twitter:description" content="Show how Quilzo implements each NIST 800-53 control in OSCAL, draft an SSP, report FedRAMP 20x indicators, and give auditors one verifiable file.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Show how Quilzo implements each NIST 800-53 control in OSCAL, draft an SSP, report FedRAMP 20x indicators, and give auditors one verifiable file.","headline":"Evidence for an assessment: NIST 800-53, OSCAL and FedRAMP 20x","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/compliance/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/compliance/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#compliance-and-audit","name":"Compliance and audit","position":2},{"@type":"ListItem","name":"Evidence for assessment","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Show how Quilzo implements each NIST 800-53 control in OSCAL, draft an SSP, report FedRAMP 20x indicators, and give auditors one verifiable file.","headline":"Evidence for an assessment: NIST 800-53, OSCAL and FedRAMP 20x","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/compliance/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/compliance/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#compliance-and-audit","name":"Compliance and audit","position":2},{"@type":"ListItem","name":"Evidence for assessment","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -188,7 +188,16 @@
 <tr><td>Every algorithm and its post-quantum status</td><td><code>quilzo compliance crypto</code></td></tr>
 <tr><td>What the law asks of the published site</td><td><code>quilzo compliance site --statement</code></td></tr>
 <tr><td>An accessibility conformance report</td><td><code>quilzo compliance acr</code></td></tr>
+<tr><td>How backups are made and checked (CP-9)</td><td><code>quilzo compliance implementation CP-9</code></td></tr>
 </tbody></table></div>
+<p>What these say is what the code does:</p>
+<ul>
+<li><code>quilzo compliance summary</code> counts, from the cryptographic inventory, the quantum-broken algorithms Quilzo generates and those it only verifies.</li>
+<li>Each control and pledge statement says what is automatic and what happens only when somebody asks: a publication is timestamped and anchored by a command somebody runs, not on a schedule, and the hourly check of the binary is the admin server's, which the public site server does not run.</li>
+<li>A FedRAMP 20x indicator whose related controls nothing checks reads <strong>stated</strong> in <code>quilzo compliance ksi</code>, not contributes.</li>
+<li><code>quilzo posture scan --oscal</code> keeps a risk accepted with <code>posture suppress</code> as not satisfied, with who accepted it, until when and why.</li>
+<li>Backups are in the controls table as CP-9: what <code>quilzo backup</code> does, and what is left to you (see <a href="/install/#backups">Back up and upgrade</a>).</li>
+</ul>
 <h2 id="policy">Organisation policy, as NIST parameters<a class="anchor" href="#policy" aria-hidden="true" tabindex="-1">#</a></h2><pre><code>quilzo policy show
 quilzo policy propose ac-12_odp="8 hours" --reason "..."
 quilzo policy approve ID     # a second administrator</code></pre>
@@ -200,9 +209,10 @@ quilzo policy approve ID     # a second administrator</code></pre>
 <tr><td>One file of evidence, proofs and a signed head</td><td><code>quilzo engagement issue ID -o FILE</code></td></tr>
 <tr><td>Controls across a group of companies</td><td><code>quilzo entity report</code></td></tr>
 </tbody></table></div>
+<p>Closing an access review is the evidence for the quarterly control <code>quilzo/AC-2 account review</code> (see <a href="/people/#access-review">Review who has access</a>). <code>quilzo assurance report</code> measures it like any other periodic control: one review in a six-month window is unproven, two are covered.</p>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/compliance.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/compliance.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/ai-evidence/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">EU AI Act and ISO/IEC 42001 evidence, and an AI bill of materials</span></a>
       <a class="pager-next" href="/provenance/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Content provenance and AI disclosure</span></a>

@@ -6,7 +6,7 @@ description: Connect Claude, ChatGPT, coding agents or your own agents to Quilzo
 lead: Quilzo's operations for any agent or AI app, with each app acting for one person, with their access and no more.
 icon: apps
 screens: Connected apps
-updated: 2026-10-28
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>The <strong>agent interface</strong> is Quilzo as an MCP server: the same operations, checks and audit log as the command line, for any client that speaks the Model Context Protocol. It runs over stdio for an app on the same machine, and over HTTP at <code>/mcp</code> (MCP revision 2026-07-28, stateless) for apps anywhere, which connect through OAuth 2.1 with a person's consent.</p></div>
@@ -19,7 +19,7 @@ updated: 2026-10-28
 <tr><td><code>quilzo_find</code></td><td>Finds the operation for a task and returns its exact arguments. Call it first.</td></tr>
 <tr><td><code>quilzo_read</code></td><td>Runs a read operation: <code>read_page</code>, <code>search_pages</code>, <code>shield_status</code>, <code>policy_status</code> and many more.</td></tr>
 <tr><td><code>quilzo_write</code></td><td>Changes a draft, or proposes a whole site or a feature for a person to install (see <a href="/site/#crew">the site crew</a>). Never publishes and never installs. What it writes is recorded as AI-generated.</td></tr>
-<tr><td><code>quilzo_check</code></td><td>Runs the checks that gate publishing: accessibility and content provenance.</td></tr>
+<tr><td><code>quilzo_check</code></td><td>Runs the checks that gate publishing: accessibility and content provenance. Anything else asked under its name is refused.</td></tr>
 <tr><td><code>quilzo_publish</code></td><td>Makes the draft live, for a publisher, after every check publishing runs. A check that fails, or cannot run, refuses it, with no override here: overriding is a person's decision.</td></tr>
 </tbody></table></div>
 <p><code>quilzo mcp --list</code> prints every operation, read or write, with what it does. An agent cannot change who may do what, what code runs, or what the keys are, because a planted instruction in a page an agent reads is a plausible route to anything that agent can call.</p>
@@ -67,7 +67,7 @@ quilzo config set admin.base_url https://quilzo.example.com</code></pre>
 <tr><td><code>mcp:publish</code></td><td>Publish.</td></tr>
 <tr><td><code>mcp:admin</code></td><td>Everything an administrator can do through the interface.</td></tr>
 </tbody></table></div>
-<p>A scope never adds to what the person may do. Everything the app does is checked against the person's access at the moment it does it, and recorded under their name.</p>
+<p>A scope never adds to what the person may do. Everything the app does is checked against the person's access at the moment it does it, and recorded under their name. A refresh that asks for less narrows the access token it gets, never the grant, so asking again later for all the person agreed to still works.</p>
 </li>
 <li>
 <h3>Watch, prove and disconnect</h3>
@@ -104,7 +104,14 @@ Mcp-Name: quilzo_read
 <p>A token is accepted only in the <code>Authorization</code> header, never in the URL, because URLs end up in logs.</p>
 
 <h2 id="when-people-leave">When a person leaves</h2>
-<p>A connection acts for one person, so it ends with their access. Once somebody is suspended, for example by the identity provider through <a href="/provisioning/">SCIM</a>, their apps get no new tokens and every call is refused as theirs would be. Removing a host from the allowed list ends every connection from it, and the <a href="/shield/">shield</a> can suspend a single connection that misbehaves.</p>
+<p>A connection acts for one person, so it ends with their access. Once somebody is suspended, for example by the identity provider through <a href="/provisioning/">SCIM</a>, their apps get no new tokens and every call is refused as theirs would be. The <a href="/shield/">shield</a> can suspend a single connection that misbehaves.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">When</th><th scope="col">What happens</th></tr></thead>
+<tbody>
+<tr><td>A host is removed from <strong>Which apps may connect</strong>, or with <code>quilzo apps disallow HOST</code></td><td>Every connection from it ends, however the app spells the host, and its refresh tokens stop working.</td></tr>
+<tr><td>Its host is removed, or a registered app taken off the register, while somebody is still agreeing or before the app redeems its code</td><td>The code connects nothing.</td></tr>
+<tr><td>A token is revoked with <code>quilzo token revoke ID</code></td><td><code>/mcp</code> refuses it at once, as it accepts a token just issued.</td></tr>
+</tbody></table></div>
 
 <section class="see-also">
 <h2 id="next">Next</h2>

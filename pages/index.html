@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Edit pages and sections, with every version kept by its hash | Quilzo</title>
-<meta name="description" content="Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.">
+<meta name="description" content="Write pages in the admin or as JSON, build them from sections and reusable blocks, share a draft by link, and see what differs from live, every version kept.">
 <link rel="canonical" href="https://quilzo.github.io/pages/">
 <meta name="color-scheme" content="light dark">
 <meta name="theme-color" content="#f8fafd" media="(prefers-color-scheme: light)">
@@ -12,14 +12,14 @@
 <meta property="og:type" content="article">
 <meta property="og:site_name" content="Quilzo manual">
 <meta property="og:title" content="Edit pages and sections, with every version kept by its hash">
-<meta property="og:description" content="Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.">
+<meta property="og:description" content="Write pages in the admin or as JSON, build them from sections and reusable blocks, share a draft by link, and see what differs from live, every version kept.">
 <meta property="og:url" content="https://quilzo.github.io/pages/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-08">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Edit pages and sections, with every version kept by its hash">
-<meta name="twitter:description" content="Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.">
+<meta name="twitter:description" content="Write pages in the admin or as JSON, build them from sections and reusable blocks, share a draft by link, and see what differs from live, every version kept.">
 <meta name="twitter:image" content="https://quilzo.github.io/assets/social.png">
 <link rel="icon" href="/assets/mark.svg" type="image/svg+xml">
 <link rel="apple-touch-icon" href="/assets/mark.png">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-08","description":"Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.","headline":"Pages, sections and the editor","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/pages/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/pages/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Pages","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Write pages in the admin or as JSON, build them from sections and reusable blocks, share a draft by link, and see what differs from live, every version kept.","headline":"Pages, sections and the editor","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/pages/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/pages/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Pages","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -179,10 +179,12 @@
 <div class="definition"><p>A <strong>page</strong> is a set of fields; what it looks like is the template's job, so the same page can be a web page, a feed entry and an API response. Every change writes a new object named by its hash, and nothing is overwritten.</p></div>
 <h2 id="write">Write and change pages<a class="anchor" href="#write" aria-hidden="true" tabindex="-1">#</a></h2>
 <figure class="shot"><img src="/images/pages/pages.webp" alt="The Pages screen listing every page in the draft and whether it differs from live" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Pages: everything in the draft, and what differs from live.</figcaption></figure>
-<p>Open a page to edit it. A page bound to a <a href="/types/">type</a> gets a form built from the type; any other page gets a form over its own fields. From the command line:</p>
+<p>Open a page to edit it, or type an address in <strong>New page at</strong> on the Pages screen and press <strong>Start writing</strong> to open the editor on a new one. A page bound to a <a href="/types/">type</a> gets a form built from the type; any other page gets a form over its own fields. From the command line:</p>
 <pre><code>quilzo add returns=returns.json     # stage a page into the draft
 quilzo diff                          # what differs from live
 quilzo log                           # the history</code></pre>
+<p>The editor's preview shows what you type before you save. With the admin's script it follows you a moment after you stop typing; without it, <strong>Show in the preview</strong> does the same. Nothing is saved until <strong>Save to draft</strong>. The script also keeps text typed and not saved for the browser tab, so after a reload the editor offers it back with <strong>Put them back</strong> or <strong>Let them go</strong>.</p>
+<p>Beside the fields, <strong>Form on this page</strong> shows one of the site's <a href="/forms/">forms</a> at the foot of the page, and <strong>None</strong> takes it off. Under <strong>Search engines</strong>, a page can be left out of search results, or name the address it copies in <strong>Published first at</strong> (see <a href="/growth/#search-engines">Search engines</a>).</p>
 <h2 id="sections">Build a page from sections<a class="anchor" href="#sections" aria-hidden="true" tabindex="-1">#</a></h2>
 <figure class="shot"><img src="/images/pages/sections.webp" alt="The Sections screen" width="1280" height="900" loading="lazy" decoding="async"><figcaption>Sections, in order, with what is editable inside each.</figcaption></figure>
 <div class="table-wrap"><table>
@@ -193,7 +195,22 @@ quilzo log                           # the history</code></pre>
 <tr><td>Add one</td><td><code>quilzo section add PAGE KIND</code></td></tr>
 <tr><td>Reorder</td><td><code>quilzo section move PAGE N up</code></td></tr>
 <tr><td>Change what one says</td><td><code>quilzo section set PAGE N path=value</code></td></tr>
+<tr><td>Make a page a reusable block, or a page again</td><td><code>quilzo section block PAGE [--off]</code></td></tr>
+<tr><td>Show a block's sections on a page</td><td><code>quilzo section reuse PAGE BLOCK [--at N]</code></td></tr>
+<tr><td>List every block, and the pages that reuse it</td><td><code>quilzo section blocks</code></td></tr>
 </tbody></table></div>
+<p>A <strong>block</strong> is sections written once and shown on many pages, such as opening hours or a call to action. Change the block and every page that reuses it changes at the next publish. On the Sections screen, <strong>Reuse a block</strong> adds one to the page, and <strong>Make this page a reusable block</strong> turns the page into one. A block is never served on its own: it has no address, no place in the sitemap and no search result. A block still reused on a page cannot be deleted; take it off those pages first.</p>
+<h2 id="share">Share this draft<a class="anchor" href="#share" aria-hidden="true" tabindex="-1">#</a></h2>
+<figure class="shot"><img src="/images/pages/editor-share.webp" alt="The editor for the Delivery in Hebden Bridge page: a notice Shared until 11 Nov 14:02 with the link, its secret redacted; beside the fields, Share this draft with For a week, Make a link, and the link listed with when it ends, who made it and Revoke" width="1280" height="900" loading="lazy" decoding="async"><figcaption>A week's link to the draft, for somebody with no account. The secret in the link is redacted here.</figcaption></figure>
+<p>A link shows somebody with no account a page as the draft is now, on the public site. Later changes do not reach it. It ends when it expires or is revoked.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
+<tbody>
+<tr><td>Share a page's draft for a day, a week or up to thirty days</td><td><strong>Make a link</strong>, in the page's editor</td><td><code>quilzo share PAGE --days 7</code></td></tr>
+<tr><td>See the links</td><td>Listed under <strong>Share this draft</strong></td><td><code>quilzo share list</code></td></tr>
+<tr><td>End one now</td><td><strong>Revoke</strong></td><td><code>quilzo share revoke ID</code></td></tr>
+</tbody></table></div>
+<p>The link opens an address under <code>/shared/</code>, marked not to be indexed. Making a link takes whoever may publish the page, and revoking one takes whoever may edit it. The link is shown once, when it is made, so copy it then: Quilzo keeps only a digest of its secret.</p>
 <h2 id="together">Working together<a class="anchor" href="#together" aria-hidden="true" tabindex="-1">#</a></h2>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
@@ -204,6 +221,7 @@ quilzo log                           # the history</code></pre>
 <tr><td>Move a page and everything under it</td><td><code>quilzo move OLD NEW --dry-run</code></td></tr>
 <tr><td>Find broken links</td><td><code>quilzo links --broken</code></td></tr>
 </tbody></table></div>
+<p>Somebody signed in with a credential for part of the site, such as one issued <code>--on /blog</code>, is held to that path in bulk actions, the pages list, notes and links followed inside a preview.</p>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
@@ -213,7 +231,7 @@ quilzo log                           # the history</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-08 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/pages.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/pages.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/evolve/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Evolve: search over programs with a sealed evaluator</span></a>
       <a class="pager-next" href="/types/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Content types and records</span></a>
@@ -226,6 +244,7 @@ quilzo log                           # the history</code></pre>
   <ul>
     <li><a href="#write">Write and change pages</a></li>
     <li><a href="#sections">Build a page from sections</a></li>
+    <li><a href="#share">Share this draft</a></li>
     <li><a href="#together">Working together</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

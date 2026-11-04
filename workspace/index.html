@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/workspace/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-13">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="AI agent terminal: sandboxed commands, files and approvals">
 <meta name="twitter:description" content="Give an AI agent a folder of its own and the programs it may run, each command in a fresh sandbox, with deletes and network use approved by a person.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-13","description":"Give an AI agent a folder of its own and the programs it may run, each command in a fresh sandbox, with deletes and network use approved by a person.","headline":"Let an AI agent run commands without a shell to misuse","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/workspace/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/workspace/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"A workspace and commands","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Give an AI agent a folder of its own and the programs it may run, each command in a fresh sandbox, with deletes and network use approved by a person.","headline":"Let an AI agent run commands without a shell to misuse","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/workspace/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/workspace/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"A workspace and commands","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -195,7 +195,7 @@
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Field</th><th scope="col">What it allows</th></tr></thead>
 <tbody>
-<tr><td><code>programs</code></td><td>The only programs it may run, by name. Each is found on the box's own path and run with the arguments exactly as given: no shell, so nothing in an argument is ever a command.</td></tr>
+<tr><td><code>programs</code></td><td>The only programs it may run, by name. Each is found on the box's own path and run with the arguments exactly as given: no shell, so nothing in an argument is ever a command. <code>code_run</code> runs code with one of them, so an agent holding it names an interpreter here.</td></tr>
 <tr><td><code>hosts</code></td><td>What a command that reaches the network may reach, through the run's proxy, on 443. None means no command reaches the network at all.</td></tr>
 <tr><td><code>ask</code></td><td>Which kinds of command wait for a person: <code>network</code> (the default) and <code>write</code>. A command that deletes or rewrites history always waits.</td></tr>
 <tr><td><code>workspace</code></td><td>The folder. Empty means one of its own beside the store's other folders. You may name another, as long as it is not the store, a folder holding the store, or a system folder.</td></tr>
@@ -206,11 +206,17 @@
 <thead><tr><th scope="col">Action</th><th scope="col">What it does</th></tr></thead>
 <tbody>
 <tr><td><code>file_list</code></td><td>Lists a folder in the workspace: names, sizes and kinds.</td></tr>
-<tr><td><code>file_read</code></td><td>Reads a file's text, up to 256 KB. A binary file is described, not shown.</td></tr>
+<tr><td><code>file_read</code></td><td>Reads a file's text, up to 256 KB, or a range of its lines from a file of up to 64 MB. A binary file is described, not shown.</td></tr>
+<tr><td><code>file_search</code></td><td>Finds files by name, or lines by text or a regular expression, under a folder. It answers with at most 200, and says when it stopped before looking everywhere.</td></tr>
 <tr><td><code>file_write</code></td><td>Writes a file whole (up to 1 MB), making the folders it needs, and says what changed.</td></tr>
+<tr><td><code>file_edit</code></td><td>Replaces exact text that is in the file once (or every time it is), or inserts text after a line.</td></tr>
+<tr><td><code>file_move</code></td><td>Renames or moves a file or folder. What was at the new name goes to the bin first, and the answer says so.</td></tr>
+<tr><td><code>file_delete</code></td><td>Moves a file or folder into the workspace's bin, where it is kept a week and <code>file_move</code> brings it back. Deleting from the bin is for good, so that waits for a person.</td></tr>
 <tr><td><code>shell_run</code></td><td>Runs one program with its arguments, and gives back the exit status, the start and end of what it printed, how long it took and which files it changed.</td></tr>
+<tr><td><code>code_run</code></td><td>Runs code in Python, JavaScript, TypeScript, shell, Ruby, Perl, PHP or Lua, with an interpreter the declaration names (<code>python3</code>, <code>node</code>, <code>deno</code>, <code>sh</code>, <code>ruby</code> and the like), and gives back what it printed.</td></tr>
 </tbody></table></div>
-<p>A file is written where its name says: never through a link, and never inside git's own folder, where a configured hook would be a program git runs later. Reading the workspace, listing it, or what a command printed, taints the run. A repository cloned or a file a page gave may hold somebody else's words, so the run is treated like one that read stored content.</p>
+<p><code>code_run</code> reads the workspace and changes nothing, unless the code says it <code>writes</code>. Code that writes may change or delete anything there, so a person reads it whole and approves it first; it is at most 8 KB, and anything longer is written to a file and run with <code>shell_run</code>. Code never reaches the network. With <code>write</code> in <code>ask</code>, writing, editing, moving and deleting into the bin wait for a person too.</p>
+<p>A file is written where its name says: never through a link, and never inside git's own folder, where a configured hook would be a program git runs later. Reading the workspace, listing it, searching it, or what a command or code printed, taints the run. A repository cloned or a file a page gave may hold somebody else's words, so the run is treated like one that read stored content.</p>
 <h2 id="kinds">What each command is<a class="anchor" href="#kinds" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Every command is classed before it runs, from the program and its arguments, without guessing at intent. A program not known is taken as writing.</p>
 <div class="table-wrap"><table>
@@ -227,7 +233,7 @@
 <ul>
 <li><strong>A fresh box for each command</strong>, the same one programs and the browser run in: its own namespaces, Landlock, the system call filter, no capabilities, and no way to reach a socket on the machine's filesystem. It may write only the workspace and the run's scratch home. It reads the system's programs and libraries, and nothing of the store. A command starts in well under a tenth of a second.</li>
 <li><strong>A home made fresh for each run</strong>, and removed when the run ends, so nothing a command leaves there (a configuration, a startup file) reaches the next run. The agent's caches (Go modules and builds, npm, pip) are kept between runs, and only a command that writes may write them. A command that only reads gets a home of its own, removed after it.</li>
-<li><strong>No prompts.</strong> Its input is empty and its environment says <code>CI=1</code>, with no pager and no colour. A program that would ask a question gets nothing rather than waiting. Both of its output streams are captured together.</li>
+<li><strong>No prompts.</strong> Its input is empty, except the code <code>code_run</code> gives its interpreter, and its environment says <code>CI=1</code>, with no pager and no colour. A program that would ask a question gets nothing rather than waiting. Both of its output streams are captured together.</li>
 <li><strong>Nothing outlives it.</strong> When the command ends, everything it started ends with it. The time limit, <strong>Stop the run</strong> and the run's budget all end it the same way.</li>
 <li><strong>One run at a time</strong> works on a workspace; another is told which run has it.</li>
 <li><strong>The quota holds while a command runs.</strong> The workspace and the run's home are measured every few seconds, and a command that goes over is stopped. Memory is bounded per process, and each command may start at most 512, so one command can still use a good share of a small machine.</li>
@@ -241,11 +247,34 @@
 <pre><code>quilzo agent workspace site-keeper
 quilzo agent workspace site-keeper --clear</code></pre>
 <p>The first says where the workspace is and how big. <code>--clear</code> empties it, with its caches, and the log records who did.</p>
+<h2 id="web">Read the web without a browser<a class="anchor" href="#web" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>To read a page or search the web, a browser is more than an agent needs. <code>web_fetch</code> reads an https address and gives back its words and links, without its scripts, styles and forms; text and JSON are read as they are. <code>web_search</code> asks a search provider and gives back what it found.</p>
+<pre><code>"capabilities": ["web_fetch", "web_search"],
+"web": { "fetch": ["docs.supplier.example", "www.gov.uk"] }</code></pre>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Field</th><th scope="col">What it allows</th></tr></thead>
+<tbody>
+<tr><td><code>fetch</code></td><td>The hosts <code>web_fetch</code> may read, by exact name, at most 32.</td></tr>
+<tr><td><code>any</code></td><td><code>true</code> lets it read any public host instead. Say one or the other.</td></tr>
+</tbody></table></div>
+<ul>
+<li><strong>Never a private address.</strong> Every redirect is held to the same rule before it is followed, and so is where it lands.</li>
+<li><strong>A search goes to one provider.</strong> <code>web_search</code> asks the one <code>agents.search</code> names: <code>brave</code>, <code>tavily</code>, <code>exa</code>, <code>serper</code>, <code>serpapi</code>, <code>kagi</code>, <code>perplexity</code> or <code>jina</code>, or <code>searxng</code>, your own, at <code>agents.search_url</code>. None is set until somebody chooses, since a search is an agent's words sent to a third party. Its key is sealed as <code>search-PROVIDER</code> and sent only to that provider's host.</li>
+<li><strong>Both taint the run</strong>, since what comes back is somebody else's words. Once a run holds something private, an address it would read and a query it would send wait for a person, because either could carry it out (<a href="/agent-limits/#exfiltration-breaker">the breaker</a>).</li>
+</ul>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Choose a search provider</td><td><code>quilzo config set agents.search brave</code></td></tr>
+<tr><td>Seal its key</td><td><code>quilzo secret set search-brave &lt; key.txt</code></td></tr>
+<tr><td>Search with your own SearXNG</td><td><code>quilzo config set agents.search searxng</code>, then <code>quilzo config set agents.search_url https://search.example.org</code></td></tr>
+</tbody></table></div>
+<p>An agent <a href="/agents/#import">brought from another platform</a> keeps these hands where they have an equivalent here: file-reading, grep, glob and edit tools come in as <code>file_read</code>, <code>file_list</code>, <code>file_search</code> and <code>file_edit</code>; a coding agent's web fetch and web search tools as <code>web_fetch</code>, reading any public host until you narrow <code>fetch</code>, and <code>web_search</code>; and a code interpreter as <code>code_run</code>, Python with no network.</p>
 <h2 id="not-yet">Not yet<a class="anchor" href="#not-yet" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul>
 <li><strong>Credentials in commands.</strong> A secret handed into the box would be readable by whatever runs there, so a command that has to sign in to something is not offered one yet.</li>
 <li><strong>macOS and Windows hosts.</strong> The box is Linux's.</li>
-<li><strong>Long-running services and interactive programs.</strong> Commands run to the end with no terminal, which is what an agent needs; a terminal a person can take over comes later.</li>
+<li><strong>Long-running services and interactive programs.</strong> Commands and code run to the end with no terminal, which is what an agent needs; a terminal a person can take over comes later.</li>
 </ul>
 <section class="see-also">
 <h2 id="next">Next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -257,7 +286,7 @@ quilzo agent workspace site-keeper --clear</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-13 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/workspace.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/workspace.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/browser/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Give an AI agent a browser it cannot misuse</span></a>
       <a class="pager-next" href="/memory/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">AI agent memory people can see, correct and erase</span></a>
@@ -273,6 +302,7 @@ quilzo agent workspace site-keeper --clear</code></pre>
     <li><a href="#kinds">What each command is</a></li>
     <li><a href="#box">How a command runs</a></li>
     <li><a href="#kept">What is kept, and what a person sees</a></li>
+    <li><a href="#web">Read the web without a browser</a></li>
     <li><a href="#not-yet">Not yet</a></li>
     <li><a href="#next">Next</a></li>
   </ul>

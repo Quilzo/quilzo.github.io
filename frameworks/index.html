@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/frameworks/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-14">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="MCP gateway for ADK, LangChain, CrewAI and OpenAI agents">
 <meta name="twitter:description" content="AI agents built with ADK, Agent Framework, LangChain, CrewAI or OpenAI&#39;s Agents SDK get their tools and models through Quilzo, governed and with memory.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-14","description":"AI agents built with ADK, Agent Framework, LangChain, CrewAI or OpenAI's Agents SDK get their tools and models through Quilzo, governed and with memory.","headline":"Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/frameworks/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/frameworks/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Agent frameworks","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"AI agents built with ADK, Agent Framework, LangChain, CrewAI or OpenAI's Agents SDK get their tools and models through Quilzo, governed and with memory.","headline":"Govern agents built with ADK, Agent Framework, LangChain, CrewAI and the OpenAI Agents SDK","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/frameworks/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/frameworks/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#connect","name":"Connect","position":2},{"@type":"ListItem","name":"Agent frameworks","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -185,6 +185,7 @@ quilzo integrations gateway tracker --role author --daily 200 --ask create_issue
 quilzo token issue support-agent --principal dana --role author</code></pre>
 <p>The agent then connects to <code>https://YOUR-ADMIN/mcp/gateway/tracker</code> with the token as a bearer credential, or through OAuth 2.1 (see <a href="/agent-interface/">Connect AI apps</a>). The token acts for the person it was issued to, with their access and no more. Each example below reads it from <code>QUILZO_TOKEN</code>.</p>
 <p>The same clients reach Quilzo's own operations at <code>/mcp</code>, or over stdio with <code>quilzo mcp</code>.</p>
+<p>In each example, <code>MODEL</code> is the model the agent talks to, which you fill in: its provider's own, or <code>quilzo</code> or <code>agent/NAME</code> served through Quilzo's <code>/v1</code>, with the model clients under <a href="#models">Their models, through the gateway</a>.</p>
 <h2 id="adk">Google ADK<a class="anchor" href="#adk" aria-hidden="true" tabindex="-1">#</a></h2>
 <pre><code>pip install "google-adk[mcp]"</code></pre>
 <pre><code>import os
@@ -192,7 +193,7 @@ from google.adk.agents import Agent
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StreamableHTTPConnectionParams
 root_agent = Agent(
-    model="gemini-flash-latest",
+    model="MODEL",
     name="support_agent",
     instruction="Help the support team find and file issues in the tracker.",
     tools=[
@@ -217,7 +218,7 @@ async def main():
         static_headers={"Authorization": "Bearer " + os.environ["QUILZO_TOKEN"]},
     ) as tracker:
         agent = Agent(
-            client=OpenAIChatClient(model="gpt-5"),
+            client=OpenAIChatClient(model="MODEL"),
             instructions="Help the support team find and file issues in the tracker.",
             tools=tracker,
         )
@@ -239,7 +240,7 @@ async def main():
         }
     })
     tools = await client.get_tools()
-    agent = create_agent("openai:gpt-5", tools)
+    agent = create_agent("openai:MODEL", tools)
     print(await agent.ainvoke({"messages": "Is the checkout timeout already reported?"}))
 asyncio.run(main())</code></pre>
 <h2 id="crewai">CrewAI<a class="anchor" href="#crewai" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -341,7 +342,7 @@ asyncio.run(main())</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-14 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/frameworks.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/frameworks.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/integrations/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">MCP gateway: govern the tools AI agents call, with pinning and approvals</span></a>
       <a class="pager-next" href="/a2a/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">A2A: agent cards and tasks from other vendors&#39; agents</span></a>

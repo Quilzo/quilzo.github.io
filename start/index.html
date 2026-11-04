@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/start/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Get started: run an AI agent control plane in ten minutes">
 <meta name="twitter:description" content="Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.","headline":"Get started with Quilzo in ten minutes","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/start/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/start/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#get-started","name":"Get started","position":2},{"@type":"ListItem","name":"Get started","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Build Quilzo, sign in, load a demo site and run your first AI agent, with or without a model. One binary, no dependencies, about ten minutes.","headline":"Get started with Quilzo in ten minutes","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/start/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/start/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#get-started","name":"Get started","position":2},{"@type":"ListItem","name":"Get started","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -225,7 +225,14 @@ http://localhost:8080/enrol/qzenrol_…</code></pre>
 <figure class="shot"><img src="/images/start/get-started.webp" alt="The Get started screen with a numbered checklist: write something, give it a shape, publish it" width="1280" height="800" loading="lazy" decoding="async"><figcaption>The checklist reads the store, so it stays accurate when you come back to it.</figcaption></figure>
 <p>The menu on the left groups the screens: <strong>Content</strong>, <strong>Release</strong>, <strong>Assurance</strong>, <strong>Protection</strong>, <strong>Administration</strong> and <strong>Reference</strong>. To jump anywhere, press <kbd>Ctrl</kbd> <kbd>K</kbd> (<kbd>⌘</kbd> <kbd>K</kbd> on a Mac) and type: Find covers every screen, page, setting and content type.</p>
 <figure class="shot"><img src="/images/start/find.webp" alt="The Find palette open over the Pages screen, showing the Memory screen as a result for the word memory" width="1280" height="800" loading="lazy" decoding="async"><figcaption>Find, opened with Ctrl K. The same search is <code>quilzo find WORDS</code> on the command line.</figcaption></figure>
-<p>Every screen has a <strong>Help</strong> link in its footer that opens the guide for that screen. What you may do, your sessions, and how the admin looks to you are under <span class="where">Reference › You</span>.</p>
+<ul>
+<li>The name in the bar goes to your start screen: Today, or Pages if you chose to start there.</li>
+<li>A screen below another in the menu has a way up above its heading, such as <strong>← Pages</strong> above a page's editor.</li>
+<li>A message offers the way back to where you were, not to the list of pages.</li>
+<li>Signing in by token, passkey, OIDC or SAML returns you to the screen you asked for.</li>
+<li><strong>Help with this screen</strong> in every footer, <strong>All documentation</strong> and every link that leaves the admin open in a new tab, marked with an icon, and read out as “(opens in a new tab)”, so a form you were filling in stays where it was.</li>
+</ul>
+<p><span class="where">Reference › You</span> says what you hold and where, as your session holds it: <strong>What you may do</strong>, asked of the whole site and of each place you hold something, through the credential you signed in with, and <strong>Your sessions</strong>. How the admin looks to you is there too.</p>
 <h2 id="first-agent">Run your first agent<a class="anchor" href="#first-agent" aria-hidden="true" tabindex="-1">#</a></h2>
 <ol class="steps">
 <li>
@@ -244,9 +251,9 @@ http://localhost:8080/enrol/qzenrol_…</code></pre>
 </li>
 <li>
 <h3 id="connect-a-model-and-ask-it-something">Connect a model and ask it something<a class="anchor" href="#connect-a-model-and-ask-it-something" aria-hidden="true" tabindex="-1">#</a></h3>
-<p>Point Quilzo at any OpenAI-compatible endpoint. A local model through Ollama is enough; nothing leaves the machine.</p>
+<p>Point Quilzo at any OpenAI-compatible endpoint, and name a model it serves. A local model through Ollama is enough; nothing leaves the machine.</p>
 <pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1
-export QUILZO_MODEL=llama3.1
+export QUILZO_MODEL=MODEL
 quilzo agent run --model help-desk "Can I return an opened bottle of ink?"</code></pre>
 <p>The model picks each step from the agent's declared capabilities and cannot add to them. Every run is kept, and you can read it step by step:</p>
 <pre><code>quilzo agent runs
@@ -263,6 +270,7 @@ quilzo agent trace RUN</code></pre>
 <figure class="shot"><img src="/images/start/site.webp" alt="The Marginalia demo shop's home page as the public site serves it" width="1280" height="800" loading="lazy" decoding="async"><figcaption>The demo shop, served by <code>quilzo site</code>.</figcaption></figure>
 <h2 id="three-ways-in">Three ways in, one set of rules<a class="anchor" href="#three-ways-in" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Everything is reachable from the admin, from the command line (<code>quilzo help</code> lists every command, and each one takes <code>--json</code>), and from the agent interface over MCP. A rule enforced in one of them is enforced in all three, because they share one code path.</p>
+<p>Asking any command for help, with <code>-h</code>, <code>-help</code> or <code>--help</code>, one dash or two, with or without a value, prints its help and does nothing else: <code>quilzo init --help</code> makes no store.</p>
 <section class="see-also">
 <h2 id="next">Where to go next<a class="anchor" href="#next" aria-hidden="true" tabindex="-1">#</a></h2>
 <ul class="cards">
@@ -274,7 +282,7 @@ quilzo agent trace RUN</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/start.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/start.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-next" href="/today/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Today, the first screen after signing in</span></a>
     </nav>

@@ -6,7 +6,7 @@ description: Sell the catalogue through Stripe's hosted checkout: a Buy button o
 lead: A Buy button beside every product that can be bought, charging exactly the price the page shows, with the card and the order kept by the provider and not here.
 icon: selling
 screens: Payments
-updated: 2026-10-28
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>A <strong>payment link</strong> is a checkout at the provider for one product at one price. Quilzo makes one for each price the published catalogue offers, and shows a Buy button only where a live link charges exactly what the page says.</p></div>
@@ -30,6 +30,8 @@ updated: 2026-10-28
 <li>While Stripe cannot be reached, a changed price shows no Buy button, never one charging the old price. The screen and <code>quilzo pay</code> say what stopped, and <code>quilzo pay sync</code> or <strong>Bring the links up to date</strong> tries again.</li>
 <li>The button names the price it charges. A page may show a price written by hand beside the number it sells at, and the button is what is paid.</li>
 </ul>
+<h2 id="subscriptions">Sell a subscription</h2>
+<p>A catalogue row with <code>"interval"</code> set to <code>week</code>, <code>month</code> or <code>year</code> is sold as a subscription. Its price at Stripe is a recurring one, its payment link starts a subscription, and its Buy button says how often, such as <strong>Buy for £12.00 a month</strong>. Monthly and yearly at the same price are two offers, each with a link of its own. A row whose interval is anything else is not offered at all, and shows no button. The subscription is kept at Stripe, as orders are.</p>
 <h2 id="keeps">What Quilzo keeps, and what it never does</h2>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Thing</th><th scope="col">Where it lives</th></tr></thead>

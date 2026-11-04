@@ -6,7 +6,7 @@ description: Every action in a hash-chained log, identifiers pseudonymised, head
 lead: Every action recorded, chained, signed and provable entry by entry.
 icon: logs
 screens: Log
-updated: 2026-10-27
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/logging/log.webp" alt="The Log screen"><figcaption>The audit log.</figcaption></figure><div class="table-wrap"><table>
@@ -19,9 +19,19 @@ updated: 2026-10-27
 <tr><td>Prove one entry is in the log</td><td><code>quilzo auditlog prove SEQ</code></td></tr>
 <tr><td>Prove nothing before a head moved</td><td><code>quilzo auditlog consistency</code></td></tr>
 <tr><td>Anchor the head where you cannot alter it</td><td><code>quilzo auditlog anchor</code></td></tr>
+<tr><td>Anchor what is published, see the proofs, and fetch their blocks</td><td><code>quilzo anchor submit</code> | <code>status</code> | <code>upgrade</code></td></tr>
+<tr><td>Write each proof as an <code>.ots</code> file, for <code>ots verify</code></td><td><code>quilzo anchor export [--dir DIR]</code></td></tr>
 <tr><td>RFC 3161 proof of when you published</td><td><code>quilzo timestamp stamp</code></td></tr>
 <tr><td>Run the writer as its own account</td><td><code>quilzo logd</code></td></tr>
 </tbody></table></div><p>Identifiers are pseudonymised in the log, wherever a person appears: as who acted, in the resource, and in the text of a record, where a name is replaced by the same pseudonym. A secret that was refused is never written. Receipts for runs, apps and forgotten memory are built from it (see <a href="/agent-identity/#receipts">receipts</a>), and it exports to a SIEM (see <a href="/integrations/#telemetry">traces and the audit log</a>).</p>
+
+<h2 id="anchors">Anchors and timestamps</h2>
+<p>An anchor commits a digest to the public OpenTimestamps calendars, which batch it into a Bitcoin block within hours; until then it is pending, which is not anchored. <code>quilzo anchor submit</code> sends the live commit of what is published, <code>quilzo auditlog anchor</code> the audit log's head, and each anchor says which it is of: a publication or the log's head.</p>
+<ul>
+<li>A timestamp is over the full live commit too, the same digest an anchor of that publication commits to, so <code>quilzo timestamp list</code> and the Integrity screen show each timestamp with its publication's anchor.</li>
+<li>Sending a digest out, by <code>anchor submit</code>, <code>anchor upgrade</code> or <code>timestamp stamp</code>, takes the grant permission and is on the record. Reading and exporting what is kept takes only view.</li>
+<li><code>quilzo anchor export --dir DIR</code> writes each proof as an <code>.ots</code> file; <code>ots verify -d DIGEST FILE</code> then checks the block it names against the chain, which Quilzo has no headers for.</li>
+</ul>
 
 <h2 id="cannot-write">When the log cannot be written</h2>
 <p>An agent does nothing it cannot record. Before each action an agent takes, Quilzo checks that the log can take its record: the log writer answers, the key can be read, more than 8 MiB is left where the log is kept, and the last record was written. If any of these fails, the action is refused and the run stops with the reason, which names the audit log. A step whose record was refused stops the run before its next action.</p>

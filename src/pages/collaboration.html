@@ -5,14 +5,17 @@ seo: End-to-end encrypted calls with SFrame (experimental)
 description: Experimental building blocks: rooms with a stated purpose, calls encrypted end to end with SFrame (RFC 9605), screen sharing and an AI note-taker.
 lead: The building blocks of real-time collaboration, demonstrated from the command line.
 icon: forum
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <div class="note"><icon name="info"></icon><div><p><strong>Experimental.</strong> These are demonstrated from the command line and are not yet a product of their own.</p></div></div><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
 <tr><td>Open a room with a purpose</td><td><code>quilzo room open ID --purpose W</code></td></tr>
+<tr><td>The rooms you can read, and what is unread in each</td><td><code>quilzo room list</code></td></tr>
 <tr><td>Post, read, edit; removal leaves the shape</td><td><code>quilzo room say ROOM "..." / quilzo room read ROOM</code></td></tr>
+<tr><td>React to a message, or take the reaction back</td><td><code>quilzo room react ROOM MSG EMOJI [--off]</code></td></tr>
+<tr><td>Erase a message's words from the disk</td><td><code>quilzo room remove ROOM MSG --erase</code></td></tr>
 <tr><td>A whole call: lobby, shares, hands, mute, eject</td><td><code>quilzo huddle demo</code></td></tr>
 <tr><td>Where the media key comes from</td><td><code>quilzo call demo</code></td></tr>
 <tr><td>The SFrame suites, and a self-check</td><td><code>quilzo sframe suites / quilzo sframe check</code></td></tr>
@@ -20,3 +23,8 @@ updated: 2026-10-08
 <tr><td>An AI note-taker in a call, and what it may do</td><td><code>quilzo scribe law / quilzo scribe demo</code></td></tr>
 <tr><td>Record the screen into the media library</td><td><code>quilzo studio</code></td></tr>
 </tbody></table></div>
+<h2 id="rooms">Rooms</h2>
+<p>A room is <code>open</code>, <code>closed</code> to the members it names, or <code>direct</code>. A closed or direct room is read only by the people in it, and <code>room list</code> shows only the rooms you are in and the open ones.</p>
+<p>Erasing a message rewrites the room's file as its messages are now, so no byte of the erased words is left on disk. Copies in backups made before go when those backups are rotated out. A room opened with <code>--retention</code> keeps its text that long, and the admin's sweep, run by <code>quilzo serve</code>, takes what is older off the disk the same way. A reaction is an emoji or a short code, never words.</p>
+<h2 id="studio">The studio</h2>
+<p><code>quilzo studio</code> records the screen into the media library, signed in with a token. A token revoked, or suspended by the shield, stops working there from the next request, with no restart. Each recording is recorded in the audit log as the token's holder, not whoever started the studio. Sound is recorded only when <strong>Record sound too</strong> is ticked, and the studio says to ask first, because sound takes in everybody who can be heard.</p>

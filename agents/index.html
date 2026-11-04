@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/agents/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-27">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Build an AI agent with human-in-the-loop approval">
 <meta name="twitter:description" content="Declare an AI agent&#39;s capabilities, budget and autonomy, make it ask a person before it writes anything, and read every run step by step, in the admin or as JSON.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-27","description":"Declare an AI agent's capabilities, budget and autonomy, make it ask a person before it writes anything, and read every run step by step, in the admin or as JSON.","headline":"Build an AI agent that asks before it acts","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/agents/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/agents/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Build an agent","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Declare an AI agent's capabilities, budget and autonomy, make it ask a person before it writes anything, and read every run step by step, in the admin or as JSON.","headline":"Build an AI agent that asks before it acts","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/agents/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/agents/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#ai-agents","name":"AI agents","position":2},{"@type":"ListItem","name":"Build an agent","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -173,7 +173,7 @@
     <nav class="crumbs" aria-label="Breadcrumb"><a href="/">Manual</a><span aria-hidden="true">›</span><a href="/#ai-agents">AI agents</a></nav>
     <h1>Build an AI agent that asks before it acts</h1>
     <p class="lead">Declare what an agent may do, decide which actions wait for a person, and read every run afterwards.</p>
-    <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Agents</span></p>
+    <p class="screens"><span class="screens-label">In the admin</span><span class="chip">Agents</span><span class="chip">Approvals</span></p>
   </header>
   <div class="prose">
 <div class="definition"><p>An <strong>agent</strong> in Quilzo is a declaration: what it is for, which capabilities it has, what it may read, how far it may go on its own, and how much one run may spend. A model or a program decides each step. The declaration decides what is allowed, and a hijacked agent still cannot do anything the declaration does not list.</p></div>
@@ -181,7 +181,7 @@
 <ol class="steps">
 <li>
 <h3 id="start-from-a-template">Start from a template<a class="anchor" href="#start-from-a-template" aria-hidden="true" tabindex="-1">#</a></h3>
-<p>Open <span class="where">Administration › Agents</span>. Under <strong>Start from a template</strong>, pick the archetype closest to what you want. Each one starts with as little permission as it needs, and you add only what is missing. Most agents are <em>retrieval</em>: they answer from published content and cannot write.</p>
+<p>Open <span class="where">Administration › Agents</span>, which opens to whoever holds <a href="/people/#agent-permissions">manage-agents</a> on the agents, not only to administrators. Under <strong>Start from a template</strong>, pick the archetype closest to what you want. Each one starts with as little permission as it needs, and you add only what is missing. Most agents are <em>retrieval</em>: they answer from published content and cannot write.</p>
 <figure class="shot"><img src="/images/agents/agents.webp" alt="The Agents screen listing two agents, help-desk and returns-editor, with their kind, autonomy and capabilities" width="1280" height="800" loading="lazy" decoding="async"><figcaption>Your agents, and the templates to start a new one from.</figcaption></figure>
 </li>
 <li>
@@ -238,12 +238,15 @@ quilzo agent formats                                    # what is read and what 
 <tr><td>AutoGen AgentChat</td><td>an AutoGen Studio component, or a team</td><td></td></tr>
 </tbody></table></div>
 <p>The format is recognised from the file, and <code>--from</code> names it when it cannot be. Instructions, the model, the helpers an agent hands work to and its step and time limits carry over as they were. Read, search and file tools become the capabilities that do the same here. An API an agent called through an OpenAPI schema becomes tools on that host, the operations that write asked about first, with the schema written beside it for <code>quilzo integrations import</code>.</p>
-<p>Code another platform ran for the agent (a Python tool, a Lambda, a code interpreter), a shell, MCP servers and other platforms' data sources become decisions, because here nothing is reached that the declaration does not name. Whatever it was allowed elsewhere, an imported agent starts at <strong>propose</strong>, or <strong>draft</strong> if it writes, until you give it more. An agent another vendor runs and offers by an A2A card is registered rather than imported (see <a href="/fleet/">Fleet</a>).</p>
+<p>A code interpreter becomes <code>code_run</code>: Python in a <a href="/workspace/">workspace</a> of its own, with no network. Other code another platform ran for the agent (a Python tool, a Lambda), a shell, MCP servers and other platforms' data sources become decisions, because here nothing is reached that the declaration does not name. Whatever it was allowed elsewhere, an imported agent starts at <strong>propose</strong>, or <strong>draft</strong> if it writes, until you give it more. An agent another vendor runs and offers by an A2A card is registered rather than imported (see <a href="/fleet/">Fleet</a>).</p>
 <p>To take one the other way, open the agent and choose <strong>Take it to another platform</strong>, or run <code>quilzo agent export returns-editor --to claude-subagent</code>. The file is printed alone, and what the format has no field for (the budget, autonomy, asking first, which pages it reads) is listed beside it rather than lost without a word.</p>
 <h2 id="run">Run it<a class="anchor" href="#run" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>On the agent's page, under <strong>Try it</strong>, write what it should do and press <strong>Run it once</strong>. Tick <strong>Let a model choose the actions</strong> to have a model decide. Leave it unticked to try every capability once without a model, which costs nothing and shows what this store answers. From the command line:</p>
 <pre><code>quilzo agent run --model returns-editor "Explain on the Returns page how to start a return"</code></pre>
-<p>A run never has more authority than the person who started it, and never more than the declaration allows.</p>
+<p>A run never has more authority than the person who started it, and never more than the declaration allows. When it finishes it says what the agent concluded, after its steps; with <code>--json</code>, <code>quilzo agent run</code> prints the run's record instead, the one <code>quilzo agent trace RUN --json</code> shows.</p>
+<p>What a run can do is what <code>quilzo agent capabilities</code> lists, by where it happens: the pages, which the run reads and writes itself; the reads the <a href="/agent-interface/">agent interface</a> offers, and the writes there that make a draft or a proposal, done as the person the run is for; its memory, browser, workspace, the web and a desktop cell. A declaration naming anything else, such as one of an administrator's reports, is refused when it is saved rather than failing the day the agent runs:</p>
+<pre class="out"><code>snoop asks for the capability "shield_status", which nothing an agent runs performs (quilzo agent capabilities lists what does)</code></pre>
+<p>A <code>decide</code> step asks a <a href="/assistant/">decider</a> about a state, which may be text, an object or a list, such as a ticket with its fields; an object or a list goes to the decider as text, its keys in order, fenced as untrusted like any other. The agent commands take their flags on either side of the file or the name: <code>quilzo agent declare FILE --widen</code> and <code>quilzo agent declare --widen FILE</code> are the same.</p>
 <div class="note"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M480-280q17 0 28.5-11.5T520-320v-160q0-17-11.5-28.5T480-520q-17 0-28.5 11.5T440-480v160q0 17 11.5 28.5T480-280Zm0-320q17 0 28.5-11.5T520-640q0-17-11.5-28.5T480-680q-17 0-28.5 11.5T440-640q0 17 11.5 28.5T480-600Zm0 520q-83 0-156-31.5T197-197q-54-54-85.5-127T80-480q0-83 31.5-156T197-763q54-54 127-85.5T480-880q83 0 156 31.5T763-763q54 54 85.5 127T880-480q0 83-31.5 156T763-197q-54 54-127 85.5T480-80Zm0-80q134 0 227-93t93-227q0-134-93-227t-227-93q-134 0-227 93t-93 227q0 134 93 227t227 93Zm0-320Z"/></svg><div><p><strong>A new agent driven by a model starts at propose.</strong> Quilzo lets a model drive an agent at its declared autonomy only after evaluations show the model is not steered by instructions planted in what it reads. Drafting takes at least three evaluation cases, each run three times. Until then, the run says <code>a model drives returns-editor at propose rather than draft</code> and explains why. <a href="/evals/">Evaluate an agent</a> shows how.</p></div></div>
 <h2 id="approve">Approve or decline what it asks for<a class="anchor" href="#approve" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>When the run reaches a capability marked ask first, it stops. The run's page shows the exact call it wants to make, field by field, with the full JSON one click away, and says what it had read before asking.</p>
@@ -256,10 +259,11 @@ quilzo agent formats                                    # what is read and what 
 quilzo agent decline RUN 3</code></pre>
 <p>The agent's sponsor decides, as does whoever holds the approve permission on the agent or on the page it would change (see <a href="/people/#who-approves">who approves an agent's actions</a>). A model cannot approve its own work, declare an agent, or widen one. What an agent writes is a draft: it goes live only when somebody publishes (see <a href="/publishing/">Review, publish and roll back</a>).</p>
 <h3 id="approvals">Everything waiting, in one place<a class="anchor" href="#approvals" aria-hidden="true" tabindex="-1">#</a></h3>
-<p><span class="where">Approvals</span> lists everything waiting for you to decide: what agent runs are asking, questions they need answered, actions the reviewer stopped, tool calls held for a second person, a change waiting for your review, memories held until somebody confirms them, and features waiting to be installed. Each says what deciding commits to: reads, acts, writes, sends, pays, deletes, publishes or answers. <code>quilzo approvals</code> lists the same, with the command that decides each.</p>
+<p>What waits on a person is one list. <span class="where">Approvals</span> lists everything waiting for you to decide: what agent runs are asking, questions they need answered, actions the reviewer stopped, tool calls held for a second person, the change to the site waiting for approvals, features waiting to be installed and features agents drafted, newsletter issues agents proposed, and memories held until somebody confirms them. <span class="where">Today</span> and <code>quilzo approvals</code> hold the same items. Each says what deciding commits to: reads, acts, writes, sends, pays, deletes, publishes, installs or answers. <code>quilzo approvals</code> gives the command that decides each.</p>
+<p>Staff are told when an agent starts waiting: <code>approval.waiting</code> is in <code>notify.events</code> by default. The notice says which agent is waiting, never what it would do, and deciding is done signed in, under Approvals (see <a href="/settings/#staff">Telling staff</a>).</p>
 <p>When several runs wait on the same action, with the same input and the same reason, and the action only reads or acts, <strong>Let all go ahead</strong> approves them together. Anything that writes, sends, pays, deletes or publishes, and every question, is decided on its own page.</p>
 <h3 id="questions">Questions it cannot answer alone<a class="anchor" href="#questions" aria-hidden="true" tabindex="-1">#</a></h3>
-<p>An agent that asks a <a href="/assistant/">decider</a> a question, and gets an answer less sure than the decider requires, stops and asks a person instead. The run's page shows the question in its own shape, a list of options, yes or no, or a number from 0 to 1, with the model's guess and how sure it was. The run continues with your answer and never with the unsure one.</p>
+<p>An agent that asks a <a href="/assistant/">decider</a> a question, and gets an answer less sure than the decider requires, stops and asks a person instead. The run's page shows the question in its own shape, a list of options, yes or no, or a number from 0 to 1, with the model's guess and how sure it was. The run continues with your answer and never with the unsure one. What the decider did settle is kept: the step's result names your answers, then each one the decider settled, with how sure it was.</p>
 <pre><code>quilzo agent answer RUN STEP eligible=no</code></pre>
 <p>When the store names a <a href="/agent-limits/#reviewer">reviewer</a> and it refuses an action, the run stops on that action. <strong>Let it go ahead</strong> performs exactly that action without asking either model again.</p>
 <h2 id="read-runs">Read what it did<a class="anchor" href="#read-runs" aria-hidden="true" tabindex="-1">#</a></h2>
@@ -277,7 +281,36 @@ quilzo agent decline RUN 3</code></pre>
 <tr><td>See what runs cost</td><td><span class="where">Agents › Runs › What they cost</span></td><td><code>quilzo agent cost --by agent|person|goal|day</code></td></tr>
 </tbody></table></div>
 <figure class="shot"><img src="/images/agents/runs.webp" alt="The list of kept runs with each one's goal, outcome and counts" width="1280" height="800" loading="lazy" decoding="async"><figcaption>Every run, kept.</figcaption></figure>
+<p><code>quilzo agent trace RUN</code> ends with what the agent concluded, whether a model or its <a href="/programs/">program</a> decided, made printable first, since those words are the agent's to choose.</p>
 <p id="cost">Each step records the tokens and money of the model's choice and of whatever the action charged, at the model gateway's prices, so a run's cost is the sum of its steps. The run's page shows it beside each step. <span class="where">What they cost</span> groups the kept runs by agent, by who started them, by kind of goal or by day; numbers, addresses and quoted words are taken out of goals, so "Refund order 1234" and "Refund order 98" count as one kind of goal. A run a model decided with no price is shown as not priced rather than as free.</p>
+<h2 id="triggers">When it runs on its own<a class="anchor" href="#triggers" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>An agent can start without anybody pressing <strong>Run it once</strong>: at a time, or when something happens on the site. On the agent's page, under <strong>When it runs on its own</strong>, open <strong>Start it on its own</strong>, choose what starts it and what each run does, and press <strong>Add the trigger</strong>. Or:</p>
+<pre><code>quilzo agent trigger gardener add --every 24h --at 07:30 --zone Europe/London \
+  --goal "Check the planting calendar against the frost dates"
+quilzo agent trigger gardener add --on page.published --where /guides \
+  --per-day 6 --goal "Propose links to the new care guide"
+quilzo agent trigger gardener          # what starts it, and how many runs today
+quilzo agent trigger gardener remove 2</code></pre>
+<figure class="shot"><img src="/images/agents/triggers.webp" alt="When it runs on its own: gardener starts every day at 07:30 Europe/London and when pages go live under /guides, with 0 of 24 and 0 of 6 runs today" width="1280" height="800" loading="lazy" decoding="async"><figcaption>A daily trigger and an event trigger, each with its runs today.</figcaption></figure>
+<p>A schedule repeats every 15 minutes at the most often. With <code>--at</code> it repeats in whole days, at that time in the zone given (UTC when none), and keeps that time when the clocks change. <code>quilzo agent trigger events</code> lists the events:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To start it when</th><th scope="col">Add</th></tr></thead>
+<tbody>
+<tr><td>Pages go live, or the live site is rolled back</td><td><code>--on page.published</code>, <code>page.rolled-back</code></td></tr>
+<tr><td>A draft is proposed for review</td><td><code>--on draft.proposed</code></td></tr>
+<tr><td>Records in a collection change</td><td><code>--on record.changed</code></td></tr>
+<tr><td>Somebody sends a form</td><td><code>--on form.submitted</code></td></tr>
+<tr><td>Somebody books a service, or cancels</td><td><code>--on booking.made</code>, <code>booking.cancelled</code></td></tr>
+<tr><td>Somebody joins the newsletter, or leaves it</td><td><code>--on subscriber.joined</code>, <code>subscriber.left</code></td></tr>
+<tr><td>A visitor asks a chatbot for a person</td><td><code>--on handoff.requested</code></td></tr>
+<tr><td>A chatbot cannot answer a question</td><td><code>--on chatbot.unanswered</code></td></tr>
+</tbody></table></div>
+<p><code>--where</code> narrows an event to what it is about: a page path and everything under it, a collection, a form, a chatbot or a service. What started a run is given to it after its goal, as data and not as instructions.</p>
+<ul>
+<li><strong>Each run is its sponsor's</strong>, checked when it starts: an agent nobody answers for, or whose sponsor may no longer run it, does not start. It is capped at drafting and proposing whatever its sponsor holds, so publishing, and anything that goes out, is still a person's decision. It needs a model to decide with, since a run nobody asked for does not walk its declaration blind.</li>
+<li><strong>It does not run away.</strong> A trigger starts at most its day's runs (24 unless <code>--per-day</code> says otherwise, up to 500), never a second while one is still going, and never from something its own agent did. A chain of agents starting one another stops at three.</li>
+<li><strong>The admin server starts them.</strong> <code>quilzo serve</code> runs at most two triggered runs at once (<code>agents.trigger_runs</code>). <code>agents.triggers</code> turns triggers off for the store: nothing starts unless a person runs it, and turning them on again starts nothing for what happened meanwhile.</li>
+</ul>
 <h2 id="templates">The eight templates<a class="anchor" href="#templates" aria-hidden="true" tabindex="-1">#</a></h2>
 <p><code>quilzo agent templates</code> lists them with when to use each. Their defaults:</p>
 <div class="table-wrap"><table>
@@ -312,7 +345,7 @@ quilzo agent decline RUN 3</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-27 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/agents.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/agents.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/concepts/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Glossary: AI agents, MCP, A2A and the words Quilzo uses</span></a>
       <a class="pager-next" href="/agent-limits/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Limits that hold: what a hijacked AI agent still cannot do</span></a>
@@ -328,6 +361,7 @@ quilzo agent decline RUN 3</code></pre>
     <li><a href="#run">Run it</a></li>
     <li><a href="#approve">Approve or decline what it asks for</a></li>
     <li><a href="#read-runs">Read what it did</a></li>
+    <li><a href="#triggers">When it runs on its own</a></li>
     <li><a href="#templates">The eight templates</a></li>
     <li><a href="#autonomy">How far an agent may go on its own</a></li>
     <li><a href="#next">Next</a></li>

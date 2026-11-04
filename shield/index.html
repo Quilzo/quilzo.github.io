@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/shield/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-11-03">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Self-defending application: automatic, reversible protections">
 <meta name="twitter:description" content="Playbooks decided in advance block, slow, lock down or pause the moment an attack shows; every protection ends by itself; changes take two admins.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-03","description":"Playbooks decided in advance block, slow, lock down or pause the moment an attack shows; every protection ends by itself; changes take two admins.","headline":"The shield: Quilzo defends itself","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/shield/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/shield/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#protection","name":"Protection","position":2},{"@type":"ListItem","name":"The shield","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"Playbooks decided in advance block, slow, lock down or pause the moment an attack shows; every protection ends by itself; changes take two admins.","headline":"The shield: Quilzo defends itself","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/shield/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/shield/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#protection","name":"Protection","position":2},{"@type":"ListItem","name":"The shield","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -182,7 +182,7 @@
 <tr><td>What is in force</td><td><code>quilzo shield status</code></td></tr>
 <tr><td>End one now</td><td><code>quilzo shield lift ID</code></td></tr>
 <tr><td>Block or slow a source</td><td><code>quilzo shield block CIDR --where site --for 1h --reason "..."</code></td></tr>
-<tr><td>Turn a public feature down</td><td><code>quilzo shield feature chatbot:help --for 1h --reason "..."</code></td></tr>
+<tr><td>Turn a public feature down (see <a href="/shield/#features">the features</a>)</td><td><code>quilzo shield feature NAME --for 1h --reason "..."</code></td></tr>
 <tr><td>Admin to passkeys and SSO only; no publishing</td><td><code>quilzo shield lockdown --for 6h --reason "..."</code></td></tr>
 <tr><td>Pause an agent</td><td><code>quilzo shield pause AGENT --for 24h --reason "..."</code></td></tr>
 <tr><td>Cut a model route, suspend a credential or app</td><td><code>quilzo shield cut ROUTE / quilzo shield suspend gr_ID</code></td></tr>
@@ -197,9 +197,37 @@
 </tbody></table></div>
 <p>A playbook step that <em>opens a case</em> does not keep one here. It writes the request into the <a href="/logging/">audit log</a>, with the playbook, the signal, what it was about and a summary, for the security team's own tools to open the case from, such as a SIEM the log is streamed to (see <a href="/integrations/#stream">the audit log, streamed as it is written</a>). <a href="/cases/">Incident cases and Quilzo</a> says what the record holds.</p>
 <p>It never acts against this machine itself, or a network added with <code>quilzo shield trust add</code>: an administrator's own address keeps the admin, a lockdown nobody could get past is not applied, and the command line on the machine always works. Any other machine, on a private network or not, is blocked like any other, and <code>quilzo shield lift</code> on this machine ends a block.</p>
+<h2 id="features">The features it can turn down<a class="anchor" href="#features" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>A feature is turned off for the time given. A chatbot can instead be limited to quoting pages, with <code>--level limited</code>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Name</th><th scope="col">Turns down</th></tr></thead>
+<tbody>
+<tr><td><code>chatbots</code></td><td>Every chatbot on the site</td></tr>
+<tr><td><code>chatbot:NAME</code></td><td>One chatbot, by name</td></tr>
+<tr><td><code>forms</code></td><td>Every form on the site</td></tr>
+<tr><td><code>form:NAME</code></td><td>One form, by name</td></tr>
+<tr><td><code>boards</code></td><td>Members posting to boards</td></tr>
+<tr><td><code>signup</code></td><td>Making a new member account</td></tr>
+<tr><td><code>bookings</code></td><td>Booking an appointment on the site</td></tr>
+<tr><td><code>newsletter</code></td><td>Signing up to the newsletter</td></tr>
+<tr><td><code>fediverse</code></td><td>Activities other servers deliver to the fediverse inbox</td></tr>
+<tr><td><code>search-answers</code></td><td>AI answers in site search</td></tr>
+<tr><td><code>api</code></td><td>The content API</td></tr>
+<tr><td><code>mcp</code></td><td>The machine interface</td></tr>
+<tr><td><code>models</code></td><td>The model gateway for agents built anywhere, at <code>/v1</code></td></tr>
+<tr><td><code>scim</code></td><td>Provisioning from the identity provider</td></tr>
+<tr><td><code>signals</code></td><td>Security events from the identity provider (see <a href="/sso/#signals">single sign-on</a>)</td></tr>
+<tr><td><code>uploads</code></td><td>Media uploads</td></tr>
+<tr><td><code>import</code></td><td>Importing content</td></tr>
+<tr><td><code>feeds</code></td><td>Deliveries from other systems</td></tr>
+<tr><td><code>upload:ID</code></td><td>One uploaded file, by its id: quarantined, and answered as if it were not there</td></tr>
+</tbody></table></div>
+<p>The admin's sign-in, its screens and the shield's own are never among them.</p>
+<h2 id="telling">Who is told<a class="anchor" href="#telling" aria-hidden="true" tabindex="-1">#</a></h2>
+<p>Holding the playbooks (<code>quilzo shield hold</code>) stops the shield acting, not telling: a decoy touched during a hold is still told to the security contact, and holding and releasing are both told. Every alert is a mail to the <code>mailto:</code> address in <code>security.contact</code>, through the relay in <code>mail.json</code>. Without either, the posture finding <code>alerts.unrouted</code> says alerts reach nobody, and a mail that could not be sent is a failure on the record.</p>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-11-03 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/shield.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/shield.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/transfer/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Import, export, replicas and the permanent web</span></a>
       <a class="pager-next" href="/signins/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Sign-ins: risky ones confirmed, lockouts and where they come from</span></a>
@@ -207,6 +235,13 @@
   </footer>
 </article>
 </main>
+<aside class="toc" aria-label="On this page">
+  <h2>On this page</h2>
+  <ul>
+    <li><a href="#features">The features it can turn down</a></li>
+    <li><a href="#telling">Who is told</a></li>
+  </ul>
+</aside>
 </div>
 <footer class="foot">
   <div class="foot-inner">

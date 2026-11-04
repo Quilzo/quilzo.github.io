@@ -2,20 +2,22 @@
 title: Pages, sections and the editor
 short: Pages
 seo: Edit pages and sections, with every version kept by its hash
-description: Write pages in the admin or as JSON, build them from sections, leave notes, and see what differs from what is live, with every version kept by its hash.
+description: Write pages in the admin or as JSON, build them from sections and reusable blocks, share a draft by link, and see what differs from live, every version kept.
 lead: Pages are fields, not markup, and every version of every page is kept.
 icon: pages
 screens: Pages, Sections, Notes
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>A <strong>page</strong> is a set of fields; what it looks like is the template's job, so the same page can be a web page, a feed entry and an API response. Every change writes a new object named by its hash, and nothing is overwritten.</p></div>
 <h2 id="write">Write and change pages</h2>
 <figure class="shot"><img src="/images/pages/pages.webp" alt="The Pages screen listing every page in the draft and whether it differs from live"><figcaption>Pages: everything in the draft, and what differs from live.</figcaption></figure>
-<p>Open a page to edit it. A page bound to a <a href="/types/">type</a> gets a form built from the type; any other page gets a form over its own fields. From the command line:</p>
+<p>Open a page to edit it, or type an address in <strong>New page at</strong> on the Pages screen and press <strong>Start writing</strong> to open the editor on a new one. A page bound to a <a href="/types/">type</a> gets a form built from the type; any other page gets a form over its own fields. From the command line:</p>
 <pre><code>quilzo add returns=returns.json     # stage a page into the draft
 quilzo diff                          # what differs from live
 quilzo log                           # the history</code></pre>
+<p>The editor's preview shows what you type before you save. With the admin's script it follows you a moment after you stop typing; without it, <strong>Show in the preview</strong> does the same. Nothing is saved until <strong>Save to draft</strong>. The script also keeps text typed and not saved for the browser tab, so after a reload the editor offers it back with <strong>Put them back</strong> or <strong>Let them go</strong>.</p>
+<p>Beside the fields, <strong>Form on this page</strong> shows one of the site's <a href="/forms/">forms</a> at the foot of the page, and <strong>None</strong> takes it off. Under <strong>Search engines</strong>, a page can be left out of search results, or name the address it copies in <strong>Published first at</strong> (see <a href="/growth/#search-engines">Search engines</a>).</p>
 <h2 id="sections">Build a page from sections</h2>
 <figure class="shot"><img src="/images/pages/sections.webp" alt="The Sections screen"><figcaption>Sections, in order, with what is editable inside each.</figcaption></figure>
 <div class="table-wrap"><table>
@@ -26,7 +28,22 @@ quilzo log                           # the history</code></pre>
 <tr><td>Add one</td><td><code>quilzo section add PAGE KIND</code></td></tr>
 <tr><td>Reorder</td><td><code>quilzo section move PAGE N up</code></td></tr>
 <tr><td>Change what one says</td><td><code>quilzo section set PAGE N path=value</code></td></tr>
+<tr><td>Make a page a reusable block, or a page again</td><td><code>quilzo section block PAGE [--off]</code></td></tr>
+<tr><td>Show a block's sections on a page</td><td><code>quilzo section reuse PAGE BLOCK [--at N]</code></td></tr>
+<tr><td>List every block, and the pages that reuse it</td><td><code>quilzo section blocks</code></td></tr>
 </tbody></table></div>
+<p>A <strong>block</strong> is sections written once and shown on many pages, such as opening hours or a call to action. Change the block and every page that reuses it changes at the next publish. On the Sections screen, <strong>Reuse a block</strong> adds one to the page, and <strong>Make this page a reusable block</strong> turns the page into one. A block is never served on its own: it has no address, no place in the sitemap and no search result. A block still reused on a page cannot be deleted; take it off those pages first.</p>
+<h2 id="share">Share this draft</h2>
+<figure class="shot"><img src="/images/pages/editor-share.webp" alt="The editor for the Delivery in Hebden Bridge page: a notice Shared until 11 Nov 14:02 with the link, its secret redacted; beside the fields, Share this draft with For a week, Make a link, and the link listed with when it ends, who made it and Revoke"><figcaption>A week's link to the draft, for somebody with no account. The secret in the link is redacted here.</figcaption></figure>
+<p>A link shows somebody with no account a page as the draft is now, on the public site. Later changes do not reach it. It ends when it expires or is revoked.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">On the screen</th><th scope="col">Or run</th></tr></thead>
+<tbody>
+<tr><td>Share a page's draft for a day, a week or up to thirty days</td><td><strong>Make a link</strong>, in the page's editor</td><td><code>quilzo share PAGE --days 7</code></td></tr>
+<tr><td>See the links</td><td>Listed under <strong>Share this draft</strong></td><td><code>quilzo share list</code></td></tr>
+<tr><td>End one now</td><td><strong>Revoke</strong></td><td><code>quilzo share revoke ID</code></td></tr>
+</tbody></table></div>
+<p>The link opens an address under <code>/shared/</code>, marked not to be indexed. Making a link takes whoever may publish the page, and revoking one takes whoever may edit it. The link is shown once, when it is made, so copy it then: Quilzo keeps only a digest of its secret.</p>
 <h2 id="together">Working together</h2>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
@@ -37,6 +54,7 @@ quilzo log                           # the history</code></pre>
 <tr><td>Move a page and everything under it</td><td><code>quilzo move OLD NEW --dry-run</code></td></tr>
 <tr><td>Find broken links</td><td><code>quilzo links --broken</code></td></tr>
 </tbody></table></div>
+<p>Somebody signed in with a credential for part of the site, such as one issued <code>--on /blog</code>, is held to that path in bulk actions, the pages list, notes and links followed inside a preview.</p>
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">

@@ -6,7 +6,7 @@ description: Upload images and video with required descriptions, derive crops an
 lead: Uploads checked on the way in, originals kept, and where each picture came from recorded.
 icon: media
 screens: Media
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/media/media.webp" alt="The Media screen with the demo shop's product photographs"><figcaption>The media library.</figcaption></figure><div class="table-wrap"><table>
@@ -21,5 +21,11 @@ updated: 2026-10-08
 <tr><td>Declare how a picture was made</td><td><code>quilzo media origin ID --source-type T</code></td></tr>
 <tr><td>Check every C2PA manifest</td><td><code>quilzo media verify</code></td></tr>
 <tr><td>Generate one, marked as generated</td><td><code>quilzo media generate "..." --alt "..."</code></td></tr>
+<tr><td>Make a video from a prompt, marked as generated; like any video, it needs captions before a page shows it</td><td><code>quilzo media film "PROMPT" --author WHO [--aspect 9:16]</code></td></tr>
+<tr><td>Read text aloud: an MP3 marked as a synthetic voice, with its words as its transcript</td><td><code>quilzo media speak "text" --voice V --author WHO</code></td></tr>
+<tr><td>Draft a video's captions: a WebVTT file, kept unattached until a person reads it and attaches it with <code>quilzo media captions VIDEO DRAFT --lang en</code></td><td><code>quilzo media transcribe VIDEO --lang en --author WHO</code></td></tr>
 <tr><td>See licences that are running out</td><td><code>quilzo rights</code></td></tr>
 </tbody></table></div>
+<p>Making a picture, a video or a voice, and transcribing a recording, asks the store's models, so it needs the <code>use-models</code> permission, as the writing assistant does; storing what comes back needs <code>edit-draft</code>. <code>--author</code> names the person accountable for publishing it. Each goes through a route that does only that job: a video route for <code>film</code>, one that reads text aloud for <code>speak</code>, and one that transcribes for <code>transcribe</code> (see <a href="/models/#route-kinds">Models</a>). A recording's voices cannot be masked, so it is sent only to a route that may receive personal data.</p>
+<p>Transcription endpoints take a recording of at most 25 MB. A larger one is transcribed from its sound alone when ffmpeg is installed, and the draft is still timed as the video is.</p>
+<p>Every upload is checked by what its bytes are, never by its name. A CSV file is refused when any cell begins as a formula would, wherever a spreadsheet would start a cell: on every line, after a comma, a semicolon or a tab, and after the byte-order mark.</p>

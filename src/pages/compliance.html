@@ -5,7 +5,7 @@ seo: OSCAL SSP, NIST 800-53 controls, FedRAMP 20x KSIs and SBOM
 description: Show how Quilzo implements each NIST 800-53 control in OSCAL, draft an SSP, report FedRAMP 20x indicators, and give auditors one verifiable file.
 lead: What Quilzo does for each control, who does the rest, and evidence an auditor can check.
 icon: gavel
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <div class="table-wrap"><table>
@@ -21,7 +21,16 @@ updated: 2026-10-08
 <tr><td>Every algorithm and its post-quantum status</td><td><code>quilzo compliance crypto</code></td></tr>
 <tr><td>What the law asks of the published site</td><td><code>quilzo compliance site --statement</code></td></tr>
 <tr><td>An accessibility conformance report</td><td><code>quilzo compliance acr</code></td></tr>
+<tr><td>How backups are made and checked (CP-9)</td><td><code>quilzo compliance implementation CP-9</code></td></tr>
 </tbody></table></div>
+<p>What these say is what the code does:</p>
+<ul>
+<li><code>quilzo compliance summary</code> counts, from the cryptographic inventory, the quantum-broken algorithms Quilzo generates and those it only verifies.</li>
+<li>Each control and pledge statement says what is automatic and what happens only when somebody asks: a publication is timestamped and anchored by a command somebody runs, not on a schedule, and the hourly check of the binary is the admin server's, which the public site server does not run.</li>
+<li>A FedRAMP 20x indicator whose related controls nothing checks reads <strong>stated</strong> in <code>quilzo compliance ksi</code>, not contributes.</li>
+<li><code>quilzo posture scan --oscal</code> keeps a risk accepted with <code>posture suppress</code> as not satisfied, with who accepted it, until when and why.</li>
+<li>Backups are in the controls table as CP-9: what <code>quilzo backup</code> does, and what is left to you (see <a href="/install/#backups">Back up and upgrade</a>).</li>
+</ul>
 <h2 id="policy">Organisation policy, as NIST parameters</h2><pre><code>quilzo policy show
 quilzo policy propose ac-12_odp="8 hours" --reason "..."
 quilzo policy approve ID     # a second administrator</code></pre>
@@ -33,3 +42,4 @@ quilzo policy approve ID     # a second administrator</code></pre>
 <tr><td>One file of evidence, proofs and a signed head</td><td><code>quilzo engagement issue ID -o FILE</code></td></tr>
 <tr><td>Controls across a group of companies</td><td><code>quilzo entity report</code></td></tr>
 </tbody></table></div>
+<p>Closing an access review is the evidence for the quarterly control <code>quilzo/AC-2 account review</code> (see <a href="/people/#access-review">Review who has access</a>). <code>quilzo assurance report</code> measures it like any other periodic control: one review in a six-month window is unproven, two are covered.</p>

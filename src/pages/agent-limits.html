@@ -6,7 +6,7 @@ description: Scope what an AI agent reads and calls, cap what it spends in money
 lead: The declaration is enforced by code outside the model, so it holds however the model is persuaded.
 icon: rule
 screens: Agents
-updated: 2026-10-13
+updated: 2026-11-04
 -->
 
 <div class="definition"><p><strong>Prompt injection</strong> is text an agent reads that tells it to do something its user did not ask for. No classifier reliably tells those words from honest content. Quilzo does not try to: it limits what a run <em>can</em> do, records what it read, and stops for a person when private material and somebody else's words meet an outbound call.</p></div>
@@ -19,18 +19,20 @@ updated: 2026-10-13
 <tr><td><code>capabilities</code></td><td>The operations it may use: <code>read_page</code>, <code>write_page</code>, <code>search_pages</code> and the rest. The model picks from this list and cannot add to it.</td></tr>
 <tr><td><code>retrieval.ref</code></td><td>Whether it reads the <code>live</code> site (the default) or the <code>draft</code>, which nobody outside has seen.</td></tr>
 <tr><td><code>retrieval.types</code>, <code>locales</code>, <code>path</code></td><td>Only pages of these content types, in these languages, under this part of the site.</td></tr>
-<tr><td><code>tools</code></td><td>Tools on outside systems, each on exactly one host with a stated purpose. There are no wildcards. Tools are reached through integrations a person approved (see <a href="/integrations/">Tools and the MCP gateway</a>).</td></tr>
-<tr><td><code>delegates</code></td><td>For a supervisor, the agents it may hand work to. Each runs as the intersection of both declarations, on what is left of the supervisor's budget.</td></tr>
+<tr><td><code>tools</code></td><td>Tools on outside systems, each on exactly one host with a stated purpose. There are no wildcards. Tools are reached through integrations a person approved (see <a href="/integrations/">Tools and the MCP gateway</a>). A tool's step counts as a write when its integration says it writes, whatever the declaration's own label says.</td></tr>
+<tr><td><code>delegates</code></td><td>For a supervisor, the agents it may hand work to. Each runs as the intersection of both declarations, so it holds only the tools its supervisor names, on the same host, and gets only what is left of the run's steps, time, tokens and money. It acts for the person who started the run, and is charged to them.</td></tr>
 <tr><td><code>ask_first</code></td><td>The capabilities and tools that stop the run for a person.</td></tr>
 <tr><td><code>autonomy</code></td><td>propose, draft or publish: the most it may ever do. A model reaches it only by passing <a href="/evals/">evaluations</a>.</td></tr>
 </tbody></table></div>
 <p>A run is also bounded by the person who starts it. Somebody with only read access who runs an agent that may write gets a run that cannot write, and the run says which capabilities it lost and why.</p>
+<p>A tool is held to what its name says. Through the <a href="/agent-interface/">agent interface</a>, <code>quilzo_check</code> runs only the checks that gate publishing, and refuses anything else asked under its name.</p>
 
 <h2 id="budgets">Set a budget it cannot argue with</h2>
 <p>Every agent has a budget, and a declaration without one is refused. One run may use at most:</p>
 <pre><code>"budget": { "steps": 25, "tool_calls": 15, "duration": "10m0s", "tokens": 40000, "money": "0.50" }</code></pre>
 <p>Money is counted at each model route's own prices, in the gateway's currency. Across runs, the model gateway caps each caller by the minute, the day and the month, and an agent is charged against its own line:</p>
 <pre><code>quilzo gateway budget agent:returns-editor --money-per-day 5.00 --money-per-month 60.00</code></pre>
+<p>Every model call a run makes is charged to the run's budget and to the person who started it: the agent's own choices, a decider's questions, the reviewer's verdicts, a delegate's choices, and a chatbot the run asks with <code>ask_assistant</code>, the embedding of its question included. Pausing for a person keeps what was spent: approving a step does not give back what the run's steps and delegates used.</p>
 <p>An agent talked into a loop stops at its limit. See <a href="/models/">Models and the gateway</a> for routes and prices.</p>
 
 <h2 id="taint">Know what it read</h2>
@@ -88,11 +90,19 @@ updated: 2026-10-13
 <p>Name a model route as the reviewer, and every action an agent's model chooses is shown to it before it runs:</p>
 <pre><code>quilzo config set agent.reviewer ROUTE</code></pre>
 <p>The reviewer sees the goal a person set and the action chosen, and nothing of what the agent read, so nothing a page planted can reach it. It can let the action through or stop it; a stopped action waits for a person on the run's page, and <strong>Let it go ahead</strong> performs exactly that action.</p>
-<p>The reviewer is asked through the route named and no other, never a fallback, so it is a second model only when that route is one. Name a route other than the first, which is the one the agents try, and preferably another provider's: a model steered by something it read would steer a copy of itself the same way. A reviewer that cannot be reached stops the run. <code>quilzo config set agent.reviewer</code> and the Settings screen refuse a route that is not declared, and the security posture reports a reviewer on the first route or on a route since removed (<code>agent.reviewer-not-second</code>). Reviews are charged to <code>reviewer:AGENT</code> and to the person who started the run. It costs one more model call per action, and it is the last defence, not the only one: the declaration, the breaker and asking first come before it.</p>
+<p>A supervisor's delegate is reviewed as the supervisor is, against the goal of the person who started the run, and what it writes is marked as a model's work. A hand-off the reviewer refuses waits for a person, who is shown which agent the work goes to and what it is. Letting it go ahead decides the hand-off, and nothing the delegate then does.</p>
+<p>The reviewer is asked through the route named and no other, never a fallback, so it is a second model only when that route is one. Name a route other than the first, which is the one the agents try, and preferably another provider's: a model steered by something it read would steer a copy of itself the same way. A reviewer that cannot be reached stops the run. <code>quilzo config set agent.reviewer</code> and the Settings screen refuse a route that is not declared, and the security posture reports a reviewer on the first route or on a route since removed (<code>agent.reviewer-not-second</code>). Reviews are charged to the run, to <code>reviewer:AGENT</code> and to the person who started the run. It costs one more model call per action, and it is the last defence, not the only one: the declaration, the breaker and asking first come before it.</p>
 
 <h2 id="desktop">Desktop apps, and your own desktop (experimental)</h2>
-<p>An agent can work a desktop app in a <strong>desktop cell</strong>: a Firecracker or Cloud Hypervisor microVM, restored from a warm snapshot you build with the app inside, worked through its accessibility tree the way the browser is worked through a page. Presses that commit to something wait for a person, Enter always does, and typing into a cell is under the exfiltration breaker. One cell runs at a time. The image, with its apps and the helper inside it, is yours to build, and the microVM runs as Quilzo's user without Firecracker's jailer, which is why cells are experimental. <code>quilzo cell status</code> says whether this machine can run one; the settings are <code>cell.backend</code>, <code>cell.binary</code>, <code>cell.snapshot</code>, <code>cell.memory</code> and <code>cell.vsock</code>.</p>
-<p><code>quilzo desktop consent</code> asks your desktop's own dialog for your keyboard and pointer and gives the session straight back. No run may use your desktop.</p>
+<p>An agent can work a desktop app in a <strong>desktop cell</strong>: a Firecracker or Cloud Hypervisor microVM, restored from a warm snapshot with the app inside, worked through its accessibility tree the way the browser is worked through a page. Presses that commit to something wait for a person, Enter always does, and typing into a cell is under the exfiltration breaker. One cell runs at a time. The image, with its apps and the helper inside it, is yours to build, and the microVM runs as Quilzo's user without Firecracker's jailer, which is why cells are experimental. The settings are <code>cell.backend</code>, <code>cell.binary</code>, <code>cell.snapshot</code>, <code>cell.memory</code> and <code>cell.vsock</code>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See whether this machine can run a cell, and what it would restore</td><td><code>quilzo cell status</code></td></tr>
+<tr><td>Make the warm snapshot every session restores, from a cell you brought up and set up by hand</td><td><code>quilzo cell warm --socket API.SOCK</code></td></tr>
+</tbody></table></div>
+<p><code>quilzo cell warm</code> pauses the cell, writes its snapshot where <code>cell.snapshot</code> and <code>cell.memory</code> say (or <code>--snapshot</code> and <code>--memory</code>), resumes it and records it. It is an administrator's, as the settings that name the snapshot are.</p>
+<p><code>quilzo desktop consent</code> asks your desktop's own dialog for your keyboard and pointer and gives the session straight back. When it could not ask, it fails, so a script is never told the question was put. Declining is still an answer. No run may use your desktop.</p>
 
 <h2 id="watchdog">The watchdog, and the shield</h2>
 <p>Asking and accepting no is how an agent should behave. Reaching again and again for what it was never given is not. <code>quilzo agents</code> lists what each model and app has been doing and which are not accepting refusals. When one crosses the line, the watchdog flags it, the agent loses the autonomy its evaluations earned, and the <a href="/shield/">shield</a>'s <code>agent-misbehaving</code> playbook tells the security contact and whoever answers for the agent, and opens a case.</p>

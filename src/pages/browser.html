@@ -6,7 +6,7 @@ description: Let an AI agent read and act on websites in a sandboxed Chromium, w
 lead: An agent can open pages, fill in forms and sign in, in a browser Quilzo runs in its box and drives for it, one checked action at a time.
 icon: travel_explore
 screens: Agents
-updated: 2026-10-13
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>An agent's <strong>browser</strong> is Chromium running inside the agent's box, driven by Quilzo over a pipe only Quilzo holds. The agent never touches the browser. It asks for one action at a time, by name: open this address, type into that field, press that button. Each action is a step of the run, checked against the agent's declaration like any other. The agent cannot send the browser a raw command, read its cookies or run a script in a page.</p></div>
@@ -18,7 +18,15 @@ quilzo browser status</code></pre>
 <pre class="out"><code>/srv/quilzo/.quilzo/browser/155.0.8059.39/chrome-headless-shell-linux64/chrome-headless-shell
   from the pinned Chrome for Testing 155.0.8059.39
   runs in the agent box on this machine</code></pre>
-<p>A machine that cannot download it names a Chromium of its own in the <code>browser.path</code> setting, as an absolute path. That browser still runs in the box and is driven the same way, but nothing checks what it is, so it should be one you installed on purpose.</p>
+<p>A machine that cannot download it names a Chromium of its own in the <code>browser.path</code> setting, as an absolute path. <code>quilzo browser find</code> lists the Chrome and Chromium builds installed on this machine, with their versions, to choose from, and <code>quilzo browser status</code> then says which one is in use and its version. That browser still runs in the box and is driven the same way, but nothing checks what it is, so it should be one you installed on purpose.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Fetch the pinned build</td><td><code>quilzo browser install</code></td></tr>
+<tr><td>Find the builds this machine has</td><td><code>quilzo browser find</code></td></tr>
+<tr><td>Use one of them</td><td><code>quilzo config set browser.path PATH</code></td></tr>
+<tr><td>See which is in use, and its version</td><td><code>quilzo browser status</code></td></tr>
+</tbody></table></div>
 
 <h2 id="declare">Declare what it may reach</h2>
 <p>An agent holds the browser's actions as capabilities, and its declaration names the hosts its browser may reach, in two lists:</p>
@@ -58,7 +66,19 @@ quilzo browser status</code></pre>
 <tr><td><code>browser_click</code></td><td>Presses a button or link, as a pointer would, and answers with the page it led to.</td></tr>
 <tr><td><code>browser_sign_in</code></td><td>Fills in the open sign-in page with a declared credential and sends it. The model never sees the password.</td></tr>
 <tr><td><code>browser_look</code></td><td>Sends the model a picture of the page, for when the outline is not enough.</td></tr>
+<tr><td><code>browser_scroll</code></td><td>Scrolls by screens, down, up, left or right, or brings an element into view.</td></tr>
+<tr><td><code>browser_key</code></td><td>Presses one key where the focus is: Enter, Tab, Escape, Backspace, an arrow and the like. An Enter or a Space that would press a button, or send a form, is weighed as that press.</td></tr>
+<tr><td><code>browser_navigate</code></td><td>Goes back, forward, or reloads; never to a page a form led to, since that would send the form again.</td></tr>
+<tr><td><code>browser_wait</code></td><td>Waits until the page shows some text, or for some seconds, 30 at the most.</td></tr>
+<tr><td><code>browser_hover</code></td><td>Rests the pointer on an element, as for a menu that opens on hover.</td></tr>
+<tr><td><code>browser_emulate</code></td><td>Shows the page as a phone, tablet, laptop or desktop would, or at a width and height, in light or dark, with reduced motion, or as it prints.</td></tr>
+<tr><td><code>browser_console</code></td><td>Reads what the page logged: its errors, warnings and failed requests.</td></tr>
+<tr><td><code>browser_check</code></td><td>Checks the page's speed, its accessibility, and what a search engine reads of it.</td></tr>
+<tr><td><code>browser_save</code></td><td>Keeps the page in the workspace as a PDF, a picture of all of it, its markup or its words.</td></tr>
+<tr><td><code>browser_download</code></td><td>Presses a link or button that downloads a file, and keeps the file in the workspace's <code>downloads</code> folder, at most 32 MB, under a name of its own.</td></tr>
+<tr><td><code>browser_upload</code></td><td>Puts a workspace file into a page's file field, only on a host the agent may send to, and only after a person is told which file and where it would go.</td></tr>
 </tbody></table></div>
+<p>The last three work with the agent's <a href="/workspace/">workspace</a>: <code>browser_save</code> and <code>browser_download</code> need <code>file_write</code>, and <code>browser_upload</code> needs <code>file_read</code>. A declaration holding one without the other is refused when it is saved. What they write is held to the workspace's quota, and a run that only reads writes nothing.</p>
 <p>Text a page hides from people, such as <code>display:none</code>, <code>hidden</code> or <code>aria-hidden</code>, is not in the outline, so the agent does not read it either.</p>
 
 <h2 id="sign-in">Keep the credential sealed</h2>
@@ -70,8 +90,8 @@ quilzo browser status</code></pre>
 <pre><code>quilzo agent run buyer --model "Reorder two boxes of A4 paper"</code></pre>
 <p>Started from <span class="where">Agents</span> instead, the run opens on its own page straight away and keeps going while you watch. Some actions wait for a person in the run, which keeps the page open meanwhile:</p>
 <ul>
-<li><strong>A press that commits to something:</strong> a button that sends a form (wherever it sits on the page), a switch, a control called Pay, Send, Submit, Delete, Book, Agree, Confirm, Save and the like, and a choice in a list that belongs to a form that sends or acts as soon as it changes.</li>
-<li><strong>Every sign-in.</strong></li>
+<li><strong>A press that commits to something:</strong> a button that sends a form (wherever it sits on the page), a switch, a control called Pay, Send, Submit, Delete, Book, Agree, Confirm, Save and the like, and a choice in a list that belongs to a form that sends or acts as soon as it changes. An Enter or a Space that would press one is weighed as that press, and so is the press <code>browser_download</code> makes.</li>
+<li><strong>Every sign-in, and every file put into a page.</strong></li>
 <li><strong>Carrying something out:</strong> once the run holds something private and has read a page somebody else wrote, any address the model opens and any text it types waits for a person. That is <a href="/agent-limits/#exfiltration-breaker">the exfiltration breaker</a>, since an address and a field are how a page can trick an agent into sending what it saw.</li>
 </ul>
 <p>The run's page shows the question with a picture of the page and the element outlined in red. Let it go ahead, or decline, there or with <code>quilzo agent approve RUN STEP</code> (or <code>decline</code>). If nobody answers before the run's time is up, the action is refused. Before a press goes ahead, the element is checked to still be what was read, and what is under the pointer is checked once the pointer is there and again once the button is down. A page that renames a button after it was read, lays something over it, slides something under the pointer as it arrives, or hides another control inside it, gets no click. A control inside another one has a reference of its own, so the agent presses the one it means.</p>
@@ -86,7 +106,7 @@ quilzo browser status</code></pre>
 <p>A page can tell an agent anything. These hold regardless of what it says:</p>
 <ul>
 <li><strong>Every request is decided before it leaves.</strong> The browser pauses each one, and Quilzo continues it only if it is https, to a declared host, and only reading on a read host. Underneath that, the box's network goes nowhere but a proxy that lets through the declared hosts, on port 443.</li>
-<li><strong>Nothing the page starts goes unwatched.</strong> A frame from another site, a worker or a service worker is held before it runs anything, until its requests pass the same rule, and stays watched when the page moves on. One that cannot be watched never runs. Windows the page tries to open are blocked, pages are not loaded ahead of time, and downloads are refused.</li>
+<li><strong>Nothing the page starts goes unwatched.</strong> A frame from another site, a worker or a service worker is held before it runs anything, until its requests pass the same rule, and stays watched when the page moves on. One that cannot be watched never runs. Windows the page tries to open are blocked, pages are not loaded ahead of time, and a download is refused unless <code>browser_download</code> is waiting for it.</li>
 <li><strong>No sockets.</strong> A WebSocket is the one connection a browser cannot pause, so pages, frames and workers get none: the ways to open one are taken out before the page's own script runs, and one opened anyway is reported.</li>
 <li><strong>Checks the page cannot fake.</strong> Filling in a field, choosing an option, asking what a button does and checking what is under the pointer run in a world of Quilzo's own inside the page, which the page's scripts cannot reach. Text dressed as one of the outline's references is not one.</li>
 <li><strong>Pictures go only where personal data may.</strong> A screenshot goes to the model only through the gateway, and only when a route is marked as allowed personal data. A directly configured model gets the outline.</li>
@@ -96,13 +116,13 @@ quilzo browser status</code></pre>
 <h2 id="other-agents">Let another vendor's agent use it</h2>
 <p>An agent you did not build, such as Claude Code, Codex or anything that speaks MCP, can drive a browser through Quilzo under a grant you declare, without ever holding the browser itself:</p>
 <pre><code>quilzo browser grant shop --read shop.example.com --write shop.example.com --daily 50</code></pre>
-<p>It is offered at <code>/mcp/browser/shop</code> on the admin, to any token that reaches that path: a reader's to read pages, an author's to act on them. It can also present an <a href="/agent-identity/#credentials">agent credential</a> instead of a token. Each call is a step of a kept run, under the same host rule and breaker as an agent's own browser. A press that commits to something is held until an administrator other than the caller approves it, once, within the hour. A grant never signs in; <code>--pictures</code> lets it look at the page, and <code>--off</code> withdraws it.</p>
+<p>It is offered at <code>/mcp/browser/shop</code> on the admin, to any token that reaches that path: a reader's to read pages, an author's to act on them. It can also present an <a href="/agent-identity/#credentials">agent credential</a> instead of a token. Each call is a step of a kept run, under the same host rule and breaker as an agent's own browser. A press that commits to something is held until an administrator other than the caller approves it, once, within the hour. A grant offers every action but signing in, saving, downloading and uploading, scrolling, keys, waiting and the checks included; <code>--ops</code> narrows it to the ones named, <code>--pictures</code> lets it look at the page, and <code>--off</code> withdraws it.</p>
 
 <h2 id="remember">Remember a flow that worked</h2>
 <p>With <code>browser.cache</code> on, a step that worked on a page is remembered, and the next run that sees the same page for the same goal, started by the same person, replays it without asking the model. Each remembered step passes every check a decided one does, and is confirmed by the page that follows it. When the page is not the one remembered, the model decides again and the memory is dropped. Signing in is never remembered. What is remembered is sealed with the store's keyring, and each replay is in the log.</p>
 
 <h2 id="dialects">Models that answer in their maker's words</h2>
-<p>Models trained for computer use answer in their maker's own shapes. Name the shape in the declaration and Quilzo translates it onto its own actions: <code>"dialect": "anthropic-computer"</code>, <code>"anthropic-browser"</code>, <code>"openai-computer"</code> or <code>"gemini-computer"</code>. A click by coordinate becomes a press of the element at that point, and is weighed as that element. Anything with no honest equivalent, such as a scroll, a drag or a right click, is refused rather than approximated, and a dialect never adds anything the declaration does not hold.</p>
+<p>Models trained for computer use answer in their maker's own shapes. Name the shape in the declaration and Quilzo translates it onto its own actions: <code>"dialect": "anthropic-computer"</code>, <code>"anthropic-browser"</code>, <code>"openai-computer"</code> or <code>"gemini-computer"</code>. A click by coordinate becomes a press of the element at that point, and is weighed as that element. Where the dialect has them, a scroll, a key, a wait, a hover and going back become <code>browser_scroll</code>, <code>browser_key</code>, <code>browser_wait</code>, <code>browser_hover</code> and <code>browser_navigate</code>. Anything with no honest equivalent, such as a drag, a right click or a key held down with another, is refused rather than approximated, and a dialect never adds anything the declaration does not hold.</p>
 
 <h2 id="evaluate">Evaluate it against planted instructions</h2>
 <p>An evaluation of an agent with a browser plants, beside the usual instructions, the kinds web pages carry. Those include text hidden off the screen, a label only a screen reader speaks, and a comment left for an assistant, each pushing the agent to send something out. A plant that works once in several tries still works, so try each one more than once:</p>
@@ -113,7 +133,7 @@ quilzo browser status</code></pre>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">Setting</th><th scope="col">What it does</th></tr></thead>
 <tbody>
-<tr><td><code>browser.path</code></td><td>A Chromium on this machine to use instead of the pinned one, as an absolute path.</td></tr>
+<tr><td><code>browser.path</code></td><td>A Chromium on this machine to use instead of the pinned one, as an absolute path. <code>quilzo browser find</code> lists them.</td></tr>
 <tr><td><code>browser.sessions</code></td><td>How many agents' browsers may run at once on this machine (2). A run that would start one more waits for one to finish.</td></tr>
 <tr><td><code>browser.cache</code></td><td>Whether a flow that worked is replayed without a model call (off).</td></tr>
 </tbody></table></div>

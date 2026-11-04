@@ -6,7 +6,7 @@ description: Leave whenever you like: export to Markdown, WordPress WXR, lossles
 lead: No lock-in, and how that is proved: every way out and in.
 icon: transfer
 screens: Transfer, Permanent web
-updated: 2026-10-29
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/transfer/transfer.webp" alt="The Transfer screen"><figcaption>Export and import.</figcaption></figure><div class="table-wrap"><table>
@@ -20,6 +20,9 @@ updated: 2026-10-29
 <tr><td>Bring a site from its export: WordPress, Squarespace, Ghost, or a folder of Markdown or pages</td><td><code>quilzo site import FILE --install</code> (see <a href="/bring/#export">Bring your site</a>)</td></tr>
 <tr><td>Import pages alone from a WordPress export, Markdown or JSON</td><td><code>quilzo import FILE</code></td></tr>
 <tr><td>Replicate from another store</td><td><code>quilzo peer add NAME https://host</code></td></tr>
+<tr><td>What the permanent web will call this site</td><td><code>quilzo ipfs id</code></td></tr>
 <tr><td>Render for IPFS</td><td><code>quilzo ipfs write -o site</code></td></tr>
 <tr><td>Federate on the fediverse</td><td><code>quilzo fediverse init</code></td></tr>
 </tbody></table></div><figure class="shot"><img src="/images/transfer/permanent-web.webp" alt="The Permanent web screen"><figcaption>The site's IPFS identifier.</figcaption></figure>
+<p>The <strong>Permanent web</strong> screen gives the same content identifier as <code>quilzo ipfs id</code>, because both copy the site the public server serves: its pages, sitemap, feeds and the structured data on each page. So neither bundles a page for members only, or one whose time to be public has not come. An agent card that does not validate is left out of a static copy, rather than failing it.</p>
+<p>An export names the site by its address without the scheme's own port, so <code>https://example.org:443</code> is written as <code>https://example.org</code>.</p>

@@ -6,12 +6,14 @@ description: A read-only or writable JSON content API with If-Match, and a comma
 lead: The content API for applications, and the command line for scripts, pipelines and agents.
 icon: playground
 screens: API
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <h2 id="content-api">Serve the content API</h2>
 <pre><code>quilzo site --api                 # read-only, at /api/v1
 quilzo site --api --api-writable  # PUT allowed; every write needs If-Match</code></pre><p>A write must carry the version it was based on, so two writers cannot silently overwrite each other. Try it against your own store in <span class="where">Reference › API</span>.</p>
+<p>These are the public site's flags, and <code>quilzo site --help</code> lists them; <code>quilzo serve</code> has neither. The admin serves the same API read-only, for the playground. A write that a read-only API refuses names the fix: <code>quilzo site --api --api-writable</code>.</p>
+<p>Both, the site's and the admin's, read the access rules again on every request when they have changed, so a grant made or taken away while they run counts at once. <code>/api/v1/openapi.json</code> describes every route as an OpenAPI 3.1 document, for a client generator or an agent. It is the same for every installation and needs no token; every route it describes does.</p>
 <figure class="shot"><img src="/images/api/playground.webp" alt="The API playground in the admin"><figcaption>The API playground.</figcaption></figure>
 <h2 id="cli">The command line</h2>
 <p>Everything the admin does, the command line does, through the same code. <code>quilzo help</code> lists every command. Each takes <code>--json</code> and then writes one JSON document to stdout, and <code>--root DIR</code> chooses the store.</p>

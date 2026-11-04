@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/models/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-11-03">
+<meta property="article:modified_time" content="2026-11-04">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="LLM gateway for AI agents: budgets, PII masking, memory">
 <meta name="twitter:description" content="One gateway for every AI agent&#39;s model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-03","description":"One gateway for every AI agent's model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.","headline":"LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/models/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/models/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#models-and-chatbots","name":"Models and chatbots","position":2},{"@type":"ListItem","name":"Models and the gateway","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-04","description":"One gateway for every AI agent's model calls, built here or in any framework: fallback routes, budgets in money, PII masking and memory.","headline":"LLM gateway: model routes, budgets in money and a privacy guard, for any AI agent","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/models/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/models/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#models-and-chatbots","name":"Models and chatbots","position":2},{"@type":"ListItem","name":"Models and the gateway","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -180,15 +180,23 @@
 <h2 id="one-model">The quickest start: one model<a class="anchor" href="#one-model" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>With no routes declared, every call goes to the model in two environment variables. Any OpenAI-compatible endpoint works: Ollama, vLLM, LM Studio, llama.cpp, or a hosted provider.</p>
 <pre><code>export QUILZO_MODEL_URL=http://127.0.0.1:11434/v1
-export QUILZO_MODEL=llama3.1</code></pre>
-<p>A key, if the endpoint needs one, goes in <code>QUILZO_MODEL_KEY</code>. Quilzo sends a key only over https, or to a model on this machine.</p>
+export QUILZO_MODEL=MODEL</code></pre>
+<p><code>MODEL</code> is the name the endpoint gives the model you chose. A key, if the endpoint needs one, goes in <code>QUILZO_MODEL_KEY</code>. Quilzo sends a key only over https, or to a model on this machine.</p>
 <h2 id="routes">Add routes, in fallback order<a class="anchor" href="#routes" aria-hidden="true" tabindex="-1">#</a></h2>
 <ol class="steps">
 <li>
 <h3 id="add-each-model-as-a-route">Add each model as a route<a class="anchor" href="#add-each-model-as-a-route" aria-hidden="true" tabindex="-1">#</a></h3>
-<p>Open <span class="where">Administration › Models</span> and fill in <strong>Add a route</strong>: a name, the address, the model name, the environment variable holding its key (never the key itself), and what a million tokens cost there. Or:</p>
+<p>Open <span class="where">Administration › Models</span> and fill in <strong>Add a route</strong>: a name, the provider, the model name, the sealed credential holding its key (never the key itself), and what a million tokens cost there.</p>
+<p>Quilzo knows more than forty providers by profile: runtimes on this machine or your network, model makers, open-model hosts, routers to many providers, cloud platforms and regional providers. Each profile gives the provider's address, how it takes its key, and what it says it does with what it is sent: whether it trains on it, how long it keeps it, and where it is processed. The <strong>Provider</strong> list on the Models screen offers the same profiles.</p>
+<pre><code>quilzo gateway providers
+quilzo gateway providers mistral-eu</code></pre>
+<p>A route that names a provider takes the profile's address and the way it sends its key, and reaches that provider's host and nothing else. A route given another host fails every call, so a typo or a planted address cannot carry a key off. Keep the key sealed and name it with <code>--key-secret</code>; the profile suggests the name:</p>
 <pre><code>quilzo gateway currency GBP
-quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model llama3.1 \
+quilzo secret set mistral &lt; keyfile
+quilzo gateway route add hosted-eu --provider mistral-eu --model MODEL --key-secret mistral \
+  --price-in 2.50 --price-out 10.00</code></pre>
+<p>A <code>providers.json</code> in the store's <code>.quilzo</code> folder adds the operator's own profiles, and one with a built-in profile's id replaces it. Any OpenAI-compatible endpoint also works by its address, with its key in an environment variable:</p>
+<pre><code>quilzo gateway route add on-premises --url http://127.0.0.1:11434/v1 --model MODEL \
   --personal --price-in 0.05 --price-out 0.20 --first
 quilzo gateway route add hosted --url https://models.example.com/v1 --model example-large \
   --key-env EXAMPLE_API_KEY --price-in 2.50 --price-out 10.00</code></pre>
@@ -198,13 +206,21 @@ quilzo gateway route add hosted --url https://models.example.com/v1 --model exam
 <thead><tr><th scope="col">Option</th><th scope="col">Sends</th></tr></thead>
 <tbody>
 <tr><td><code>--max-tokens-field max_completion_tokens</code></td><td>The output limit under that name, for OpenAI's reasoning models. The default is <code>max_tokens</code>.</td></tr>
-<tr><td><code>--temperature T</code>, <code>--top-p P</code></td><td>That sampling on every call. Claude's current models refuse both.</td></tr>
+<tr><td><code>--temperature T</code>, <code>--top-p P</code></td><td>That sampling on every call. Anthropic's Messages API refuses both on every model, so a route to it with either is refused where the route is made.</td></tr>
 <tr><td><code>--timeout 300s</code></td><td>Nothing; it lets one call take that long, for a model that reasons at length. The default is two minutes.</td></tr>
 <tr><td><code>--auto-tool-choice</code></td><td><code>auto</code> where a caller forces a tool, for a model that refuses a forced choice.</td></tr>
+<tr><td><code>--effort low|medium|high|xhigh|max</code></td><td>How hard the model thinks (<strong>How hard it thinks</strong>).</td></tr>
+<tr><td><code>--geo us</code></td><td>That the model runs in the US only (<strong>Where it may run</strong>). <code>global</code> is the provider's default.</td></tr>
+<tr><td><code>--server-fallback</code></td><td>That a request the model declines may be answered by another of the provider's models, for the models that take it.</td></tr>
 </tbody>
 </table>
 <pre><code>quilzo gateway route add reasoning --url https://models.example.com/v1 --model example-reasoner \
   --key-env EXAMPLE_API_KEY --max-tokens-field max_completion_tokens --timeout 300s</code></pre>
+<p>The last three are for a provider spoken to in its own Messages API, and are refused for any other. <code>quilzo gateway providers anthropic</code> says that its profile speaks it:</p>
+<pre><code>quilzo secret set anthropic &lt; keyfile
+quilzo gateway route add careful --provider anthropic --model MODEL --key-secret anthropic \
+  --effort high --geo us --server-fallback</code></pre>
+<p>A request the model's safeguards decline goes back to whoever asked, with the provider's reason when it gives one. It is not sent to the next route and rests nothing: routing round a provider's safeguard is not a fallback.</p>
 </li>
 <li>
 <h3 id="check-the-order">Check the order<a class="anchor" href="#check-the-order" aria-hidden="true" tabindex="-1">#</a></h3>
@@ -226,13 +242,28 @@ quilzo gateway budget '*' --money-per-day 20.00</code></pre>
 <figure class="shot"><img src="/images/models/spend.webp" alt="Today's spending by caller: person dana, agent help-desk and agent returns-editor, with tokens and money, and the budgets table below" width="1280" height="800" loading="lazy" decoding="async"><figcaption>Spending by caller, against their budgets.</figcaption></figure>
 <pre><code>quilzo gateway status</code></pre>
 <pre class="out"><code>routes, in fallback order
-  on-premises  http://127.0.0.1:11434/v1 llama3.1  no key needed; may receive personal data
+  on-premises  http://127.0.0.1:11434/v1 MODEL  no key needed; may receive personal data
   hosted  https://models.example.com/v1 example-large  key in $EXAMPLE_API_KEY; personal data masked
 today
   agent:returns-editor  4463 characters no daily limit, 3 call(s), 0 failed, 0 refused
     1112 tokens, 0.000067 GBP today of 5.00, 0.000067 this month of 60.00</code></pre>
 </li>
 </ol>
+<h3 id="route-kinds">Routes for pictures, embeddings, voice and video<a class="anchor" href="#route-kinds" aria-hidden="true" tabindex="-1">#</a></h3>
+<p>A route answers in words unless it is added as one of these. Each is used for its one job and nothing else, under the callers' budgets and in the same record as words:</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Option</th><th scope="col">On the Models screen</th><th scope="col">What uses it</th></tr></thead>
+<tbody>
+<tr><td><code>--draws</code>, priced with <code>--price-picture</code></td><td><strong>It draws pictures</strong>, <strong>Price of a picture</strong></td><td><code>quilzo media generate</code>. Add <code>--ask-base64</code> (<strong>Ask it for the picture itself</strong>) for an endpoint that otherwise answers with a link, which is never fetched.</td></tr>
+<tr><td><code>--embeds</code></td><td><strong>It makes embeddings</strong></td><td>Chatbots that find passages by meaning, once it is named in <code>chatbot.embeddings</code> (see <a href="/chatbots/#embeddings">Chatbots</a>).</td></tr>
+<tr><td><code>--speaks</code></td><td><strong>It reads text aloud</strong></td><td><code>quilzo media speak</code>. Text holding personal data goes only to a route that may receive it, since a voice cannot leave it out.</td></tr>
+<tr><td><code>--transcribes</code>, priced with <code>--price-minute</code></td><td><strong>It transcribes recordings</strong>, <strong>Price of a minute of recording</strong></td><td><code>quilzo media transcribe</code>. Voices cannot be masked, so it is sent a recording only when it is marked <code>--personal</code>.</td></tr>
+<tr><td><code>--films</code>, priced with <code>--price-video</code></td><td>The command line only</td><td><code>quilzo media film</code>, through a provider that makes video: <code>google-veo</code> or <code>fal</code>.</td></tr>
+</tbody></table></div>
+<pre><code>quilzo gateway route add pictures --provider openai --model MODEL --key-secret openai \
+  --draws --price-picture 0.04
+quilzo gateway route add meaning --provider openai --model MODEL --key-secret openai \
+  --embeds --price-in 0.02</code></pre>
 <h2 id="privacy-guard">The privacy guard<a class="anchor" href="#privacy-guard" aria-hidden="true" tabindex="-1">#</a></h2>
 <p>Before a prompt leaves for a route that may not receive personal data, Quilzo replaces each personal value with a placeholder such as <code>&lt;quilzo:email:1&gt;</code>. The same value gets the same placeholder every time, so the model can still tell one customer from another. The placeholders are swapped back in the answer, so it reads as if nothing was taken out. The model never sees a value, and the record of what was masked holds only counts by kind.</p>
 <div class="table-wrap"><table>
@@ -304,7 +335,7 @@ reply = client.chat.completions.create(model="agent/concierge",
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-11-03 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/models.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-04 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/models.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/memory/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">AI agent memory people can see, correct and erase</span></a>
       <a class="pager-next" href="/chatbots/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">A RAG chatbot that answers from your pages and cites its sources</span></a>

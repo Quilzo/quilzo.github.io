@@ -2,11 +2,11 @@
 title: People, roles and permissions for working with agents
 short: People and access
 seo: Roles and agent permissions with denies, jobs and expiry
-description: Grant roles on any part of the site, give jobs and agent permissions such as approve on one agent, deny where it must win, and explain why anybody can act.
+description: Grant roles on any part of the site, give jobs and agent permissions, deny where it must win, explain why anybody can act, and review who has access.
 lead: Who may do what, where, and until when.
 icon: people
 screens: People, Access
-updated: 2026-10-21
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/people/people.webp" alt="The People screen"><figcaption>People and their access.</figcaption></figure><div class="table-wrap"><table>
@@ -14,7 +14,7 @@ updated: 2026-10-21
 <tbody>
 <tr><td>Grant a role on part of the site</td><td><code>quilzo auth grant dana author --on /help</code></td></tr>
 <tr><td>Give somebody a link that adds their passkey</td><td><code>quilzo auth enrol dana</code>, or <strong>Give a passkey enrolment link</strong> beside them on this screen</td></tr>
-<tr><td>A job that must end</td><td><code>quilzo auth grant sam analyst --for 30d</code></td></tr>
+<tr><td>A job for a set time</td><td><code>quilzo auth grant sam analyst --for 30d</code></td></tr>
 <tr><td>Access that ends by itself</td><td><code>quilzo auth grant ... --until 2026-12-31</code></td></tr>
 <tr><td>A deny wins wherever it sits</td><td><code>quilzo auth deny sam publisher --on /legal</code></td></tr>
 <tr><td>Why somebody can or cannot</td><td><code>quilzo auth explain sam publish</code></td></tr>
@@ -23,28 +23,62 @@ updated: 2026-10-21
 <tr><td>Give somebody a role an app declares</td><td><code>quilzo auth grant tess lab-samples/technician</code></td></tr>
 <tr><td>Let somebody work on one collection of records</td><td><code>quilzo auth grant tech author --on /@data/samples</code></td></tr>
 <tr><td>Break-glass when every admin token is lost</td><td><code>quilzo auth recover</code></td></tr>
-</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor, each of which must end. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p><p>A grant or a deny on part of the site holds everywhere: on the command line, in the admin and over the machine interface. A list, a search or a diff shows only the pages the person may read, a publish is refused if it would change a page they may not publish, and an export is refused if it would hold a page or a collection they may not read.</p>
+</tbody></table></div><p>Roles: reader, author, publisher and admin. Jobs: analyst, compliance, support and auditor; an auditor's must end, so it takes <code>--for</code> or <code>--until</code>. An agent is a principal too (see <a href="/agent-identity/#principals">agents as principals</a>).</p><p>A grant or a deny on part of the site holds everywhere: on the command line, in the admin and over the machine interface. A list, a search or a diff shows only the pages the person may read, a publish is refused if it would change a page they may not publish, and an export is refused if it would hold a page or a collection they may not read.</p>
 
 <h2 id="two-administrators">Changes that take two administrators</h2>
 <p>One administrator asks and another approves (NIST SP 800-53 AC-5, CM-5(4) and AU-9(5)):</p>
 <ul>
 <li>making somebody an administrator of anything;</li>
 <li>issuing an administrator's token;</li>
+<li>an enrolment link for an administrator;</li>
+<li>the provisioning token while a group mapping makes administrators, or waits to (see <a href="/provisioning/">Provisioning</a>);</li>
 <li>a setting weaker than its default;</li>
 <li>fewer approvals for a change (<code>review.required_approvals</code>, <code>approval.required_humans</code>);</li>
 <li>moving the audit log (<code>quilzo auditlog dir</code>);</li>
 <li>a shield playbook change, or letting held playbooks act again.</li>
 </ul>
-<p>Asked here or on the command line, a change waits under <strong>Waiting for a second administrator</strong> for up to a week. Nobody approves their own. An administrator's token is issued to whoever asked, within a day of being approved.</p>
+<p>Asked here or on the command line, a change waits under <strong>Waiting for a second administrator</strong> for up to a week. Nobody approves their own. An approved token or enrolment link is received once, by whoever asked, within a day, with <code>quilzo pending redeem ID</code>. An enrolment link or a provisioning token can also be received on this screen, with <strong>Receive the link</strong> or <strong>Receive the token</strong>.</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Do</th></tr></thead>
 <tbody>
 <tr><td>See what is waiting</td><td><code>quilzo pending</code>, or this screen</td></tr>
 <tr><td>Approve or decline one</td><td><code>quilzo pending approve ID</code>, <code>quilzo pending decline ID</code>, or the buttons here</td></tr>
 <tr><td>Take back your own</td><td><code>quilzo pending withdraw ID</code></td></tr>
-<tr><td>Receive an approved administrator's token</td><td><code>quilzo pending redeem ID</code></td></tr>
+<tr><td>Receive an approved token or link, once</td><td><code>quilzo pending redeem ID</code>, or <strong>Receive</strong> here</td></tr>
+<tr><td>See what approving a group mapping lets the provisioning token do</td><td><code>quilzo pending show ID</code></td></tr>
 </tbody></table></div>
-<p>A store with one administrator is not left unable to change anything: their change is made as they ask, and the record says it was approved alone.</p>
+<p>A group mapped to administrator lets whoever holds the provisioning token make anybody an administrator, by putting them in the group. So <code>quilzo pending show ID</code> lists, for such a mapping, every provisioning token that works now: who made it, when, and how it was approved. This screen shows the same under <strong>Approving this lets the provisioning token make administrators</strong>.</p>
+<figure class="shot"><img src="/images/people/pending.webp" alt="A request waiting for a second administrator: a group mapped to admin, and the provisioning token it would let make administrators"><figcaption>A group mapped to admin waits, and names the provisioning token it would let make administrators.</figcaption></figure>
+<p>A store with one administrator is not left unable to change anything: their change is made as they ask, and the record says it was approved alone. Not for a day after another administrator is removed, though: until then the one left cannot approve anything alone (their own requests, playbooks, policy changes, installs, the first token), unless a second administrator holds the role again. A store that only ever had one administrator is unaffected.</p>
+<p>The standing is the session's, not only the person's. A session confined to <code>/@security</code>, or capped at reader, cannot change the shield, the organisation's policy or another administrator's standing, such as unlocking one, even when its person administers the whole store.</p>
+<h2 id="access-review">Review who has access</h2>
+<p>Access granted to unblock somebody is never taken back by itself. So an administrator reviews, every <code>access.review.every</code>, the access only Quilzo holds, and keeps or revokes each part of it:</p>
+<ul>
+<li>every grant made by hand, with a role in an app counted once;</li>
+<li>what each identity provider group means here, one item for each group however many people are in it;</li>
+<li>every long-lived token.</li>
+</ul>
+<p>Sessions end within a day, an agent's identity is renewed rather than reviewed, a grant that provisioning made is the identity provider's to review, and the site's members hold nothing in the admin, so none of those is in it. A review falls due every 90 days by default (<code>access.review.every</code>, between 30 and 365 days), and never further apart than <code>ac-02_odp.10</code> when the organisation declares it (see <a href="/compliance/#policy">NIST parameters</a>).</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Start one: a snapshot, one review open at a time</td><td><code>quilzo access review start</code>, or <strong>Start a review</strong> on this screen</td></tr>
+<tr><td>See what there is to decide, dormant and privileged first</td><td><code>quilzo access review items [--json]</code></td></tr>
+<tr><td>Revoke an item, at once</td><td><code>quilzo access review decide 3 revoke</code>, or <strong>Revoke</strong></td></tr>
+<tr><td>Keep one, and say why</td><td><code>quilzo access review decide 4 keep --why "edits the handbook"</code>, or <strong>Why</strong> and <strong>Keep</strong></td></tr>
+<tr><td>Close it, once every item is decided</td><td><code>quilzo access review close</code>, or <strong>Close the review</strong></td></tr>
+</tbody></table></div>
+<figure class="shot"><img src="/images/people/review.webp" alt="Review who has access on the People screen: a dormant token proposed for revoke, privileged grants with a Why field, one item kept, two items of the reviewer's own, and Close the review"><figcaption>A review open on People: a token nobody has used proposed for revoke, privileged grants waiting for a reason, and the reviewer's own access left for another administrator.</figcaption></figure>
+<p>Each item says how and when it was granted, by whom for a grant made by hand, until when, and when it was last active. The rules are the ones that make a review one:</p>
+<ul>
+<li>Anything nobody has used for ninety days is tagged <strong>dormant: proposed revoke</strong> and listed first, then items tagged <strong>privileged</strong>: administration, the security, compliance or log areas, or a permission only an administrator otherwise holds. Keeping privileged access needs a reason.</li>
+<li>Nobody decides their own access, or a group they are in. An item of your own says so, and waits for another administrator.</li>
+<li>The reviewer is a person. On this screen that means signed in with two factors: a session made from a pasted token is told <strong>Deciding needs a sign-in with two factors</strong> in place of the buttons. On the command line it means a person's own token, one named <code>cli</code> or after an address (<code>dana@example.org</code>); any other token is taken for a program's, and a program reviews nothing. Starting, listing, deciding and closing each take an administrator of the whole store.</li>
+<li>A revoke takes effect at once, through the path that granted the access: the binding is removed, the token is revoked with every session made from it, or the group's mapping is taken off with what it gave. A revoke that would leave nobody able to administer the store is refused. There is no reduce: revoke, then grant the lower role.</li>
+<li>Closing is refused while anything is undecided. It writes <code>review.closed</code> with the counts, and the evidence for the control <code>quilzo/AC-2 account review</code>, which <code>quilzo assurance report</code> reads (see <a href="/compliance/#auditors">evidence over time</a>).</li>
+<li>A store with one administrator closes the review alone, says how much of theirs went unreviewed, and <code>approval.alone</code> counts it; except for a day after another administrator was removed.</li>
+</ul>
+<p>When no review has closed within the period, the posture finding <code>access.review-due</code> says so, and it is mailed to the security contact (see <a href="/security/">Security posture</a>). Reasons are kept in the review's file in the store, <code>access/reviews/ID.json</code>, and never in the audit log, whose record says only that one was given.</p>
 <h2 id="agent-permissions">Permissions for working with agents</h2>
 <p>Roles decide what somebody may do to content. Working with agents brings decisions that are not about content, and each has a permission of its own:</p>
 <div class="table-wrap"><table>
@@ -74,6 +108,8 @@ quilzo auth grant lee use-models</code></pre>
 
 <h3 id="tokens-and-permissions">Tokens and permissions</h3>
 <p>A token caps what its session may do. Signing in with an identity provider or a passkey gives a session the highest role the person holds anywhere, so an analyst, administrator of <code>/@security</code>, signs in as an administrator, and the policy still keeps them to security. A permission granted on its own is capped by the token's path and its limits, so a reader's own token can use the approve permission they were given. A read-only token never uses a permission, and a permission that comes from a role is capped by the token's role, as everything else is. The same limits hold in the admin: a session made from a read-only token approves nothing, and one capped at reader or confined to part of the site approves only what that token could.</p>
+<p>A permission granted alone reaches the commands its own work needs. Approve, granted on an agent or on part of the site, reaches <code>quilzo approvals</code>, <code>agent approve</code>, <code>agent decline</code> and <code>agent answer</code>; install-features reaches <code>feature list</code>, <code>feature show</code> and <code>feature check</code>, and the installs waiting in <code>approvals</code>; run-agents reaches <code>agent resume</code>; and each of the agent permissions, held on <code>/@agents</code> or one agent, reaches <code>agent list</code> and <code>agent show</code>. Each command still decides the exact run or agent itself, so this widens only what can be asked, not what anybody may decide.</p>
+<p><code>quilzo auth list</code> and <code>quilzo token list</code> show a reader their own grants and tokens. Whoever may grant access sees everybody's grants, whoever may manage tokens everybody's tokens, and somebody who has not shown who they are is shown nobody's.</p>
 <h2 id="app-roles">Roles in an app</h2>
 <p>An app built from a feature has people of its own: a lab has technicians who record samples and a manager who publishes the samples page. The feature declares those roles over its own records, pages and agents (see <a href="/make/#roles">roles a feature declares</a>), and you give them to people:</p>
 <pre><code>quilzo auth roles                              # every role the installed features declare

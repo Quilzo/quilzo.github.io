@@ -1,6 +1,6 @@
 # Quilzo
 
-> Quilzo gives every AI agent an identity, a policy, a budget and a signed record, asks a person before the actions that matter, and runs as one self-hosted binary.
+> Quilzo is a self-hosted CMS for websites, chatbots and AI agents: every agent governed, every change approved, every action on a signed record.
 
 Quilzo is one Go binary with no third-party dependencies, licensed under Apache-2.0. Source: https://github.com/Quilzo/Quilzo
 

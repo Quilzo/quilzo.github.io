@@ -94,5 +94,5 @@ Quilzo is one Go binary with no third-party dependencies, licensed under Apache-
 
 ## More
 
-- [Rooms and calls (experimental)](https://quilzo.github.io/collaboration/): Experimental building blocks: rooms with a stated purpose, calls encrypted end to end with SFrame (RFC 9605), screen sharing and an AI note-taker.
+- [Screens (experimental)](https://quilzo.github.io/collaboration/): Experimental: what a lossless codec for screen content costs, measured from the command line, and the studio, which records the screen into the media library.
 - [Licence: Apache-2.0](https://quilzo.github.io/licence/): Quilzo is open source under the Apache License 2.0. Use it, change it, embed it in your own product and sell it, with no licence key and nothing held back.

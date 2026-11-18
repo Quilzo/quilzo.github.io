@@ -6,7 +6,7 @@ description: Move a site in by its address or the file it exported: its pages, p
 lead: Give Quilzo your old site's address, or the file it exported. It reads the site the way a careful visitor would and hands you all of it as one package to read before anything changes.
 icon: transfer
 screens: Make
-updated: 2026-10-29
+updated: 2026-11-18
 -->
 
 <div class="definition"><p>Most sites somebody wants to move have no export file, but every site has pages. <strong>Bring your site</strong> reads a live site by its address, whatever it was built with: Wix, Squarespace, Webflow, WordPress, dotCMS, Drupal or pages written by hand. A site that can export itself comes in from the file instead, with its posts as a <a href="/blog/">blog</a>. Either way it becomes a <a href="/site/">site package</a>, which you read and install as one decision.</p></div>
@@ -72,7 +72,7 @@ quilzo site import ./my-hugo-site --install</code></pre>
 <p>The card lists what did not come, so nothing goes missing without you knowing:</p>
 <ul>
 <li><strong>Pictures with no description.</strong> They are left out rather than given a description nobody wrote. Add them with <code>quilzo media add FILE --alt "…"</code>.</li>
-<li><strong>Forms.</strong> A form here says what it asks, why, and how long answers are kept, which an old form's markup cannot tell you. Declare yours with <code>quilzo form add</code> or <strong>Forms</strong> (see <a href="/forms/">Forms</a>).</li>
+<li><strong>Forms.</strong> A form here says what it asks, why, and how long answers are kept, which an old form's markup cannot tell you. Declare yours on the <strong>Forms</strong> screen, in <code>forms.json</code>, or in a feature package (see <a href="/forms/#declare">Forms</a> and <a href="/make/">Make features as packages</a>).</li>
 <li><strong>Scripts and frames</strong>, such as trackers, embedded maps and widgets. The site's own security policy would block them anyway.</li>
 <li>Pages robots.txt asked not to be read, pages that did not answer, pages with no words, and pages past the budget.</li>
 </ul>

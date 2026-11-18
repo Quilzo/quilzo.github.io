@@ -16,7 +16,7 @@
 <meta property="og:url" content="https://quilzo.github.io/bring/">
 <meta property="og:image" content="https://quilzo.github.io/assets/social.png">
 <meta property="og:locale" content="en_GB">
-<meta property="article:modified_time" content="2026-10-29">
+<meta property="article:modified_time" content="2026-11-18">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="Move a website from WordPress, Ghost, Hugo, Wix or dotCMS">
 <meta name="twitter:description" content="Move a site in by its address or the file it exported: its pages, posts, menus, pictures and look, with redirects so its old addresses keep working.">
@@ -28,7 +28,7 @@
 <link rel="sitemap" type="application/xml" href="/sitemap.xml">
 <script>try{var t=localStorage.getItem("qz-theme");if(t)document.documentElement.dataset.theme=t}catch(e){}document.documentElement.classList.add("js")</script>
 <script src="/assets/docs.js" defer></script>
-<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-10-29","description":"Move a site in by its address or the file it exported: its pages, posts, menus, pictures and look, with redirects so its old addresses keep working.","headline":"Bring your site from anywhere, by its address or its export","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/bring/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/bring/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Bring your site","position":3}]}]}</script>
+<script type="application/ld+json">{"@context":"https://schema.org","@graph":[{"@id":"https://quilzo.github.io/#project","@type":"Organization","logo":"https://quilzo.github.io/assets/mark.png","name":"The Quilzo project","sameAs":["https://github.com/Quilzo/Quilzo"],"url":"https://github.com/Quilzo"},{"@type":"TechArticle","about":{"@type":"SoftwareApplication","name":"Quilzo"},"author":{"@id":"https://quilzo.github.io/#project"},"dateModified":"2026-11-18","description":"Move a site in by its address or the file it exported: its pages, posts, menus, pictures and look, with redirects so its old addresses keep working.","headline":"Bring your site from anywhere, by its address or its export","image":"https://quilzo.github.io/assets/social.png","inLanguage":"en","isPartOf":{"@type":"WebSite","name":"Quilzo manual","url":"https://quilzo.github.io/"},"mainEntityOfPage":"https://quilzo.github.io/bring/","publisher":{"@id":"https://quilzo.github.io/#project"},"url":"https://quilzo.github.io/bring/"},{"@type":"BreadcrumbList","itemListElement":[{"@type":"ListItem","item":"https://quilzo.github.io/","name":"Quilzo manual","position":1},{"@type":"ListItem","item":"https://quilzo.github.io/#content","name":"Content","position":2},{"@type":"ListItem","name":"Bring your site","position":3}]}]}</script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to the content</a>
@@ -239,7 +239,7 @@ quilzo site import ./my-hugo-site --install</code></pre>
 <p>The card lists what did not come, so nothing goes missing without you knowing:</p>
 <ul>
 <li><strong>Pictures with no description.</strong> They are left out rather than given a description nobody wrote. Add them with <code>quilzo media add FILE --alt "…"</code>.</li>
-<li><strong>Forms.</strong> A form here says what it asks, why, and how long answers are kept, which an old form's markup cannot tell you. Declare yours with <code>quilzo form add</code> or <strong>Forms</strong> (see <a href="/forms/">Forms</a>).</li>
+<li><strong>Forms.</strong> A form here says what it asks, why, and how long answers are kept, which an old form's markup cannot tell you. Declare yours on the <strong>Forms</strong> screen, in <code>forms.json</code>, or in a feature package (see <a href="/forms/#declare">Forms</a> and <a href="/make/">Make features as packages</a>).</li>
 <li><strong>Scripts and frames</strong>, such as trackers, embedded maps and widgets. The site's own security policy would block them anyway.</li>
 <li>Pages robots.txt asked not to be read, pages that did not answer, pages with no words, and pages past the budget.</li>
 </ul>
@@ -266,7 +266,7 @@ quilzo site import ./my-hugo-site --install</code></pre>
 </section>
   </div>
   <footer class="guide-foot">
-    <p class="updated">Updated 2026-10-29 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/bring.html">Edit this page on GitHub</a></p>
+    <p class="updated">Updated 2026-11-18 · <a href="https://github.com/Quilzo/quilzo.github.io/blob/main/src/pages/bring.html">Edit this page on GitHub</a></p>
     <nav class="pager" aria-label="Previous and next guides">
       <a class="pager-prev" href="/site/" rel="prev"><span class="pager-dir"><svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="m313-440 196 196q12 12 11.5 28T508-188q-12 11-28 11.5T452-188L188-452q-6-6-8.5-13t-2.5-15q0-8 2.5-15t8.5-13l264-264q11-11 27.5-11t28.5 11q12 12 12 28.5T508-715L313-520h447q17 0 28.5 11.5T800-480q0 17-11.5 28.5T760-440H313Z"/></svg>Previous</span><span class="pager-title">Build a whole site from a sentence</span></a>
       <a class="pager-next" href="/make/" rel="next"><span class="pager-dir">Next<svg class="icon" viewBox="0 -960 960 960" aria-hidden="true" focusable="false"><path d="M647-440H200q-17 0-28.5-11.5T160-480q0-17 11.5-28.5T200-520h447L451-716q-12-12-11.5-28t12.5-28q12-11 28-11.5t28 11.5l264 264q6 6 8.5 13t2.5 15q0 8-2.5 15t-8.5 13L508-188q-11 11-27.5 11T452-188q-12-12-12-28.5t12-28.5l195-195Z"/></svg></span><span class="pager-title">Make features as packages</span></a>

@@ -6,7 +6,7 @@ description: Sign in with passkeys and no password, issue API tokens scoped belo
 lead: Passkeys for people, scoped tokens for programs, and sessions that end.
 icon: passkeys
 screens: Passkeys
-updated: 2026-10-27
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/passkeys/passkeys.webp" alt="The Passkeys screen"><figcaption>Your passkeys, and adding one.</figcaption></figure><p>Everybody manages their own passkeys under <span class="where">Administration › Passkeys</span>. There is no password: no password storage, no reset flow and nothing to stuff.</p><p>Every passkey asks for the PIN, fingerprint or face that unlocks it, when it is added and at every sign-in, so one passkey is two factors. Touch ID, Windows Hello and a phone's screen lock already do this; a security key that has no PIN needs one set before it works here.</p><div class="table-wrap"><table>
@@ -25,6 +25,8 @@ updated: 2026-10-27
 <li>With nobody using the page for <code>session.idle</code>, it ends: an hour by default, between five minutes and an hour, and never switched off. Anybody who can grant access is signed out after fifteen minutes at most.</li>
 <li>Typing, clicking and scrolling count as use. The page warns a minute before the end, and afterwards offers to sign in again with your passkey without leaving it, so nothing you were writing is lost. Only your own passkey carries on with your page.</li>
 <li>A site member signs in again after thirty days, or after two weeks unused.</li>
+<li><code>/signout</code> reached from a link you did not follow from here, an image or a frame asks <strong>Sign out?</strong> instead of signing you out, so a page elsewhere cannot end your session. The menu's <strong>Sign out</strong> still signs out at once.</li>
+<li>A break-glass recovery at the store's machine (<code>quilzo auth recover</code>) is told to the security contact, as well as written to the audit log.</li>
 </ul>
 <h2 id="two-factors">Two factors on every request</h2>
 <p>Every request a person makes to the admin carries two factors (NIST SP 800-63B-4, AAL2). A passkey is two on its own, and a sign-in through single sign-on counts as two when the identity provider says it used two (see <a href="/sso/#second-factor">when a sign-in counts as two factors</a>); otherwise it waits for your passkey. A token is one: anybody holding a copy has it.</p>
@@ -45,6 +47,8 @@ updated: 2026-10-27
 <li>Only its hash is kept. Giving it, using it and ending it are recorded, with who gave it.</li>
 <li>Guessing at links is throttled, and none works while the admin is locked down.</li>
 <li><code>quilzo auth enrol dana --revoke</code> ends a link nobody has used.</li>
+<li>A link for somebody who administers anything waits for a second administrator, because whoever opens it signs in as them from then on. Once approved, it is received once, within a day, by whoever asked for it: <strong>Receive the link</strong> under <span class="where">Administration › People</span>, or <code>quilzo pending redeem ID</code>.</li>
+<li><code>quilzo init --admin NAME</code> in an empty directory that already exists, such as a volume mounted for the store, makes a new store with two factors from its first day, rather than the fourteen days an upgraded installation is given.</li>
 </ul>
 <p>A passkey belongs to the address it was made on, and a browser refuses an IP address as one, so open the admin as <code>http://localhost:8080</code> rather than <code>127.0.0.1</code>, or set <code>admin.base_url</code> and links carry it.</p>
 <h2 id="lockout">Too many failed sign-ins</h2>
@@ -53,7 +57,10 @@ updated: 2026-10-27
 <li>Ten failures from places the account is not used from lock those places out of it for thirty minutes, and each lockout after that doubles, up to a day.</li>
 <li>A hundred failures in a row, from anywhere, turn passkey sign-in to the account off until you sign in with a single sign-on that says it used two factors, or another administrator unlocks it.</li>
 <li>Each lockout is recorded and raises the <code>account-locked</code> sign-in signal. At your next sign-in you are told how many failures came before it.</li>
-<li>Every other way in is slowed per address as well: the delay doubles after five failures in an hour, up to fifteen minutes, and nothing is accepted past a hundred. Throttling cannot be switched off. Its settings (<code>auth.throttle.after</code>, <code>.ceiling</code>, <code>.base</code>, <code>.max</code> and <code>auth.lockout.alert</code>) are held between bounds: at most ten free failures, a ceiling of 10 to 100, delays of a second to an hour, and an alert by twenty failures.</li>
+<li>A passkey whose signature counter went back exists in two places. Its sign-in is refused, recorded as <code>passkey.counter-refused</code>, and raises the <code>passkey-cloned</code> sign-in signal, rated high, which tells the security contact to have the key removed and registered again. The key is not removed by itself. A member's passkey is refused and recorded the same way (see <a href="/members/">Members</a>).</li>
+<li>Every way in is slowed per address as well: after five failures in an hour each one doubles the delay, up to fifteen minutes, and past a hundred in the hour every failure is refused until the hour is up.</li>
+<li>Only failures are slowed. From a throttled address a failure is answered 429 and not counted, and a valid token, passkey or enrolment link still gets in: at <code>/mcp</code> and <code>/a2a</code>, token exchange, the passkey ceremony, the sign-in box, enrolment links and the studio's sign-in, as at the API and the admin's screens. So somebody behind the same NAT or proxy as a guesser is not locked out with them.</li>
+<li>Throttling cannot be switched off. Its settings (<code>auth.throttle.after</code>, <code>.ceiling</code>, <code>.base</code>, <code>.max</code> and <code>auth.lockout.alert</code>) are held between bounds: at most ten free failures, a ceiling of 10 to 100, delays of a second to an hour, and an alert by twenty failures.</li>
 </ul>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Do</th></tr></thead>

@@ -6,10 +6,10 @@ description: Count views, visitors, referrers and conversions without a cookie, 
 lead: Measure without cookies, test without scripts, and personalise without profiles.
 icon: analytics
 screens: Analytics, Experiments, Personalisation
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
-<figure class="shot"><img src="/images/growth/analytics.webp" alt="The Analytics screen"><figcaption>Analytics, counted with no cookie and no script.</figcaption></figure><div class="table-wrap"><table>
+<p>Analytics are counted at the server, with no cookie and no script on your pages. A visitor is recognised for one day only, and no address is kept.</p><div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>
 <tr><td>Views, visitors, referrers, conversions</td><td><code>quilzo analytics --days 30</code></td></tr>
@@ -18,3 +18,22 @@ updated: 2026-10-08
 <tr><td>Personalise by campaign, language or device</td><td><code>quilzo personalise add NAME --page P --variant V --when campaign=X</code></td></tr>
 <tr><td>Test a rule</td><td><code>quilzo personalise test PAGE --campaign X</code></td></tr>
 </tbody></table></div><figure class="shot"><img src="/images/growth/experiments.webp" alt="The Experiments screen"><figcaption>Starting an experiment.</figcaption></figure>
+<h2 id="missing">Looked for and not found</h2>
+<figure class="shot"><img src="/images/growth/analytics.webp" alt="The Analytics screen: Looked for and not found lists /hours.html asked 47 times and /old-site/hours 15 times, each probably meaning /hours with a Redirect it button, and three addresses with no close page; below it, Searches that found nothing lists gift vouchers, parking and vegan croissants"><figcaption>Addresses people asked for, the page each most likely meant, and what searches found nothing.</figcaption></figure>
+<p>On the <strong>Analytics</strong> screen, <strong>Looked for and not found</strong> lists the addresses people asked for that are not on the site: a link somebody else has wrong, or a page that moved. Beside each is the page it most likely meant, and <strong>Redirect it</strong> sends it there. Below it, <strong>Searches that found nothing</strong> lists what readers searched for in their words, with addresses and numbers masked: each is a page somebody could write.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>List the site's redirects</td><td><code>quilzo redirect list</code></td></tr>
+<tr><td>Send an old address to where its page is now</td><td><code>quilzo redirect add FROM TO [--temporary]</code></td></tr>
+<tr><td>Take one away</td><td><code>quilzo redirect remove FROM</code></td></tr>
+</tbody></table></div>
+<p>A redirect is served before any page and changes the live site at once, with no draft to review, so it takes whoever may publish. The running site reads a change within a second, with no restart.</p>
+<h2 id="search-engines">Search engines and agents</h2>
+<ul>
+<li>Once the site has an address (<code>site.base_url</code>), every page names its own address with <code>rel=canonical</code>, so the same page reached with a query string or a trailing slash is one page.</li>
+<li>In a page's editor, under <strong>Search engines</strong>, <strong>Leave this page out of search results</strong> marks it <code>noindex</code> and leaves it out of the sitemap. <strong>Published first at</strong> names the address a page copies, which becomes its canonical address.</li>
+<li>Every published page has a Markdown copy at <code>/NAME.md</code>, its words in order, for a reader's agent. <code>llms.txt</code> lists them, and each copy names its page as canonical.</li>
+<li>With <code>site.indexnow</code> on (it is off by default), each publish tells the search engines that take IndexNow which pages changed, and nothing else. The key is served at <code>/KEY.txt</code>. It goes out under the network purpose <code>indexnow</code>, so an offline deployment refuses it (see <a href="/settings/#network">Settings</a>).</li>
+<li>Site search scores its results over the pages the visitor may read, so a page they cannot see does not shape how the others rank.</li>
+</ul>

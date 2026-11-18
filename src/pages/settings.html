@@ -6,7 +6,7 @@ description: Every setting with what it is for and what it costs, a recorded rea
 lead: Every setting explained, and every connection this program makes named.
 icon: settings
 screens: Settings
-updated: 2026-10-21
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/settings/settings.webp" alt="The Settings screen"><figcaption>Settings. The banner names the one setting running weaker than its default, and the reason given for it.</figcaption></figure><div class="table-wrap"><table>
@@ -19,4 +19,15 @@ updated: 2026-10-21
 <tr><td>Put one back</td><td><code>quilzo config unset KEY</code></td></tr>
 <tr><td>What this may connect to, and why</td><td><code>quilzo network</code></td></tr>
 </tbody></table></div>
+<p>A duration takes days and weeks as well as hours, such as <code>90d</code> or <code>13w</code>, and is shown in days: <code>quilzo config explain access.review.every</code> prints <code>default 90d</code>.</p>
+<h2 id="staff">Telling staff</h2>
+<p>Staff hear when somebody is waiting on them. <code>notify.staff</code> is where: <code>mailto:</code> addresses, or <code>secret:NAME</code> for a Slack, Teams or Discord incoming webhook sealed with <code>quilzo secret set NAME</code>. A webhook's address in the setting itself is refused, because whoever has it can post as the site.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Mail the team</td><td><code>quilzo config set notify.staff mailto:team@example.org</code></td></tr>
+<tr><td>Post to a chat channel</td><td><code>quilzo secret set staff-hook &lt; hook.txt</code>, then <code>quilzo config set notify.staff secret:staff-hook</code></td></tr>
+<tr><td>Choose what they hear about</td><td><code>quilzo config set notify.events ...</code>; <code>quilzo agent trigger events</code> lists them</td></tr>
+</tbody></table></div>
+<p><code>notify.events</code> is <code>handoff.requested,form.submitted,approval.waiting</code> by default: a visitor asking for a person, a form sent, and an agent waiting for a person to approve. At most thirty notices go out an hour. A notice says which chatbot, form or agent and how many, never who or what they wrote. Mail goes through the relay in <code>mail.json</code> in the store (a store that kept it in <code>notify/mail.json</code> is still read), and a notice that could not be sent is a failure on the record.</p>
 <h2 id="network">Every connection, named</h2><p>Each outbound connection has a declared purpose (models, integrations, connectors, webhooks, guardrail, fleet and others) and is checked against the address actually dialled, after DNS. Set <code>network.mode</code> to <code>offline</code> and every connection that would leave the host is refused before a packet is sent, naming the feature that wanted it; loopback still works, so a local model keeps working.</p>

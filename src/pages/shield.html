@@ -6,7 +6,7 @@ description: Playbooks decided in advance block, slow, lock down or pause the mo
 lead: Decided beforehand, acting at once, and every protection ends by itself.
 icon: shield
 screens: Shield
-updated: 2026-11-03
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>The <strong>shield</strong> is Quilzo protecting itself: playbooks that watch signals such as failed sign-ins, prompt injection against a chatbot or an agent following a planted instruction, and respond at once with protections that always end.</p></div><figure class="shot"><img src="/images/shield/shield.webp" alt="The Shield screen: what is in force, and the playbooks with their modes"><figcaption>What is in force, and the playbooks.</figcaption></figure><div class="table-wrap"><table>
@@ -15,7 +15,7 @@ updated: 2026-11-03
 <tr><td>What is in force</td><td><code>quilzo shield status</code></td></tr>
 <tr><td>End one now</td><td><code>quilzo shield lift ID</code></td></tr>
 <tr><td>Block or slow a source</td><td><code>quilzo shield block CIDR --where site --for 1h --reason "..."</code></td></tr>
-<tr><td>Turn a public feature down</td><td><code>quilzo shield feature chatbot:help --for 1h --reason "..."</code></td></tr>
+<tr><td>Turn a public feature down (see <a href="/shield/#features">the features</a>)</td><td><code>quilzo shield feature NAME --for 1h --reason "..."</code></td></tr>
 <tr><td>Admin to passkeys and SSO only; no publishing</td><td><code>quilzo shield lockdown --for 6h --reason "..."</code></td></tr>
 <tr><td>Pause an agent</td><td><code>quilzo shield pause AGENT --for 24h --reason "..."</code></td></tr>
 <tr><td>Cut a model route, suspend a credential or app</td><td><code>quilzo shield cut ROUTE / quilzo shield suspend gr_ID</code></td></tr>
@@ -30,3 +30,33 @@ updated: 2026-11-03
 </tbody></table></div>
 <p>A playbook step that <em>opens a case</em> does not keep one here. It writes the request into the <a href="/logging/">audit log</a>, with the playbook, the signal, what it was about and a summary, for the security team's own tools to open the case from, such as a SIEM the log is streamed to (see <a href="/integrations/#stream">the audit log, streamed as it is written</a>). <a href="/cases/">Incident cases and Quilzo</a> says what the record holds.</p>
 <p>It never acts against this machine itself, or a network added with <code>quilzo shield trust add</code>: an administrator's own address keeps the admin, a lockdown nobody could get past is not applied, and the command line on the machine always works. Any other machine, on a private network or not, is blocked like any other, and <code>quilzo shield lift</code> on this machine ends a block.</p>
+
+<h2 id="features">The features it can turn down</h2>
+<p>A feature is turned off for the time given. A chatbot can instead be limited to quoting pages, with <code>--level limited</code>.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Name</th><th scope="col">Turns down</th></tr></thead>
+<tbody>
+<tr><td><code>chatbots</code></td><td>Every chatbot on the site</td></tr>
+<tr><td><code>chatbot:NAME</code></td><td>One chatbot, by name</td></tr>
+<tr><td><code>forms</code></td><td>Every form on the site</td></tr>
+<tr><td><code>form:NAME</code></td><td>One form, by name</td></tr>
+<tr><td><code>boards</code></td><td>Members posting to boards</td></tr>
+<tr><td><code>signup</code></td><td>Making a new member account</td></tr>
+<tr><td><code>bookings</code></td><td>Booking an appointment on the site</td></tr>
+<tr><td><code>newsletter</code></td><td>Signing up to the newsletter</td></tr>
+<tr><td><code>fediverse</code></td><td>Activities other servers deliver to the fediverse inbox</td></tr>
+<tr><td><code>search-answers</code></td><td>AI answers in site search</td></tr>
+<tr><td><code>api</code></td><td>The content API</td></tr>
+<tr><td><code>mcp</code></td><td>The machine interface</td></tr>
+<tr><td><code>models</code></td><td>The model gateway for agents built anywhere, at <code>/v1</code></td></tr>
+<tr><td><code>scim</code></td><td>Provisioning from the identity provider</td></tr>
+<tr><td><code>signals</code></td><td>Security events from the identity provider (see <a href="/sso/#signals">single sign-on</a>)</td></tr>
+<tr><td><code>uploads</code></td><td>Media uploads</td></tr>
+<tr><td><code>import</code></td><td>Importing content</td></tr>
+<tr><td><code>feeds</code></td><td>Deliveries from other systems</td></tr>
+<tr><td><code>upload:ID</code></td><td>One uploaded file, by its id: quarantined, and answered as if it were not there</td></tr>
+</tbody></table></div>
+<p>The admin's sign-in, its screens and the shield's own are never among them.</p>
+
+<h2 id="telling">Who is told</h2>
+<p>Holding the playbooks (<code>quilzo shield hold</code>) stops the shield acting, not telling: a decoy touched during a hold is still told to the security contact, and holding and releasing are both told. Every alert is a mail to the <code>mailto:</code> address in <code>security.contact</code>, through the relay in <code>mail.json</code>. Without either, the posture finding <code>alerts.unrouted</code> says alerts reach nobody, and a mail that could not be sent is a failure on the record.</p>

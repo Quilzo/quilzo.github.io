@@ -6,7 +6,7 @@ description: A mailing list on your site: sign-ups confirmed by mail, issues sen
 lead: A page takes sign-ups, each address says yes from its own inbox, and an issue is a page you have published, sent to everybody who did.
 icon: newsletter
 screens: Newsletter
-updated: 2026-10-28
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>The <strong>newsletter</strong> is the site's mailing list: the addresses that asked for it and confirmed, and the <strong>issues</strong> sent to them. An issue is a published page, sent as mail. A <strong>newsletter</strong> section on any page takes sign-ups.</p></div>
@@ -24,7 +24,7 @@ updated: 2026-10-28
 <figure class="shot"><img src="/images/newsletter/confirm.webp" alt="A page on a phone headed Get Crumb's newsletter: Press the button to say yes. Until you do, nothing is sent to this address. A button reads Yes, send it to me"><figcaption>The page the link opens.</figcaption></figure>
 <ul>
 <li>An address that never presses it is forgotten after a week.</li>
-<li>One address is mailed a link at most once an hour, and the whole site at most 200 an hour, so the form cannot be used to fill somebody's inbox.</li>
+<li>One inbox is mailed a link at most once an hour, however its address is spelled: with a <code>+tag</code>, or with dots moved about in a Gmail address. The whole site mails at most 200 an hour, so the form cannot be used to fill somebody's inbox.</li>
 <li>The page says the same thing whether or not the address was already subscribed, so the form tells nobody who is on the list.</li>
 </ul>
 <h2 id="send">Sending an issue</h2>
@@ -46,9 +46,12 @@ quilzo newsletter send october --yes</code></pre>
 <tr><td>Take the list to any other service</td><td><strong>Download the list</strong></td><td><code>quilzo newsletter export</code></td></tr>
 <tr><td>Ask one person, who joins when they say yes</td><td><strong>Ask somebody</strong></td><td><code>quilzo newsletter add ADDRESS</code></td></tr>
 </tbody></table></div>
-<p>An import finds the columns by their names, as each service writes them. People it adds count as having said yes, and where they agreed is kept as the record of it, so say truthfully where that was. Anybody the file marks as unsubscribed, bounced or complained is kept as having left, and never sent anything. Somebody already subscribed here is never taken off by an older list. The export is plain CSV: address, name, when they joined, when they confirmed, and what they agreed to.</p>
+<p>An import finds the columns by their names, as each service writes them. People it adds count as having said yes, and where they agreed is kept as the record of it, so say truthfully where that was. Anybody the file marks as unsubscribed, bounced or complained is kept as having left, and never sent anything. Somebody already subscribed here is never taken off by an older list. The export is plain CSV: address, name, when they joined, when they confirmed, and what they agreed to. It goes through the one guard every CSV Quilzo writes goes through, the address included, so a value that begins like a formula is not run by the spreadsheet that opens it. Importing the file again takes the guard back off.</p>
 <h2 id="privacy">Who can see the addresses</h2>
 <p>The public site writes a sign-up, writes that it was confirmed, and deletes an address that leaves. It never reads an address back. The links in mail are keyed with a secret the public site can read and cannot change, so checking a link reads nothing either. The addresses are read on the <strong>Newsletter</strong> screen and with <code>quilzo newsletter list</code>, by whoever may read what forms collect. Sending an issue and importing a list take whoever may publish.</p>
+<p>The shield can turn sign-ups off for a while, and a visitor is told that signing up is not available and to try again later:</p>
+<pre><code>quilzo shield feature newsletter --for 1h --reason "a flood of sign-ups from one network"</code></pre>
+<p>Sign-ups are judged by the same bot check as forms and bookings (see <a href="/forms/#checks">Forms</a>).</p>
 <p>The audit log records that somebody signed up, confirmed or left, and that an issue was sent and to how many, never which address. Webhooks can be told <code>subscribed</code> and <code>unsubscribed</code> (see <a href="/integrations/">Integrations</a>), with no address.</p>
 <h2 id="agents">Agents</h2>
 <ul>

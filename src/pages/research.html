@@ -6,7 +6,7 @@ description: Research projects for people and AI agents: a plan registered befor
 lead: A report whose every number is linked to the code that produced it, and whose every citation is a work that exists and says what the sentence claims.
 icon: research
 screens: Research
-updated: 2026-10-16
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>A <strong>research project</strong> is a question, a plan registered before the data is analysed, computations run in a box with no network, and a report. Every number the report states is a <strong>claim</strong> pinned to the computation that produced it, by the digests of its code, its inputs and its environment. Every citation is a work an open index returned, and the sentence citing it must be supported by what the work says. People and AI agents work on a project the same way, and only people register or amend its plan.</p></div>
@@ -28,6 +28,7 @@ quilzo research add fever-children fever.csv --to data</code></pre>
 quilzo research register fever-children</code></pre>
 <p>Registering seals the plan: its SHA-256 is signed with the audit log's keys, so anybody holding the published keys can check that this plan existed then. A plan registered after the first computation says so. From then on, a change is an amendment with a reason, and the report shows each one and whether the data had been analysed when it was made:</p>
 <pre><code>quilzo research plan fever-children plan-v2.md --why "the outcome is skewed, so compare medians"</code></pre>
+<p>A plan reads as signed only when its signature checks against the store's published keys. Its text must be what its digest was taken of, and its amendments must lead, one to the next, from the plan registered to the plan as it stands. The project's page says <strong>checks</strong> or <strong>does not check</strong> beside the signature, with the reason, and <code>quilzo research check</code> counts a plan that does not check as a problem. A plan rewritten by hand, with its old signature left on it, does not check.</p>
 </li>
 </ol>
 
@@ -63,7 +64,7 @@ quilzo research ideas fever-children --verdict i-1ddaff81 --outcome supported --
 <pre><code>quilzo research search "paracetamol ibuprofen fever children randomised trial"
 quilzo research cite fever-children doi:10.1136/bmj.a1302</code></pre>
 <p>A DOI is looked up in OpenAlex, then Crossref; a PubMed ID (<code>pmid:</code>) and an OpenAlex ID in OpenAlex; an arXiv ID (<code>arxiv:</code>) in arXiv. An identifier no index has is refused, so a citation cannot be invented. The work's title, authors, year, venue and abstract are kept, and it is cited as <code>[@hay2008]</code>, or the key given with <code>--key</code>.</p>
-<p>A sentence citing a work must be supported by what Quilzo holds of it: every figure in the sentence must appear there, and most of its informative words, the test chatbot answers pass (see <a href="/chatbot-safety/">Chatbot safety</a>). When the index holds no abstract, or the support is in the full text, quote the passage the sentence rests on:</p>
+<p>A sentence citing a work is held to what Quilzo holds of it as a chatbot's sentence is held to its passage (see <a href="/chatbot-safety/#verified">What verified means</a>). Every figure in the sentence must appear there and count the same thing, most of its informative words must be there, and it must not turn the source around with a dropped "not" or an opposite word. The report and the chatbot find figures with one detector. When the index holds no abstract, or the support is in the full text, quote the passage the sentence rests on:</p>
 <pre><code>quilzo research quote fever-children hay2008 "Combined therapy cleared fever 23 minutes faster than paracetamol alone"</code></pre>
 
 <h2 id="report">Write and check the report</h2>

@@ -6,10 +6,11 @@ description: Let visitors have accounts that sign in with passkeys, invite them,
 lead: Accounts for visitors, with passkeys and no passwords, and boards they can write on.
 icon: members
 screens: Members, Boards
-updated: 2026-10-21
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/members/members.webp" alt="The Members screen"><figcaption>Members, before accounts are turned on.</figcaption></figure><p>Turn accounts on with the setting <code>site.members</code>. Members sign in with passkeys, and no password. A recovery code, for a member who has lost their passkeys, opens the account to add a new passkey and nothing else, for fifteen minutes; adding it signs them in as a passkey sign-in would. Each code works once.</p><p>Members get the same <a href="/passkeys/#lockout">lockout</a> as the admin: ten failed sign-ins from places a member does not sign in from lock those places out of the account, and a hundred in a row turn its passkeys off until a recovery code is used. A locked-out sign-in gets the same answer as any failure, so it tells nobody that the account exists. The account page tells the member how many failed sign-ins came before their last one.</p>
+<p>A member's passkey whose signature counter went back, which happens only when the credential exists in two places, is refused like any failure and also put on the record as a copy, <code>member.passkey-counter-refused</code>, with the account's id and never its name. Starting a passkey sign-in on the public site is limited per address, and at most ten thousand of its prompts are held at once, from everywhere, so asking for them in a loop cannot fill the server's memory. After signing in, a member is sent back only to a page on this site.</p>
 <div class="table-wrap"><table>
 <thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
 <tbody>

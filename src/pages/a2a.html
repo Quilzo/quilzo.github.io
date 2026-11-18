@@ -5,7 +5,7 @@ seo: A2A protocol: agent cards and tasks for governed AI agents
 description: Publish an A2A agent card that states each agent's capabilities, budget and oversight, and accept A2A 1.0 tasks from other agents, run under your declarations.
 lead: Tell other agents what yours may do, and take their tasks under your own rules.
 icon: handshake
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <div class="definition"><p><strong>A2A</strong> (Agent2Agent) is the protocol agents use to describe themselves and hand each other work. Quilzo publishes an <strong>agent card</strong> for your agents, with a governance extension stating what each may do, and accepts <strong>A2A 1.0 tasks</strong>, each run as one of your agents under its declaration.</p></div>
@@ -19,6 +19,19 @@ updated: 2026-10-08
 </ol>
 <h2 id="other-agents">Register other vendors' agents</h2>
 <pre><code>quilzo fleet add https://agents.example.com/.well-known/agent-card.json</code></pre><p>You answer for an agent you register. It appears on the <a href="/fleet/">Fleet</a> map, and <code>quilzo fleet check</code> reads every card again and says which changed.</p>
+<h3 id="call-other-agents">Let your agents call one</h3>
+<p>For your agents to hand work to another vendor's agent, declare it as an integration of kind <code>a2a</code>, from its agent card. Like every declaration, it arrives switched off:</p>
+<pre><code>quilzo integrations import agent-card.json                    # what it offers
+quilzo integrations import agent-card.json --uses translate   # declare one skill</code></pre>
+<pre class="out"><code>declared translator (a2a) reaching agents.example.com, switched off
+  may call translate</code></pre>
+<p>Its card is read again from the host each time. Read its skills, pin them, and turn it on under <span class="where">Integrations</span>.</p>
+<p>Each skill on the card is a tool, pinned, allowed and approved as an MCP server's tools are (see <a href="/integrations/">Tools and the MCP gateway</a>). The card's own words describe the skill to the model, as words from somebody else. A call sends one message naming the skill (<code>message/send</code>), and a task the far agent takes on is followed (<code>tasks/get</code>) until it finishes or ninety seconds pass.</p>
+<ul>
+<li>A card whose service address is off the declared host is refused, so a card cannot send your credential somewhere else.</li>
+<li>The message's ID is the step's idempotency key, so a step tried again is not done twice by an agent that keeps them.</li>
+<li>Where a card offers A2A 1.0, Quilzo's client speaks 1.0 to it (<code>SendMessage</code> and <code>GetTask</code>, with <code>A2A-Version</code>), so one Quilzo's agents can call another's.</li>
+</ul>
 <section class="see-also">
 <h2 id="next">Next</h2>
 <ul class="cards">

@@ -5,7 +5,7 @@ seo: Vulnerabilities and Quilzo: known flaws in its own build
 description: Vulnerability management across your systems is not part of Quilzo. Quilzo checks its own build against the Go vulnerability database, offline.
 lead: Quilzo checks its own build for known flaws, and contains one that is being exploited.
 icon: vulns
-updated: 2026-11-03
+updated: 2026-11-04
 -->
 
 <div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Finding and ranking the flaws in your other systems, scanning their dependencies and following each fix to the end belong to the vulnerability management your organisation already runs. Quilzo answers one question in that area: what is known to be wrong with Quilzo itself.</p></div></div>
@@ -19,7 +19,7 @@ updated: 2026-11-03
 <tr><td>Contained</td><td>It is known to be exploited, and only features that can be turned off reach it.</td></tr>
 <tr><td>Upgrade Go</td><td>What every server runs uses it, or it is not known to be exploited: a person decides, and upgrades Go.</td></tr>
 </tbody></table></div>
-<p>The admin runs the same check every hour. <span class="where">Security › Inventory</span> shows it under <strong>Known flaws in this build</strong>, with the date of the database and whether the binary is the one it says it is, which <code>quilzo self verify</code> also answers. <code>quilzo self vex</code> writes an OpenVEX statement for each advisory.</p>
+<p>The admin runs the same check every hour, and a flaw it finds in this build is told once a day, not at every check. <span class="where">Security › Inventory</span> shows it under <strong>Known flaws in this build</strong>, with the date of the database and whether the binary is the one it says it is, which <code>quilzo self verify</code> also answers. <code>quilzo self vex</code> writes an OpenVEX statement for each advisory.</p>
 
 <h2 id="offline">Keep the database current</h2>
 <p>A snapshot of the database is embedded at release, and nothing is fetched by itself. Download a newer one, and CISA's catalogue of Known Exploited Vulnerabilities, wherever you can, and give them to Quilzo:</p>
@@ -27,6 +27,7 @@ updated: 2026-11-03
 quilzo self kev known_exploited_vulnerabilities.json   # CISA's KEV catalogue, as JSON
 quilzo self check</code></pre>
 <p>Each is read on the machine and written to the audit log. A database more than a month old is flagged on Inventory and by <code>self check</code>, because a check against an old list is a clean bill of health that stopped being true.</p>
+<p>Only the catalogue says a flaw is being exploited, and only then is it contained at once. So <code>self check</code> says when no catalogue has been given, when it cannot be read and when it is more than a month old, and the security posture reports the same as <code>self.kev-missing</code>. Without it, such a flaw waits for a person to upgrade Go.</p>
 
 <h2 id="contained">When a flaw turns a feature off</h2>
 <p>When the catalogue says a flaw is being exploited, and only features a site can do without reach it, such as uploads, forms, import, the chatbots or the API, the <a href="/shield/">shield</a>'s <code>self-exposure</code> playbook turns those features off for a day. It tells the security contact, and writes a request to open a case into the audit log. Any other flaw that reaches this build is one to upgrade Go for: the <code>self-flaw</code> playbook tells the security contact and asks for a case, then reminds them each day until Go is upgraded. <code>quilzo shield lift</code> ends a protection early.</p>

@@ -6,7 +6,7 @@ description: Continuous checks of how Quilzo is configured, each with why it mat
 lead: Continuous checks of this deployment, read as the frameworks you answer to.
 icon: security
 screens: Security
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/security/security.webp" alt="The Security screen with posture findings"><figcaption>The posture scan, read from this deployment.</figcaption></figure><div class="table-wrap"><table>
@@ -17,3 +17,14 @@ updated: 2026-10-08
 <tr><td>Read it as a framework</td><td><code>quilzo posture frameworks soc2</code></td></tr>
 <tr><td>Accept a risk, for at most 90 days</td><td><code>quilzo posture suppress ID --reason "..."</code></td></tr>
 </tbody></table></div><p>Frameworks: FedRAMP, NIST SP 800-53, ISO/IEC 27001, SOC 2, NIST CSF 2.0, HIPAA, GDPR, CCPA, the EU AI Act, NIST AI RMF, ISO/IEC 42001 and OWASP's Top 10 for LLM applications.</p>
+<h2 id="checks">Some of the checks</h2>
+<ul>
+<li><code>access.review-due</code>: no review of who has access has closed within <code>access.review.every</code> (see <a href="/people/#access-review">Review who has access</a>).</li>
+<li><code>signals.stream-silent</code>: the identity provider's security event stream has not answered a verification for a day.</li>
+<li><code>sso.unverified-addresses</code>: an identity provider signs people in as addresses it has not said it verified.</li>
+<li><code>alerts.unrouted</code>: security alerts reach nobody, because <code>security.contact</code> has no mailto: address, or there is no usable <code>mail.json</code> to send through.</li>
+<li><code>self.kev-missing</code>: no current copy of CISA's catalogue of exploited vulnerabilities, so a flaw being exploited waits for a person to upgrade.</li>
+</ul>
+<p>A finding about a token names the token, not its holder, and the <span class="where">Security</span> screen, the rule's page, a framework's page and <code>quilzo posture scan</code> say whose it is.</p>
+<h2 id="drift">When a check starts failing</h2>
+<p>The admin server scans on its own schedule, and drift is on the record: <code>posture.drifted</code> in the audit log once, when a check starts failing, and <code>posture.restored</code> when a later scan no longer finds it. A newly failing check that is high or critical is mailed to the security contact at once, and so is <code>access.review-due</code>, as a reminder.</p>

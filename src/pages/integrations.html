@@ -5,8 +5,8 @@ seo: MCP gateway: tool pinning, approvals and audit for AI agents
 description: Give AI agents tools on MCP servers you approve, refuse a tool whose definition changed, and offer your MCP servers to other agents with approvals.
 lead: Agents call only the tools a person agreed to, as those tools were on the day they agreed, and other vendors' agents reach your tool servers only through Quilzo.
 icon: integrations
-screens: Integrations
-updated: 2026-11-03
+screens: Integrations, Your accounts
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>An <strong>MCP gateway</strong> sits between AI agents and MCP servers and decides each tool call: who may call which tool, how often, whether a person approves it first, and with which credential. Quilzo is one for its own agents, and offers the same to other vendors' agents at <code>/mcp/gateway/NAME</code>.</p></div>
@@ -79,7 +79,7 @@ quilzo integrations import billing-openapi.json --uses getInvoice,listInvoices -
 <p>A server's <code>server.json</code> from the MCP registry becomes a declaration of its Streamable HTTP address. Without <code>--uses</code> the server is asked what it offers and nothing is declared:</p>
 <pre><code>quilzo integrations import server.json
 quilzo integrations import server.json --uses list_issues,create_issue --secret tracker-token</code></pre>
-<p>A server published only as a package runs on your side first; give its address with <code>--endpoint</code>.</p>
+<p>A server published only as a package runs on your side first; give its address with <code>--endpoint</code>. Another vendor's agent is imported the same way, from its A2A agent card, as kind <code>a2a</code> (see <a href="/a2a/#other-agents">A2A</a>).</p>
 <h2 id="agents-use-tools">Let an agent use a tool</h2>
 <p>An agent names each tool it needs, on its host, with a purpose, in its declaration. Tools that change something can ask first:</p>
 <pre><code>"tools": [
@@ -87,7 +87,7 @@ quilzo integrations import server.json --uses list_issues,create_issue --secret 
   { "name": "create_issue", "host": "tracker.example.com", "purpose": "report a problem it finds", "writes": true }
 ],
 "ask_first": ["create_issue"]</code></pre>
-<p>A call is allowed only if the agent declares the tool, an enabled integration offers it, and it is pinned. Every call is recorded, and the exfiltration breaker stops a call when the run holds something private and has read somebody else's words (see <a href="/agent-limits/#exfiltration-breaker">Limits that hold</a>). Try a call by hand with <code>quilzo integrations call tracker list_issues</code>.</p>
+<p>A call is allowed only if the agent declares the tool, an enabled integration offers it, and it is pinned. Every call is recorded, and the exfiltration breaker stops a call when the run holds something private and has read somebody else's words (see <a href="/agent-limits/#exfiltration-breaker">Limits that hold</a>). Try a call by hand with <code>quilzo integrations call tracker list_issues</code>. A tool that answers that it failed makes the command exit non-zero, and the call is a failure on the record. A call refused before it is sent (an argument the declaration does not name, a tool not pinned, a private address nobody declared) is recorded as denied, since the far side was asked nothing.</p>
 
 <h3 id="own-network">A tool server on your own network</h3>
 <p>Quilzo refuses private, loopback and link-local addresses unless you say otherwise, so a declaration cannot be pointed at whatever else is inside your network. To use an MCP server that runs inside it, name the range it is in with <code>reach</code>:</p>
@@ -109,6 +109,50 @@ quilzo integrations import server.json --uses list_issues,create_issue --secret 
 <li>In an offline deployment (<code>network.mode</code> set to offline) only loopback is reached, whatever is declared.</li>
 </ul>
 <p>The Integrations screen and <code>quilzo integrations list</code> show the range next to the server, so a reviewer sees what was opened.</p>
+
+<h2 id="accounts">With each person's own account</h2>
+<p>An integration's <code>secret</code> is one key for the whole install: every agent that reaches it acts there as whoever the key belongs to. An integration can name a <code>connection</code> instead. A call then goes as the person the agent acts for, with the account they connected themselves, and with nobody's when nobody is.</p>
+<ol class="steps">
+<li>
+<h3>Declare where people connect</h3>
+<p>An administrator declares the provider once, from a template, with the client ID the provider issued. Where it issues a client secret too, keep that sealed with <code>quilzo secret set</code> and name it with <code>--client-secret</code>.</p>
+<pre><code>quilzo connect provider add google --template google --client-id ID</code></pre>
+<p>It prints the address to register with the provider as the redirect: the admin's own address, followed by <code>/connections/callback</code>. The templates are <code>google</code>, <code>microsoft</code> and <code>github</code>. <code>quilzo connect providers</code> lists what is declared, with the scopes it asks for and the API hosts its tokens may go to; a token goes to those hosts and nowhere else.</p>
+</li>
+<li>
+<h3>Declare an integration that goes with it</h3>
+<pre><code>quilzo integrations template
+quilzo integrations template google-calendar --uses listEvents</code></pre>
+<p>The first lists the templates: <code>google-calendar</code>, <code>microsoft-calendar</code> and <code>github-issues</code>, each with the operations it offers. The second declares one with only the operations named. It arrives switched off, like every declaration. Pin it and turn it on as usual. <code>--as</code> gives it another name and <code>--connection</code> another provider. An integration with a connection is never offered through the gateway, where there is no person to act for.</p>
+</li>
+<li>
+<h3>People connect their own accounts</h3>
+<p>Each person opens <span class="where">Administration › Your accounts</span> and presses <strong>Connect</strong> beside the provider, then signs in there and agrees.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>Connect your account</td><td><code>quilzo connect start google</code>, then open the address it prints where you are signed in to the admin</td></tr>
+<tr><td>See the accounts you connected</td><td><code>quilzo connect list</code></td></tr>
+<tr><td>Disconnect one</td><td><code>quilzo connect revoke google</code>, or <strong>Disconnect</strong> on Your accounts</td></tr>
+</tbody></table></div>
+</li>
+</ol>
+<p>Connecting is OAuth 2.1: an authorization code with PKCE (S256), and a state that is used once, lasts ten minutes and belongs to the person who started it. The tokens are kept sealed, refreshed when due, and revoked at the provider when somebody disconnects, where it offers that. The page the provider sends people back to shows only an OAuth error code, never other words a link could put there.</p>
+
+<h3 id="mcp-sign-in">A remote MCP server that asks people to sign in</h3>
+<pre><code>quilzo connect provider discover tracker https://tracker.example.com/mcp</code></pre>
+<p>Quilzo reads who authorises the server from what it publishes: its protected-resource metadata (RFC 9728), then its authorization server's metadata (RFC 8414). It registers itself there as a public client when the server takes registrations (RFC 7591), or uses the client ID given with <code>--client-id</code>. A server that does not offer PKCE with S256 is refused, and every authorization and token request names the server (RFC 8707), so a token is for it alone. An integration naming that connection then reaches the server as each person.</p>
+
+<h2 id="undelivered">Writes that did not get through</h2>
+<p>A write is named by the run and step that made it. A write to a REST API carries that name as its <code>Idempotency-Key</code> header, and a message to another agent carries it as its message ID, so a far side that keeps them does not do the same thing twice when a step is tried again.</p>
+<p>A REST API that does not answer, or answers that it is busy (408, 425, 429, 502, 503 or 504), is tried up to three times, waiting as its <code>Retry-After</code> asks, up to ten seconds, or one second and then two. A read is always tried again; a write only when it carries its key.</p>
+<p>A write an agent made that still failed is kept, with its run and step, the integration, the tool, its key and what the far side said, never its arguments, which the run's own record holds. It is listed under <strong>Writes that did not get through</strong> on <span class="where">Integrations</span>, and nothing is sent again by itself: settle it at the far side, then take it off the list.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See what did not get through</td><td><code>quilzo integrations undelivered</code></td></tr>
+<tr><td>Take one off, once it is settled</td><td><code>quilzo integrations undelivered --dismiss N</code>, or <strong>Settled</strong> on the screen</td></tr>
+</tbody></table></div>
 
 <h2 id="gateway">Offer your MCP servers to other agents</h2>
 <p>Another vendor's agent, or one your teams built, can reach a declared server through Quilzo instead of directly. It gets only the pinned tools, at the role and daily limit you set, with Quilzo's credential injected and never its own. Every call is checked, counted and recorded with a digest of its arguments.</p>
@@ -136,7 +180,7 @@ quilzo integrations decline gq_915959844d12</code></pre>
 <h2 id="webhooks">Tell other systems when something happens</h2>
 <p>A webhook is a signed POST to a URL you choose when something is <code>published</code>, <code>rolled-back</code>, <code>scheduled</code>, <code>submitted</code> (a form), <code>proposed</code> (a change waiting for approval), <code>booked</code> or <code>booking-cancelled</code> (see <a href="/bookings/">Bookings</a>), <code>subscribed</code> or <code>unsubscribed</code> (see <a href="/newsletter/">Newsletter</a>). Only https endpoints are accepted.</p>
 <pre><code>quilzo webhook add https://deploy.example.com/hooks/quilzo</code></pre>
-<p>The signing key is printed once. Each delivery carries <code>X-Quilzo-Event</code>, <code>X-Quilzo-Delivery</code>, <code>X-Quilzo-Timestamp</code> and <code>X-Quilzo-Signature</code>. The signature is an HMAC-SHA256 over the timestamp and the body, each prefixed with its length, so the boundary between them cannot be moved. Reject anything more than five minutes old. A receiver in Python:</p>
+<p>The signing key is printed once. A delivery that fails is tried twice more, after one second and then four, and each attempt is signed for the moment it is sent. A 429 or 408 is tried again like a 5xx; any other 4xx ends the delivery. Each delivery carries <code>X-Quilzo-Event</code>, <code>X-Quilzo-Delivery</code>, <code>X-Quilzo-Timestamp</code> and <code>X-Quilzo-Signature</code>. The signature is an HMAC-SHA256 over the timestamp and the body, each prefixed with its length, so the boundary between them cannot be moved. Reject anything more than five minutes old. A receiver in Python:</p>
 <pre><code>import hmac, hashlib, struct, time
 
 def verify(key, timestamp, body, signature, now=None):

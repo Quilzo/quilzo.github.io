@@ -6,7 +6,7 @@ description: Define content types every surface enforces, bind pages to them, an
 lead: A type says which fields a page must have, and every surface checks it.
 icon: types
 screens: Types, Data
-updated: 2026-10-29
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>A <strong>type</strong> is a flat list of fields. Bind a page or a collection to it and every write must satisfy it, from the admin, the command line, the API and the agent interface, with no way to write around it.</p></div>
@@ -25,10 +25,12 @@ quilzo type check                     # validate every bound page</code></pre>
 <tr><td>List collections</td><td><code>quilzo records collections</code></td></tr>
 <tr><td>Query</td><td><code>quilzo records list products --where availability=low_stock</code></td></tr>
 <tr><td>Add one</td><td><code>quilzo records add products field=value</code></td></tr>
-<tr><td>Import many in one commit</td><td><code>quilzo records import products rows.json</code></td></tr>
+<tr><td>Import many in one commit, from a CSV, a JSON list or a calendar</td><td><code>quilzo records import products rows.json</code></td></tr>
+<tr><td>Export every record as a spreadsheet</td><td><code>quilzo records export products -o products.csv</code></td></tr>
 <tr><td>Require a type</td><td><code>quilzo type bind-collection products product</code></td></tr>
 <tr><td>Let somebody work on one collection</td><td><code>quilzo auth grant tech author --on /@data/samples</code></td></tr>
 </tbody></table></div>
+<p>Every CSV Quilzo writes, the records export, the newsletter's list and the form exports alike, goes through one guard against spreadsheet formulas: a value that begins like one is written so the spreadsheet that opens it does not run it, and importing the file again reads it back as it was. Importing many items with the same title, from a spreadsheet or a WordPress export, numbers them from their shared name: <code>same</code>, <code>same-2</code>, <code>same-3</code>.</p>
 <h3 id="collection-access">Who may read and write a collection</h3>
 <p>Each collection is checked as itself, at <code>/@data/NAME</code>; <code>/@data</code> is every collection. A role on the whole site covers them all. A role on a section of pages covers none, even a section with the same name as a collection: <code>author on /samples</code> writes pages under /samples, and <code>author on /@data/samples</code> writes the samples. The Data screen, <code>quilzo records</code>, the agent interface and the content API all ask the same question, so somebody granted one collection sees that one and is not told the others exist.</p>
 <section class="see-also">

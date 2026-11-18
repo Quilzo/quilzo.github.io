@@ -6,7 +6,7 @@ description: Run a coding agent, script or agent runtime in a kernel sandbox whe
 lead: When an agent's own program decides instead of a model, Quilzo runs it in a box and hands in only what the declaration allows.
 icon: deployed_code
 screens: Agents
-updated: 2026-10-10
+updated: 2026-11-04
 -->
 
 <div class="definition"><p>A <strong>program</strong> is the other way an agent decides: a coding agent's command line, a script, or a runtime somebody built their agent in. Quilzo never runs it as itself. It runs it in a box with no capabilities, its own namespaces, Landlock for files and ports, and a system call filter. It hands in three things over the box's own loopback: the agent interface for this run, a model endpoint through the gateway, and a proxy to the declared hosts.</p></div>
@@ -18,6 +18,7 @@ updated: 2026-10-10
 openshell  unavailable
   the openshell command is not installed here (https://docs.nvidia.com/openshell)</code></pre>
 <p>The <strong>native</strong> backend is built from the Linux kernel's own parts. It needs no root, no daemon and no container runtime: user, PID, network, IPC and UTS namespaces, Landlock for files and ports (port rules need Linux 6.7, Landlock ABI 4), seccomp, no capabilities, and resource limits. <strong>NVIDIA OpenShell</strong> is a second backend, with the same services handed in and the declaration compiled to its policy.</p>
+<p>When the native backend is unavailable, it says what on this machine refused the box its user namespace, from what the kernel reports, and every cause that applies: user namespaces switched off (<code>user.max_user_namespaces</code> or <code>kernel.unprivileged_userns_clone</code> is 0), a system call filter on Quilzo's own process, as a container has (Docker's default one refuses new user namespaces), or AppArmor's restriction on Ubuntu 23.10 and later. Inside a container, run the agents that need a program box where Quilzo runs on the machine itself, or choose another backend.</p>
 
 <h2 id="run-a-program">Give an agent a program, and run it</h2>
 <ol class="steps">
@@ -78,6 +79,8 @@ body: Thirty days, unused, and we pay the postage back. Ink is the exception: â€
 <ul>
 <li><strong>Time</strong> is the declaration's duration. CPU time, memory, file size, open files and processes are capped too; <code>--memory-mb</code> sets the memory cap (2048 by default). It counts what the program writes, not the address space it reserves, so Node and a browser run in the box.</li>
 <li><strong>A connection to a host the declaration does not name</strong> is refused by the proxy, and the network namespace leaves no other way out.</li>
+<li><strong>A tunnel through the proxy that carries nothing</strong>, in either direction, for five minutes is closed, and its record says so. Silence is measured on the tunnel, so an answer only the far side is sending is not cut off.</li>
+<li><strong>A netlink socket</strong> opens only for the routing tables. Netfilter, xfrm, audit and generic netlink are refused by the system call filter.</li>
 <li><strong>Ask-first capabilities</strong> wait for a person, and the program waits on its call meanwhile. Answer on the run's page or with <code>quilzo agent approve RUN STEP</code> (or <code>decline</code>). If nobody answers before the run's time is up, the call is refused, with the reason.</li>
 <li><strong>The exfiltration breaker</strong> applies. Once the run holds something private and has read somebody else's words, a step that would send it out waits for a person in the same way, and a connection through the proxy is refused, with the reason.</li>
 </ul>

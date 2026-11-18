@@ -6,7 +6,7 @@ description: Every sign-in, where it came from and how risky it looked; a risky 
 lead: A sign-in that does not look like its person waits until they prove it is them.
 icon: automations
 screens: Sign-ins
-updated: 2026-11-03
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/signins/signins.webp" alt="The Sign-ins screen: nobody waiting to confirm, nobody locked out, and recent sign-ins with where each came from and its risk"><figcaption>Sign-ins, under Protection.</figcaption></figure>
@@ -33,6 +33,24 @@ updated: 2026-11-03
 
 <h2 id="lockout">Lockout</h2>
 <p>Failed sign-ins that belong to an account lock out the places they come from: after ten, for half an hour, and longer each time after that. The places the person usually signs in from keep working, so somebody guessing at an account cannot lock its owner out. A hundred failures in a row turn the person's passkey sign-in off until an administrator turns it back on. See <a href="/passkeys/#lockout">lockout</a> for what the person sees.</p>
+<p>Every way in is slowed per address too, and a throttled address slows only its failures: a right token or passkey from it still gets in. So behind a NAT, an office proxy or Docker's port publishing, where everybody arrives from one address, one person guessing locks nobody else out. After an attempt refused for trying too often, the sign-in page says <strong>Too many attempts</strong> and how long to wait; anybody else who opens it gets the form.</p>
+
+<h2 id="copied-passkey">A passkey used from two places</h2>
+<p>A passkey's signature counter only goes forward. One that went back means the credential exists in two places, so the sign-in is refused, recorded as <code>passkey.counter-refused</code> with the account and the key, and raises the <code>passkey-cloned</code> sign-in signal, rated high. It tells the security contact that the key should be removed and registered again. The key is not removed by itself: removing it stays its person's act, on their <a href="/passkeys/">Passkeys</a> screen.</p>
+
+<h2 id="identity-provider">From the identity provider</h2>
+<p>When the identity provider sends its security events here (see <a href="/sso/#signals">when the identity provider ends a session</a>), this panel says whether they arrive and what came of them. With no stream connected, it says how to connect one: <code>quilzo signals connect</code>, with <code>--client-id</code> and the secret in <code>QUILZO_SIGNALS_SECRET</code>, or <code>--jwks URL</code> for a stream made in the provider's own console.</p>
+<figure class="shot"><img src="/images/signins/signals.webp" alt="The From the identity provider panel: a stream speaking for saml:northwind sign-ins, last answered a verification, enabled, its last event a session-revoked, and the counts received 37, acted on 9, unmatched 2, refused 1 and past the hourly cap 0"><figcaption>A stream from the identity provider, and what came of it.</figcaption></figure>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">Row</th><th scope="col">Says</th></tr></thead>
+<tbody>
+<tr><td>Speaks for</td><td>The sign-ins whose sessions its events end, <code>oidc</code> or <code>saml:NAME</code>, the provider, and when it was connected</td></tr>
+<tr><td>Verified</td><td>When the provider last answered a verification and when one was last asked for; <strong>silent</strong> when it has not answered for a day; <strong>cannot be asked</strong> for a stream made in the provider's console</td></tr>
+<tr><td>Last request</td><td>Why the last request for a verification failed, when it did</td></tr>
+<tr><td>Stream</td><td>Enabled, paused or disabled, as the provider last said</td></tr>
+<tr><td>Last event</td><td>Its kind and when it came</td></tr>
+</tbody></table></div>
+<p>Below them are the counts: <strong>Received</strong>; <strong>Acted on</strong>; <strong>Unmatched</strong>, about nobody the access policy knows; <strong>Refused</strong>, which did not prove they came from the stream or came too late; and <strong>Past the hourly cap</strong>, told to wait and acted on when the provider sends them again. <code>quilzo signals status</code> says the same.</p>
 
 <h2 id="where">Where sign-ins come from</h2>
 <p>Name your offices and VPNs first, so a sign-in from them reads as yours:</p>

@@ -2,8 +2,9 @@
 
 # quilzo.github.io
 
-The manual for [Quilzo](https://github.com/Quilzo/Quilzo), the self-hosted
-control plane for AI agents: **[quilzo.github.io](https://quilzo.github.io)**.
+The manual for [Quilzo](https://github.com/Quilzo/Quilzo), the self-hosted AI
+agent platform: a control plane, an agent studio, a CMS and chatbots in one Go
+binary. It is published at **[quilzo.github.io](https://quilzo.github.io)**.
 
 A guide per page, each with steps taken in a real store and screenshots of the
 screens it describes, in the admin's own Material 3 Expressive design. Every

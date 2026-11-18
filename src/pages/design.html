@@ -6,7 +6,7 @@ description: Start from a template, generate a palette from one colour with cont
 lead: A theme from one colour, contrast checked, in a template language that cannot run code.
 icon: design
 screens: Design
-updated: 2026-10-08
+updated: 2026-11-04
 -->
 
 <figure class="shot"><img src="/images/design/design.webp" alt="The Design screen with the theme's colours and styles"><figcaption>The demo shop ships its own <code>site.css</code>, so the screen says the theme values are not in effect until that file is removed or edited by hand.</figcaption></figure><div class="table-wrap"><table>
@@ -20,5 +20,16 @@ updated: 2026-10-08
 <tr><td>Import design tokens</td><td><code>quilzo theme import tokens.json --set T=PATH</code></td></tr>
 <tr><td>Export them</td><td><code>quilzo theme export --out tokens.json</code></td></tr>
 <tr><td>Convert a template from another system</td><td><code>quilzo template adopt FILE</code></td></tr>
+</tbody></table></div>
+<h2 id="look">The look</h2>
+<p>Under <strong>Look</strong> on the Design screen, <strong>Style</strong> sets corners, density and type for the whole site, and never colour. <strong>Material 3 Expressive</strong> is the default and listed first: big rounded shapes, tonal colour and a bold type scale, the look the admin itself is drawn in. <strong>Classic</strong> is the calmer choice, the look sites had before styles: the same tones with smaller shapes and quieter type. Glass, Editorial, Bold, Soft and Business follow.</p>
+<p><strong>Motion</strong> is Subtle (the default), <strong>Springy</strong>, which overshoots a little and settles, or None; a visitor who asks for reduced motion gets it whatever is chosen. Under <strong>A palette from one colour</strong>, <strong>Scheme</strong> is Tonal (the default), Vibrant, <strong>Playful</strong>, with accents far round the colour wheel, Neutral or Monochrome.</p>
+<div class="table-wrap"><table>
+<thead><tr><th scope="col">To</th><th scope="col">Run</th></tr></thead>
+<tbody>
+<tr><td>See the styles</td><td><code>quilzo theme styles</code></td></tr>
+<tr><td>Choose one</td><td><code>quilzo theme set style classic</code></td></tr>
+<tr><td>Choose how much moves; Springy is <code>expressive</code></td><td><code>quilzo theme set motion expressive</code></td></tr>
+<tr><td>A palette with Playful accents</td><td><code>quilzo theme generate "#0b57d0" --scheme expressive</code></td></tr>
 </tbody></table></div>
 <p>Templates use four constructs: a value, <code>if</code>, <code>for</code> and filters. There are no function calls, no arithmetic and no includes, so a template cannot be made to run anything.</p>

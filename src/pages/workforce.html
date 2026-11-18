@@ -5,21 +5,22 @@ seo: Workforce risk and Quilzo: its own people, sign-ins and SCIM
 description: Scoring people and machines across your organisation is not part of Quilzo. Quilzo knows its own people: their access, their sign-ins and SCIM.
 lead: What Quilzo knows about the people who use it, and nothing beyond them.
 icon: workforce
-updated: 2026-11-03
+updated: 2026-11-04
 -->
 
 <div class="note"><icon name="info"></icon><div><p><strong>Not part of Quilzo.</strong> Joining people and their machines across your tools, scoring their risk and reminding them to fix what is theirs belong to the identity and security tooling your organisation already runs. Quilzo knows only the people who use Quilzo.</p></div></div>
 
 <h2 id="people">Who may do what</h2>
-<p><span class="where">Administration › People</span> lists everybody with access and what each holds: roles on parts of the site, jobs that must end, permissions such as deciding one agent's runs, and denies, with their credentials, when each was last used and when it expires. <code>quilzo auth list</code> lists every grant, and <code>quilzo auth explain WHO</code> says why somebody can or cannot do a thing. Making somebody an administrator takes two administrators. See <a href="/people/">People and access</a>.</p>
+<p><span class="where">Administration › People</span> lists everybody with access and what each holds: roles on parts of the site, jobs, permissions such as deciding one agent's runs, and denies, with their credentials, when each was last used and when it expires. <code>quilzo auth list</code> lists every grant to whoever may grant access, and a reader their own, and <code>quilzo auth explain WHO</code> says why somebody can or cannot do a thing. Making somebody an administrator takes two administrators, and every ninety days by default an administrator reviews the access Quilzo grants and keeps or revokes each part of it (see <a href="/people/#access-review">Review who has access</a>). See <a href="/people/">People and access</a>.</p>
 
 <h2 id="signins">How they sign in</h2>
 <p><span class="where">Protection › Sign-ins</span> shows every sign-in to the admin in the last thirty days: who, when, where from, the device, how risky it looked and why. Above them are the people waiting to confirm it is them, and the people locked out. <code>quilzo token stale</code> lists the credentials nobody has used for thirty days that still work, and <code>quilzo token revoke ID</code> ends one. See <a href="/signins/">Sign-ins</a> and <a href="/passkeys/">Passkeys and tokens</a>.</p>
 
 <h2 id="scim">Kept in step with your identity provider</h2>
-<p>With SCIM, Okta, Microsoft Entra or another identity provider creates, updates, suspends and deletes people here, and their groups mean roles and jobs:</p>
+<p>With SCIM, Okta, Microsoft Entra or another identity provider creates, updates, suspends and deletes people here, and their groups mean roles and jobs; a job granted for a time, such as auditor, is mapped until a day:</p>
 <pre><code>quilzo scim token
 quilzo scim map Editors author
+quilzo scim map Auditors auditor --until 2026-12-31
 quilzo scim status</code></pre>
 <p>Deactivation suspends a person at once: their sessions, tokens and connected apps stop, and so do the agents they sponsor. Only grants made by provisioning are changed by it; access granted by hand is left alone. <span class="where">Administration › Provisioning</span> shows the connection, what each group means and who was provisioned. See <a href="/provisioning/">Provisioning</a>.</p>
 

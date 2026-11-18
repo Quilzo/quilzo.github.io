@@ -21,6 +21,8 @@ logging
 make
 research
 selling
+bookings
+newsletter
 media
 members
 memory

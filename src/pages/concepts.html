@@ -5,12 +5,12 @@ seo: Glossary: AI agent control plane, MCP gateway, A2A and more
 description: What an AI agent control plane, an MCP gateway, A2A, prompt injection, human in the loop, earned autonomy and the other terms in this manual mean, in one place.
 lead: Short definitions of the terms this manual uses, from agents to the content store.
 icon: section-reference
-updated: 2026-10-08
+updated: 2026-11-18
 -->
 
 <h2 id="agents-and-ai">Agents and AI</h2>
 <dl class="glossary">
-<dt id="ai-agent-control-plane">AI agent control plane</dt><dd>The layer that decides what AI agents may do: identity, policy, budgets, approvals, and an audit trail of every action, enforced outside the model. Quilzo is one, self-hosted.</dd>
+<dt id="ai-agent-control-plane">AI agent control plane</dt><dd>The layer that decides what AI agents may do: identity, policy, budgets, approvals, and an audit trail of every action, enforced outside the model. Quilzo has one, self-hosted, beside its agent studio, its CMS and its chatbots.</dd>
 <dt id="ai-agent">AI agent</dt><dd>A program in which a model, or the agent's own code, chooses actions toward a goal. In Quilzo every agent has a declaration.</dd>
 <dt id="declaration">Declaration (manifest)</dt><dd>One JSON document saying what an agent is for, what it may do and read, how far it may go on its own and what one run may spend. The gate enforces it on every action. See <a href="/agents/">Build an agent</a>.</dd>
 <dt id="capability">Capability</dt><dd>An operation an agent may use, such as <code>read_page</code> or <code>write_page</code>. A model picks from the declared list and cannot add to it.</dd>

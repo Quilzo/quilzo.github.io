@@ -622,7 +622,7 @@ func jsonLD(p, home *Page, g *Group) template.JS {
 				"@type": "SoftwareApplication", "@id": Site + "/#software", "name": "Quilzo",
 				"description":            p.Desc,
 				"applicationCategory":    "BusinessApplication",
-				"applicationSubCategory": "CMS for websites, chatbots and AI agents",
+				"applicationSubCategory": "AI agent platform: control plane, agent studio, CMS and chatbots",
 				"operatingSystem":        "Linux, macOS, Windows",
 				"url":                    Site + "/",
 				"downloadUrl":            "https://github.com/Quilzo/Quilzo",
